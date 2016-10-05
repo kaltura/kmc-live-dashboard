@@ -1,0 +1,15 @@
+
+/app/**/*.js
+/app/**/*.map
+
+node_modules/*
+typings/*
+.idea/misc.xml
+
+.idea/workspace.xml
+
+.DS_Store
+
+e2e/app.e2e-spec.js.map
+
+e2e/app.e2e-spec.js
