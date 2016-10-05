@@ -136,6 +136,30 @@ nav a.router-link-active {
   border-radius: 4px 0 0 4px;
 }
 
+.kmcSubNav {
+  border-bottom: 2px solid #CCCCCC;
+  display: block;
+  height: 33px;
+  width: 100%;
+  margin-bottom: 1px;
+  padding-left: 10px;
+  background-color: #FFFFFF;
+  position:fixed;
+  z-index:1005;
+}
+.kmcSubNav a {
+  background: none repeat scroll 0 0 #FFFFFF;
+  border-radius: 18px;
+  color: #555555;
+  font: 700 11px arial,sans-serif;
+  margin: 7px 0px;
+  padding: 3px 9px;
+}
+.kmcSubNav a.active {
+  background: none repeat scroll 0 0 #222222;
+  color: #FFFFFF;
+}
+
 /* everywhere else */
 * {
   font-family: Arial, Helvetica, sans-serif;
