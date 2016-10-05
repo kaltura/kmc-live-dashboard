@@ -13,3 +13,5 @@ typings/*
 e2e/app.e2e-spec.js.map
 
 e2e/app.e2e-spec.js
+
+npm-debug.log
