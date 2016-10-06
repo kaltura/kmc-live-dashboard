@@ -131,7 +131,7 @@ export class EntriesComponent implements OnInit {
       //fetching analytics data
       this.getAnalyticsData();
       //fetching entry server node data
-      this.getEntryServerNodeData();
+      //this.getEntryServerNodeData(); //todo [SA] uncomment when permissions will be added to partners
     }
 
   }
