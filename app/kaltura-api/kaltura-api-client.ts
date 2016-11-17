@@ -17,6 +17,7 @@ export class KalturaAPIClient {
         }
     }
 
+
     transmit(args : {parameters : any, ksValue : {assignAutomatically : boolean}}):Observable<any> {
 
         // We use the actual args parameters to optimize performance, it should affect the api since the arguments are created inside the library elements.

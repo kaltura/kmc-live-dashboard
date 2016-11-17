@@ -10,213 +10,300 @@ import { LiveAnalyticsService } from './../kaltura-api/live-analytics/live-analy
 import { EntryServerNodeService } from './../kaltura-api/entry-server-node/entry-server-node.service';
 import {isEmpty} from "rxjs/operator/isEmpty";
 
+import 'rxjs/add/operator/merge';
+
+
 export interface Entry {
-  id: string;
-  name: string;
-  thumbnailUrl: string;
-  mediaType: string;
-  plays: string;
-  createdAt: string;
-  duration: string;
-  status: string;
+    id: string;
+    name: string;
+    thumbnailUrl: string;
+    mediaType: string;
+    plays: string;
+    createdAt: string;
+    duration: string;
+    status: string;
 }
 
 @Component({
-  selector: 'kmc-entries',
-  templateUrl: './app/entries-component/entries.component.html',
-  providers: [
-    FormBuilder
-  ],
-  styleUrls:  ['./app/entries-component/entries.component.css'],
+    selector: 'kmc-entries',
+    templateUrl: './app/entries-component/entries.component.html',
+    providers: [
+        FormBuilder
+    ],
+    styleUrls: ['./app/entries-component/entries.component.css'],
 
 })
+
+
 export class EntriesComponent implements OnInit {
 
-  public static LIVE_DASHBOARD_FAVORITE_TAG = 'live-dashboard-favorite';
+    public static LIVE_DASHBOARD_FAVORITE_TAG = 'live-dashboard-favorite';
 
-  private entries$: Observable<any>;
-  private searchForm: FormGroup;
-  private filter: any;
-  private responseProfile: any;
-  private sub: any;
+    private entries$:Observable<any>;
+    private searchForm:FormGroup;
+    private filter:any;
+    private responseProfile:any;
+    private sub:any;
+    private selectedEntry: Entry = null;
 
-  favoritesOnly : boolean = false;
-  entriesList: Entry[];
-  liveEntriesAdditionalData = {};
 
-  constructor(private formBuilder: FormBuilder, private kalturaAPIClient : KalturaAPIClient) {
+    entriesList:Entry[];
+    liveEntriesAdditionalData = {};
 
-    this.searchForm = this.formBuilder.group({
-      'search': ['', Validators.required]
-    });
-    this.filter = {
-      "objectType": "KalturaLiveStreamEntryFilter",
-      "orderBy": "-createdAt"
-    };
-    this.responseProfile = {
-      "objectType": "KalturaDetachedResponseProfile",
-      "type": "1",
-      "fields": "id,name,thumbnailUrl,liveStatus,recordStatus,dvrStatus,dvrWindow,tags"
-    };
-  }
+    constructor(private formBuilder:FormBuilder, private kalturaAPIClient:KalturaAPIClient) {
 
-  ngOnInit() {
-
-    this.entries$ = this.searchForm.controls['search'].valueChanges
-      .startWith('')
-      .debounceTime(500)
-      .switchMap(value =>
-        LiveStreamService.list(value, this.filter, this.responseProfile)
-          .execute(this.kalturaAPIClient)
-          .map(response => response.objects));
-
-    this.sub = this.entries$.subscribe((entries) => {
-      this.populateData(entries);
-    });
-  }
-
-  ngOnDestroy() {
-
-    this.sub.unsubscribe();
-  }
-
-  onFavoritesFilter() {
-
-    this.favoritesOnly = !this.favoritesOnly;
-    if(this.favoritesOnly) {
-      this.filter["tagsLike"] = EntriesComponent.LIVE_DASHBOARD_FAVORITE_TAG;
-    } else {
-      delete this.filter["tagsLike"];
-    }
-    this.refresh();
-  }
-
-  onFavoriteStateChange(entryId) {
-
-    let entry = _.find(this.entriesList, {'id' : entryId});
-    if(entry) {
-      this.updateEntryTags(entry);
-    }
-  }
-
-  refresh() {
-
-    this.sub.unsubscribe();
-    this.sub = this.entries$.subscribe((entries) => {
-      this.populateData(entries);
-    });
-  }
-
-  onActionSelected(action, entryID) {
-
-    alert("Selected Action: "+action+"\nEntry ID: "+entryID);
-  }
-
-  private populateData(entries) {
-
-    this.entriesList = entries;
-    this.updateEntriesAdditionalData();
-  }
-
-  private updateEntriesAdditionalData(){
-
-    this.liveEntriesAdditionalData = {};
-
-    _.each(this.entriesList, (entry) => {
-      if(entry['liveStatus']) {
-        this.liveEntriesAdditionalData[entry.id] = {id : entry.id};
-      }
-    });
-    if(!_.isEmpty(this.liveEntriesAdditionalData)) {
-      //fetching analytics data
-      this.getAnalyticsData();
-      //fetching entry server node data
-      //this.getEntryServerNodeData(); //todo [SA] uncomment when permissions will be added to partners
+        this.searchForm = this.formBuilder.group({
+            'search': ['', Validators.required],
+            'favoritesOnly': false,
+            'liveOnly': true,
+        });
+        this.filter = {
+            "objectType": "KalturaLiveStreamEntryFilter",
+            "orderBy": "-createdAt"
+        };
+        this.responseProfile = {
+            "objectType": "KalturaDetachedResponseProfile",
+            "type": "1",
+            "fields": "id,name,thumbnailUrl,liveStatus,recordStatus,dvrStatus,dvrWindow,tags",
+            "relatedProfiles:0:objectType": "KalturaDetachedResponseProfile",
+            "relatedProfiles:0:type": 1,
+            "relatedProfiles:0:fields": "id",
+            "relatedProfiles:0:filter:objectType": "KalturaEntryServerNodeFilter",
+            "relatedProfiles:0:mappings:0:objectType": "KalturaResponseProfileMapping",
+            "relatedProfiles:0:mappings:0:parentProperty": "id",
+            "relatedProfiles:0:mappings:0:filterProperty": "entryIdEqual"
+        };
     }
 
-  }
+    ngOnInit() {
 
-  private getAnalyticsData() {
+        let valueChanges=this.searchForm.controls['search'].valueChanges
+            .startWith('')
+            .debounceTime(500);
+        let valueChanges2=this.searchForm.controls['favoritesOnly'].valueChanges.subscribe( (value:boolean)=>{
+            this.onFavoritesFilter();
+            this.refresh();
+        })
+        let valueChanges3=this.searchForm.controls['liveOnly'].valueChanges.subscribe( (value:boolean)=>{
+            this.onLiveOnlyFilter();
+            this.refresh();
+        });
 
-    let multiRequest = new KalturaMultiRequest();
+/*
+        valueChanges.merge(valueChanges2).subscribe( (value) => {
+            console.warn(JSON.stringify(value));
+        })*/
 
-    _.each(this.liveEntriesAdditionalData, function(value, key) {
-      let filter = {
-        'entryIds' : key,
-        'fromTime' : -129600,
-        'toTime' : -2
-      };
-      multiRequest.addRequest(LiveAnalyticsService.getEvents('ENTRY_TIME_LINE', filter));
-    });
+/*
+        let vv=Observable.merge(valueChanges,valueChanges2).subscribe( (value) => {
+            console.warn(value);
 
-    multiRequest.execute(this.kalturaAPIClient).toPromise()
-      .then(results => {this.handleAnalyticsData(results)})
-      .catch(error => {console.log(error)});
-  }
+        });
 
-  private handleAnalyticsData(analyticsData) {
+*/
 
-    let currentIndex = 0;
-    if(!_.isEmpty(analyticsData)) {
-      _.each(this.liveEntriesAdditionalData, (liveEntry) => {
-        if(analyticsData[currentIndex] && analyticsData[currentIndex][0] && analyticsData[currentIndex][0]['data']) {
-          let audience = _.split(analyticsData[currentIndex][0]['data'], ';');
-          liveEntry['audience'] = !_.isEmpty(audience) ? this.getLastUpdatedAudienceData(audience) : null;
+        this.onFavoritesFilter();
+        this.onLiveOnlyFilter();
+
+
+        this.entries$ = valueChanges
+            .switchMap(value =>
+                LiveStreamService.list(value, this.filter, this.responseProfile)
+                    .execute(this.kalturaAPIClient)
+                    .map(response => {
+                        return response.objects;
+                    }));
+
+        this.sub = this.entries$.subscribe((entries) => {
+            this.populateData(entries);
+        });
+
+    }
+
+    ngOnDestroy() {
+
+        this.sub.unsubscribe();
+    }
+
+    onFavoritesFilter() {
+
+        if (this.searchForm.value.favoritesOnly) {
+            this.filter["tagsLike"] = EntriesComponent.LIVE_DASHBOARD_FAVORITE_TAG;
+        } else {
+            delete this.filter["tagsLike"];
         }
-        currentIndex++;
-      });
     }
-  }
 
-  private getLastUpdatedAudienceData(audienceData) {
-    //for some reason the audience array contains redundant empty strings (god knows why - but we need to deal with it)
-    for(let i = 1 ; i <= audienceData.length ; i++) {
-      let lastValidData = audienceData[audienceData.length - i];
-      if(!_.isEmpty(lastValidData)){
-        let lastUpdatedArray = _.split(lastValidData, ',');
-        return lastUpdatedArray ? lastUpdatedArray[1] : null; //the idex for the audience parameter the analytics report
-      }
+
+    onLiveOnlyFilter() {
+
+        if (this.searchForm.value.liveOnly) {
+            this.filter["isLive"] = true;
+        } else {
+            delete this.filter["isLive"];
+        }
     }
-    return null;
-  }
 
+    onFavoriteStateChange(entryId) {
 
-
-  private getEntryServerNodeData() {
-
-    let liveEntriesIds = _.keys(this.liveEntriesAdditionalData);
-    let filter = {
-      'entryIdIn' : _.join(liveEntriesIds)
-    };
-     EntryServerNodeService.list(filter).execute(this.kalturaAPIClient).toPromise()
-       .then(results => {this.handleEntryServerNodeDate(results)})
-       .catch(error => {console.log(error)});
-  }
-
-  private handleEntryServerNodeDate(nodeData) {
-
-    console.log(nodeData);
-  }
-
-  private updateEntryTags(entry) {
-
-    if(entry.tags.indexOf(EntriesComponent.LIVE_DASHBOARD_FAVORITE_TAG) >= 0) {
-      entry.tags = _.replace(entry.tags, EntriesComponent.LIVE_DASHBOARD_FAVORITE_TAG, '');
-    }else {
-      entry.tags = entry.tags + ',' + EntriesComponent.LIVE_DASHBOARD_FAVORITE_TAG;
+        let entry = _.find(this.entriesList, {'id': entryId});
+        if (entry) {
+            this.updateEntryTags(entry);
+        }
     }
-    //fix unwanted commas in tags string
-    entry.tags = entry.tags.replace(/^[,\s]+|[,\s]+$/g, '').replace(/,[,\s]*,/g, ',');
-    let liveStreamEntry = {
-      'liveStreamEntry:objectType' : 'KalturaLiveStreamEntry',
-      'liveStreamEntry:tags': entry.tags
-    };
 
-    LiveStreamService.update(entry.id, liveStreamEntry)
-      .execute(this.kalturaAPIClient)
-      .toPromise()
-      .catch((reason) => console.log('ERROR: filed to update entry tags. ' + reason));
-  }
+    refresh() {
+
+        this.sub.unsubscribe();
+        this.sub = this.entries$.subscribe((entries) => {
+            this.populateData(entries);
+        });
+    }
+    showEntry(entry: Entry) {
+        this.selectedEntry = entry;
+    }
+
+    onActionSelected(action, entryID) {
+
+        alert("Selected Action: " + action + "\nEntry ID: " + entryID);
+    }
+
+    private populateData(entries) {
+
+        this.entriesList = entries;
+        this.updateEntriesAdditionalData();
+    }
+
+    private updateEntriesAdditionalData() {
+
+        this.liveEntriesAdditionalData = {};
+
+        _.each(this.entriesList, (entry) => {
+            if (entry['liveStatus']) {
+                this.liveEntriesAdditionalData[entry.id] = {id: entry.id};
+            }
+        });
+        if (!_.isEmpty(this.liveEntriesAdditionalData)) {
+            //fetching analytics data
+            this.getAnalyticsData();
+            //fetching entry server node data
+            this.getEntryServerNodeData();
+        }
+
+    }
+
+    private getAnalyticsData() {
+
+        let multiRequest = new KalturaMultiRequest();
+
+        _.each(this.liveEntriesAdditionalData, function (value, key) {
+            let filter = {
+                'entryIds': key,
+                'fromTime': -129600,
+                'toTime': -2
+            };
+            multiRequest.addRequest(LiveAnalyticsService.getEvents('ENTRY_TIME_LINE', filter));
+        });
+
+        multiRequest.execute(this.kalturaAPIClient).toPromise()
+            .then(results => {
+                this.handleAnalyticsData(results)
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
+    private handleAnalyticsData(analyticsData) {
+
+        let currentIndex = 0;
+        if (!_.isEmpty(analyticsData)) {
+            _.each(this.liveEntriesAdditionalData, (liveEntry) => {
+                if (analyticsData[currentIndex] && analyticsData[currentIndex][0] && analyticsData[currentIndex][0]['data']) {
+                    let audience = _.split(analyticsData[currentIndex][0]['data'], ';');
+                    liveEntry['audience'] = !_.isEmpty(audience) ? this.getLastUpdatedAudienceData(audience) : null;
+                }
+                currentIndex++;
+            });
+        }
+    }
+
+    private getLastUpdatedAudienceData(audienceData) {
+        //for some reason the audience array contains redundant empty strings (god knows why - but we need to deal with it)
+        for (let i = 1; i <= audienceData.length; i++) {
+            let lastValidData = audienceData[audienceData.length - i];
+            if (!_.isEmpty(lastValidData)) {
+                let lastUpdatedArray = _.split(lastValidData, ',');
+                return lastUpdatedArray ? lastUpdatedArray[1] : null; //the idex for the audience parameter the analytics report
+            }
+        }
+        return null;
+    }
+
+
+    private getEntryServerNodeData() {
+
+        let liveEntriesIds = _.keys(this.liveEntriesAdditionalData);
+        let filter = {
+            'entryIdIn': _.join(liveEntriesIds)
+        };
+        EntryServerNodeService.list(filter).execute(this.kalturaAPIClient).toPromise()
+            .then(results => {
+                this.handleEntryServerNodeResult(results)
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
+    private handleEntryServerNodeResult(entryServerNodeResult) {
+
+        let self = this;
+        _.each(this.liveEntriesAdditionalData, (liveEntry: any)=> {
+            liveEntry.redundant=false;
+            liveEntry.startTime = null;
+
+        });
+        _.each(entryServerNodeResult.objects, (entryServerNode) => {
+            let liveEntry = self.liveEntriesAdditionalData[entryServerNode.entryId];
+            if (!liveEntry) {
+                return;
+            }
+            if (!liveEntry.entryServerNode) {
+                liveEntry.entryServerNode = [];
+            }
+            liveEntry.entryServerNode.push(entryServerNode);
+
+            liveEntry.flavors = entryServerNode.streams.length;
+            liveEntry.redundant = (liveEntry.entryServerNode.length > 1);
+            if (!liveEntry.time  || liveEntry.time.getTime()>entryServerNode.createdAt*1000)
+            {
+                liveEntry.startTime = new Date(entryServerNode.createdAt*1000);
+            }
+        });
+
+
+    }
+
+    private updateEntryTags(entry) {
+
+        if (entry.tags.indexOf(EntriesComponent.LIVE_DASHBOARD_FAVORITE_TAG) >= 0) {
+            entry.tags = _.replace(entry.tags, EntriesComponent.LIVE_DASHBOARD_FAVORITE_TAG, '');
+        } else {
+            entry.tags = entry.tags + ',' + EntriesComponent.LIVE_DASHBOARD_FAVORITE_TAG;
+        }
+        //fix unwanted commas in tags string
+        entry.tags = entry.tags.replace(/^[,\s]+|[,\s]+$/g, '').replace(/,[,\s]*,/g, ',');
+        let liveStreamEntry = {
+            'liveStreamEntry:objectType': 'KalturaLiveStreamEntry',
+            'liveStreamEntry:tags': entry.tags
+        };
+
+        LiveStreamService.update(entry.id, liveStreamEntry)
+            .execute(this.kalturaAPIClient)
+            .toPromise()
+            .catch((reason) => console.log('ERROR: filed to update entry tags. ' + reason));
+    }
 
 }
 

@@ -1,12 +1,31 @@
 import { Injectable } from '@angular/core';
+import * as _ from "lodash";
+
 
 @Injectable()
 export class KalturaAPIConfig {
 
+    private
+    get kmcConfig():any {
+        return _.get(window.parent,'kmc',null);
+    }
     //noinspection TypeScriptUnresolvedVariable
-    ks : string = window.parent.kmc.vars.ks || "djJ8MTgwMjM4MXyxrZt-jJdDm4lPrbqcRw9EkkW58t4O2i2J3hA8CDFk6-j0dtgvanzHd27lKeuyJEe0WYZswYzkuvRvKq98TxXc6zz7wFt6z_D5Gls4K43urat_XnxjpNFCE8ixbmKevQizNff6wHsLkGLipIgpZrdc";
-    //noinspection TypeScriptUnresolvedVariable
-    apiUrl : string = (window.parent.kmc.vars.api_url || "https://www.kaltura.com")  + "/api_v3/index.php";
+    get ks():string {
+        if (this.kmcConfig) {
+            return this.kmcConfig.vars.ks;
+        }
+        return "YTEzMjIyNWFlZjZlNDE4YzBlODQyNzY3MTQ1NjA4OWE4OTYwYWE2OXwtNTstNTsxNDc5NDY4NjA4OzI7MTQ3OTM4MjIwOC4zMzY1Ozs7Ow=="
+    }
+
+    get apiUrl():string {
+        let baseUrl : string;
+        if (this.kmcConfig) {
+            baseUrl=this.kmcConfig.vars.api_url;
+        } else {
+            baseUrl = "https://www.kaltura.com";
+        }
+        return baseUrl + "/api_v3/index.php";
+    }
     apiVersion : string;
 
     clientTag = 'kaltura/kaltura-api_v1';
