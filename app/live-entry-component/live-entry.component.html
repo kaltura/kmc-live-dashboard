@@ -1,4 +1,90 @@
-<div>
-  hello world
+<div class="ui-grid ui-grid-responsive ui-fluid" style="font-size:16px;padding:20px">
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-6">
+      <dl>
+        <dt>Id</dt><dd>{{entry.id}}</dd>
+        <dt>Name</dt><dd>{{entry.name}}</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-4">
+      <span>Input streams</span>
+      <table class="table table-bordered stable">
+        <thead>
+          <tr>
+            <th style="width: 20px">Server</th>
+            <th style="width: 30px">index</th>
+            <th style="width: 30px">address</th>
+            <th style="width: 30px">uptime</th>
+            <th style="width: 30px">Kbit/s</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let entryServerNode of entry.entryServerNodes" >
+          <tr *ngFor="let stream of entryServerNode.inputStreams">
+            <td>{{entryServerNode.isPrimary ? "Primary" : "Backup"}}</td>
+            <td>{{stream.index}}</td>
+            <td > {{stream.address}}</td>
+            <td>{{stream.uptime}}</td>
+            <td >{{stream.bitrate | number:'.0-0'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ui-grid-col-8">
+      <span>Output streams</span>
 
+
+      <table class="table table-bordered stable">
+        <thead>
+          <tr>
+            <th style="width: 20px">Server</th>
+            <th style="width: 30px">Flavor</th>
+            <th style="width: 30px">Resolution</th>
+            <th style="width: 30px">Kbit/s</th>
+            <th style="width: 30px">FPS</th>
+            <th style="width: 30px">GOP len.</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let entryServerNode of entry.entryServerNodes" >
+          <tr>
+            <td colspan="6">
+              {{entryServerNode.isPrimary ? "Primary" : "Backup"}}
+              {{entryServerNode.startTime | date:"M/d/yy HH:mm"}}
+              <!--, running time  {{ getControllerUpTime(controller_diag)  | duration}})-->
+            </td>
+          </tr>
+          <tr *ngFor="let stream of entryServerNode.outputStreams">
+            <td></td>
+            <td>{{stream.flavorId}}</td>
+            <td class="text-right"> {{stream.width}}x{{stream.height}}</td>
+            <td class="text-right">{{stream.bitrate/1000 | number:'.0-0'}}</td>
+            <td>N/A</td>
+            <td>N/A</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--
+      <p-dataTable [value]="entry.outputStreams" >
+        <p-column  header="Encoder"  [style]="{'width':'80px'}">
+          <template let-stream="rowData" pTemplate type="body">
+            {{stream.isPrimary ? "Primary" : "Backup"}}
+          </template>
+        </p-column>
+        <p-column field="flavorId" header="Flavor Id"  [style]="{'width':'50px'}"></p-column>
+        <p-column field="Resolution"  header="Resolution"  [style]="{'width':'80px', 'text-align':'center'}">
+          <template let-stream="rowData" pTemplate type="body">
+              {{stream.width}}x{{stream.height}}
+          </template>
+        </p-column>
+        <p-column  field="Bitrate"   header="Bitrate"  [style]="{'width':'70px', 'text-align':'right'}">
+          <template let-stream="rowData" pTemplate type="body"  >
+            {{stream.bitrate/1024 | number:'.0-0'}}
+          </template>
+        </p-column>
+
+      </p-dataTable>
+      -->
+  </div>
 </div>

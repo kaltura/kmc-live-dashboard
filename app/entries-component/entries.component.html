@@ -15,9 +15,11 @@
   <button pButton type="text" (click)="refresh(); search.value=''; dt.reset()" icon="fa-refresh" label="Refresh" title="Refresh" class="refreshBtn"></button>
   <span [hidden]="(entriesList && entriesList.length !== 0) || search.value.length != 0">Loading Entries...</span>
   <div class="tableHolder">
-    <p-dataTable [value]="entriesList" scrollable="true" [hidden]="!entriesList || entriesList.length===0" scrollHeight="auto" #dt>
-      <p-column expander="true" styleClass="col-icon"></p-column>
-
+    <p-dataTable [value]="entriesList" scrollable="true" expandableRows="true" [hidden]="!entriesList || entriesList.length===0" scrollHeight="auto" >
+      <template let-entry>
+        <kmc-live-entry [entry]="entry"></kmc-live-entry>
+      </template>
+      <p-column expander="true"  styleClass="col-icon" [style]="{'width':'30px'}"></p-column>
       <p-column field="tags" header="Favorite" [sortable]="true" [style]="{'width':'80px', 'text-align': 'center'}">
         <template let-col let-entry="rowData" pTemplate type="body">
           <i [ngClass]="{'fa': true, 'fa-star-o': entry[col.field], 'fa-star': !entry[col.field]}"
@@ -44,14 +46,12 @@
       </p-column>
       <p-column field="startTime" header="Start" [sortable]="true" [style]="{'width':'80px', 'text-align': 'center'}">
         <template let-col let-entry="rowData" pTemplate type="body">
-          <span *ngIf="liveEntriesAdditionalData[entry.id] && liveEntriesAdditionalData[entry.id][col.field]">
-            {{liveEntriesAdditionalData[entry.id][col.field] | date: "HH:mm"}}</span>
+            {{entry[col.field] | date: "HH:mm"}}
         </template>
       </p-column>
       <p-column field="audience" header="Viewers" [sortable]="true" [style]="{'width':'80px', 'text-align': 'center'}">
         <template let-col let-entry="rowData" pTemplate type="body">
-          <span *ngIf="liveEntriesAdditionalData[entry.id] && liveEntriesAdditionalData[entry.id][col.field]">
-            {{liveEntriesAdditionalData[entry.id][col.field]}}</span>
+            {{entry[col.field]}}
         </template>
       </p-column>
       <p-column field="dvrStatus" header="DVR" [sortable]="true" [style]="{'width':'140px', 'text-align': 'center'}">
@@ -67,14 +67,14 @@
       </p-column>
       <p-column field="flavors" header="Flavors" [sortable]="true" [style]="{'width':'50px'}">
         <template let-col let-entry="rowData" pTemplate type="body">
-          <span *ngIf="liveEntriesAdditionalData[entry.id] && liveEntriesAdditionalData[entry.id][col.field]">
-            {{liveEntriesAdditionalData[entry.id][col.field]}}</span>
+            {{entry[col.field]}}
         </template>
       </p-column>
       <p-column field="redundant" header="Redundancy" [sortable]="true" [style]="{'width':'50px'}">
         <template let-col let-entry="rowData" pTemplate type="body">
-          <span *ngIf="liveEntriesAdditionalData[entry.id] && liveEntriesAdditionalData[entry.id][col.field]">
-            {{(liveEntriesAdditionalData[entry.id][col.field]) ? "YES" : "NO"}}</span>
+          <span *ngIf="entry[col.field]">
+            {{(entry[col.field]) ? "YES" : "NO"}}
+          </span>
         </template>
       </p-column>
 
@@ -93,13 +93,6 @@
           </div>
         </template>
       </p-column>
-      <template let-entry>
-        <div class="ui-grid ui-grid-responsive ui-fluid" style="font-size:16px;padding:20px">
-          hello world
-        <kmc-live-entry></kmc-live-entry>
-          </div>
-      </template>
-
 
     </p-dataTable>
 

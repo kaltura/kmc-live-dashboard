@@ -11,18 +11,8 @@ import { EntryServerNodeService } from './../kaltura-api/entry-server-node/entry
 import {isEmpty} from "rxjs/operator/isEmpty";
 
 import 'rxjs/add/operator/merge';
+import {Entry} from "../entry.service";
 
-
-export interface Entry {
-    id: string;
-    name: string;
-    thumbnailUrl: string;
-    mediaType: string;
-    plays: string;
-    createdAt: string;
-    duration: string;
-    status: string;
-}
 
 @Component({
     selector: 'kmc-entries',
@@ -48,7 +38,7 @@ export class EntriesComponent implements OnInit {
 
 
     entriesList:Entry[];
-    liveEntriesAdditionalData = {};
+    id2entry :Map<string,Entry>;
 
     constructor(private formBuilder:FormBuilder, private kalturaAPIClient:KalturaAPIClient) {
 
@@ -168,41 +158,38 @@ export class EntriesComponent implements OnInit {
         alert("Selected Action: " + action + "\nEntry ID: " + entryID);
     }
 
-    private populateData(entries) {
-
-        this.entriesList = entries;
+    private populateData(apiEntries) {
+        this.id2entry = new Map<string,Entry>();
+        let newEntriesList : Entry[] = apiEntries.map( (apiEntry) => {
+            let obj=new Entry(apiEntry);
+            this.id2entry.set(obj.id,obj);
+            return obj;
+        });
+        this.entriesList = newEntriesList;
         this.updateEntriesAdditionalData();
     }
 
     private updateEntriesAdditionalData() {
+        //fetching analytics data
+        //this.getAnalyticsData();
+        //fetching entry server node data
+        this.getEntryServerNodeData();
 
-        this.liveEntriesAdditionalData = {};
-
-        _.each(this.entriesList, (entry) => {
-            if (entry['liveStatus']) {
-                this.liveEntriesAdditionalData[entry.id] = {id: entry.id};
-            }
-        });
-        if (!_.isEmpty(this.liveEntriesAdditionalData)) {
-            //fetching analytics data
-            this.getAnalyticsData();
-            //fetching entry server node data
-            this.getEntryServerNodeData();
-        }
 
     }
 
     private getAnalyticsData() {
-
         let multiRequest = new KalturaMultiRequest();
 
-        _.each(this.liveEntriesAdditionalData, function (value, key) {
-            let filter = {
-                'entryIds': key,
-                'fromTime': -129600,
-                'toTime': -2
-            };
-            multiRequest.addRequest(LiveAnalyticsService.getEvents('ENTRY_TIME_LINE', filter));
+        _.each(this.entriesList, function (entry, key) {
+            if (entry['liveStats']) {
+                let filter = {
+                    'entryIds': key,
+                    'fromTime': -129600,
+                    'toTime': -2
+                };
+                multiRequest.addRequest(LiveAnalyticsService.getEvents('ENTRY_TIME_LINE', filter));
+            }
         });
 
         multiRequest.execute(this.kalturaAPIClient).toPromise()
@@ -217,6 +204,7 @@ export class EntriesComponent implements OnInit {
     private handleAnalyticsData(analyticsData) {
 
         let currentIndex = 0;
+        /*
         if (!_.isEmpty(analyticsData)) {
             _.each(this.liveEntriesAdditionalData, (liveEntry) => {
                 if (analyticsData[currentIndex] && analyticsData[currentIndex][0] && analyticsData[currentIndex][0]['data']) {
@@ -225,7 +213,7 @@ export class EntriesComponent implements OnInit {
                 }
                 currentIndex++;
             });
-        }
+        }*/
     }
 
     private getLastUpdatedAudienceData(audienceData) {
@@ -243,10 +231,18 @@ export class EntriesComponent implements OnInit {
 
     private getEntryServerNodeData() {
 
-        let liveEntriesIds = _.keys(this.liveEntriesAdditionalData);
+        let liveEntriesIds = Array.from(this.id2entry.keys());
+        if (liveEntriesIds.length==0) {
+            return;
+        }
         let filter = {
             'entryIdIn': _.join(liveEntriesIds)
         };
+        this.id2entry.forEach( (entry, id) => {
+            entry.clearEntryServerNodes();
+        });
+
+
         EntryServerNodeService.list(filter).execute(this.kalturaAPIClient).toPromise()
             .then(results => {
                 this.handleEntryServerNodeResult(results)
@@ -257,29 +253,14 @@ export class EntriesComponent implements OnInit {
     }
 
     private handleEntryServerNodeResult(entryServerNodeResult) {
+        let self=this;
 
-        let self = this;
-        _.each(this.liveEntriesAdditionalData, (liveEntry: any)=> {
-            liveEntry.redundant=false;
-            liveEntry.startTime = null;
-
-        });
         _.each(entryServerNodeResult.objects, (entryServerNode) => {
-            let liveEntry = self.liveEntriesAdditionalData[entryServerNode.entryId];
+            let liveEntry = self.id2entry.get(entryServerNode.entryId);
             if (!liveEntry) {
                 return;
             }
-            if (!liveEntry.entryServerNode) {
-                liveEntry.entryServerNode = [];
-            }
-            liveEntry.entryServerNode.push(entryServerNode);
-
-            liveEntry.flavors = entryServerNode.streams.length;
-            liveEntry.redundant = (liveEntry.entryServerNode.length > 1);
-            if (!liveEntry.time  || liveEntry.time.getTime()>entryServerNode.createdAt*1000)
-            {
-                liveEntry.startTime = new Date(entryServerNode.createdAt*1000);
-            }
+            liveEntry.addEntryServerNode(entryServerNode);
         });
 
 
