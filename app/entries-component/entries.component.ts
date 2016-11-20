@@ -9,16 +9,17 @@ import { LiveStreamService } from './../kaltura-api/live-stream/live-stream.serv
 import { LiveAnalyticsService } from './../kaltura-api/live-analytics/live-analytics.service';
 import { EntryServerNodeService } from './../kaltura-api/entry-server-node/entry-server-node.service';
 import {isEmpty} from "rxjs/operator/isEmpty";
+import {MenuModule,MenuItem,ToggleButtonModule,DialogModule} from 'primeng/primeng';
 
 import 'rxjs/add/operator/merge';
-import {Entry} from "../entry.service";
+import {Entry, EntryService} from "../entry.service";
 
 
 @Component({
     selector: 'kmc-entries',
     templateUrl: './app/entries-component/entries.component.html',
     providers: [
-        FormBuilder
+        FormBuilder, EntryService
     ],
     styleUrls: ['./app/entries-component/entries.component.css'],
 
@@ -35,12 +36,18 @@ export class EntriesComponent implements OnInit {
     private responseProfile:any;
     private sub:any;
     private selectedEntry: Entry = null;
+    private gridMode:string = 'Grid';
+    private entryMenuItems: MenuItem[];
+    private totalEntries:number = 0;
+    private displayEntry:Entry = null;
 
-
+    private valueChanges:any;
     entriesList:Entry[];
     id2entry :Map<string,Entry>;
 
-    constructor(private formBuilder:FormBuilder, private kalturaAPIClient:KalturaAPIClient) {
+    constructor(private formBuilder:FormBuilder,
+                private kalturaAPIClient:KalturaAPIClient,
+                private entryService:EntryService) {
 
         this.searchForm = this.formBuilder.group({
             'search': ['', Validators.required],
@@ -67,7 +74,21 @@ export class EntriesComponent implements OnInit {
 
     ngOnInit() {
 
-        let valueChanges=this.searchForm.controls['search'].valueChanges
+        this.entryMenuItems =   [{
+            label: 'File',
+            items: [
+                {label: 'New', icon: 'fa-plus'},
+                {label: 'Open', icon: 'fa-download'}
+            ]},
+            {
+                label: 'Edit',
+                items: [
+                    {label: 'Undo', icon: 'fa-refresh'},
+                    {label: 'Redo', icon: 'fa-repeat'}
+                ]
+            }];
+
+        this.valueChanges=this.searchForm.controls['search'].valueChanges
             .startWith('')
             .debounceTime(500);
         let valueChanges2=this.searchForm.controls['favoritesOnly'].valueChanges.subscribe( (value:boolean)=>{
@@ -96,18 +117,24 @@ export class EntriesComponent implements OnInit {
         this.onLiveOnlyFilter();
 
 
-        this.entries$ = valueChanges
+
+    }
+    loadData(event) {
+        //event.first = First row offset
+        //event.rows = Number of rows per page
+
+        this.entries$ = this.valueChanges
             .switchMap(value =>
-                LiveStreamService.list(value, this.filter, this.responseProfile)
+                LiveStreamService.list(value, this.filter, this.responseProfile,event.rows,event.first)
                     .execute(this.kalturaAPIClient)
                     .map(response => {
+                        this.totalEntries=response.totalCount;
                         return response.objects;
                     }));
 
         this.sub = this.entries$.subscribe((entries) => {
             this.populateData(entries);
         });
-
     }
 
     ngOnDestroy() {
@@ -124,7 +151,6 @@ export class EntriesComponent implements OnInit {
         }
     }
 
-
     onLiveOnlyFilter() {
 
         if (this.searchForm.value.liveOnly) {
@@ -132,6 +158,9 @@ export class EntriesComponent implements OnInit {
         } else {
             delete this.filter["isLive"];
         }
+    }
+    openEntry(entry:Entry) {
+        this.displayEntry = entry;
     }
 
     onFavoriteStateChange(entryId) {

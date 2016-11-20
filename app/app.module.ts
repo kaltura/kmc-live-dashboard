@@ -3,17 +3,18 @@ import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { CheckboxModule } from 'primeng/primeng';
+import { ButtonsModule } from 'ng2-bootstrap/components/buttons';
 
 import { AppComponent }  from './app.component';
 import { EntriesComponent }  from './entries-component/entries.component';
-import { LiveEntriesComponent }  from './live-entry-component/live-entry.component';
+import { LiveEntryComponent }  from './live-entry-component/live-entry.component';
+import { LiveEntryGridPreviewComponent }  from './live-entry-grid-preview-component/live-entry-grid-preview.component';
 
 import { LiveStatusPipe } from './pipes/live.status.pipe';
 import { TimePipe } from './pipes/time.pipe';
 import { RecordStatusPipe } from './pipes/record.status.pipe';
 
-import { DataTableModule, SharedModule, InputTextModule, ButtonModule} from 'primeng/primeng';
+import { PanelModule, DialogModule, ToggleButtonModule, SelectButtonModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, MenuModule, ButtonModule, DataGridModule} from 'primeng/primeng';
 
 
 import { HttpModule }    from '@angular/http';
@@ -30,18 +31,26 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       HttpModule,
       FormsModule,
       ReactiveFormsModule,
+      DataGridModule,
+      PanelModule,
       DataTableModule,
       SharedModule,
       InputTextModule,
+      SelectButtonModule,
+      ToggleButtonModule,
       ButtonModule,
+      MenuModule,
+      DialogModule,
       DropdownModule,
-      CheckboxModule
+      CheckboxModule,
+      ButtonsModule
     ],
   declarations:
     [
       AppComponent,
       EntriesComponent,
-      LiveEntriesComponent,
+      LiveEntryComponent,
+      LiveEntryGridPreviewComponent,
       TimePipe,
       LiveStatusPipe,
       RecordStatusPipe

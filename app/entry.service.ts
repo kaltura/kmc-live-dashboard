@@ -1,3 +1,6 @@
+import { Injectable } from '@angular/core';
+
+
 export class Stream {
     isPrimary: boolean;
     flavorId: string;
@@ -18,6 +21,11 @@ export class Input {
     address: string;
 }
 
+export class EntryServerNode {
+    inputStreams: Input[];
+    outputStreams: Stream[];
+
+}
 
 export class Entry {
     constructor(apiEntry) {
@@ -35,7 +43,7 @@ export class Entry {
         this.dvrWindow = apiEntry.dvrWindow;
         this.recordStatus = apiEntry.recordStatus;
     }
-    entryServerNodes: any[];
+    entryServerNodes: EntryServerNode[];
     id: string;
     name: string;
     thumbnailUrl: string;
@@ -53,7 +61,6 @@ export class Entry {
 
     public clearEntryServerNodes() {
         this.entryServerNodes=[];
-        this.outputStreams=[];
     }
 
     public addEntryServerNode(entryServerNode) {
@@ -82,4 +89,10 @@ export class Entry {
 //        console.warn(`Updated entry ${this.id}`)
 
     }
+}
+
+
+@Injectable()
+export class EntryService {
+
 }

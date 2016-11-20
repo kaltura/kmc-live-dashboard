@@ -10,7 +10,7 @@ import {TreeTableModule,TreeNode,SharedModule} from 'primeng/primeng';
 })
 
 
-export class LiveEntriesComponent implements OnInit {
+export class LiveEntryComponent implements OnInit {
 
     @Input() entry : Entry;
 

@@ -1,0 +1,15 @@
+<div style="padding:3px" >
+    <p-panel >
+        <header>
+            <button pButton type="button" icon="fa-bars" iconPos="left" ></button>
+            {{entry.name}}
+            <button pButton type="button" (click)="openEntry()" icon="fa-external-link" iconPos="right" ></button>
+        </header>
+        <img class="center-image" [src]="entry.thumbnailUrl">
+        <dl class="live-entry-grid-preview">
+            <dt>Id</dt><dd>{{entry.id}}</dd>
+            <dt>Status</dt><dd><span [outerHTML]="entry.liveStatus | liveStatus" > </span></dd>
+            <dt>Health</dt><dd><span>Excellent</span></dd>
+        </dl>
+    </p-panel>
+</div>
