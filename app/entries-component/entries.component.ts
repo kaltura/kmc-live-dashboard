@@ -39,7 +39,7 @@ export class EntriesComponent implements OnInit {
     private gridMode:string = 'Grid';
     private entryMenuItems: MenuItem[];
     private totalEntries:number = 0;
-    private displayEntry:Entry = null;
+    private displayEntry:boolean = null;
 
     private valueChanges:any;
     entriesList:Entry[];
@@ -160,7 +160,8 @@ export class EntriesComponent implements OnInit {
         }
     }
     openEntry(entry:Entry) {
-        this.displayEntry = entry;
+        this.selectedEntry = entry;
+        this.displayEntry = true;
     }
 
     onFavoriteStateChange(entryId) {

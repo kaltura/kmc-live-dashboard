@@ -41,6 +41,7 @@
   <button pButton type="text" (click)="onLiveOnlyFilter()" icon="fa-check" iconPos="right" label="Live Only" ></button>
   -->
   <span [hidden]="(entriesList && entriesList.length !== 0) || search.value.length != 0">Loading Entries...</span>
+
   <div class="gridHolder" *ngIf="gridMode=='Grid'">
     <p-dataGrid [value]="entriesList" [paginator]="true" [rows]="30" [lazy]="true" (onLazyLoad)="loadData($event)" [totalRecords]="totalEntries">
       <template let-entry>
@@ -51,6 +52,7 @@
       </template>
     </p-dataGrid>
   </div>
+
   <div class="tableHolder"  *ngIf="gridMode=='List'">
     <p-dataTable [value]="entriesList" scrollable="true" expandableRows="true" [hidden]="!entriesList || entriesList.length===0" scrollHeight="auto" >
       <template let-entry>
@@ -139,10 +141,10 @@
     </p-dataTable>
 
   </div>
-<!--
-  <p-dialog  header="Title" [(visible)]="displayEntry" [responsive]="true" [width]="800" [height]="600" >
-    <kmc-live-entry [entry]="entry"></kmc-live-entry>
-  </p-dialog>
--->
+  <div *ngIf="displayEntry">
+    <p-dialog  [header]="selectedEntry.name" [(visible)]="displayEntry" [responsive]="true" [width]="800" [height]="600" [modal]="true" >
+      <kmc-live-entry [entry]="selectedEntry"></kmc-live-entry>
+    </p-dialog>
+  </div>
 
 </div>
