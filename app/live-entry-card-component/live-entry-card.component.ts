@@ -4,13 +4,13 @@ import {Entry} from "../entry.service";
 import {TreeTableModule,TreeNode,SharedModule,ButtonModule} from 'primeng/primeng';
 
 @Component({
-    selector: 'kmc-live-entry-grid-preview',
-    templateUrl: './app/live-entry-grid-preview-component/live-entry-grid-preview.component.html',
-    styleUrls: ['./app/live-entry-grid-preview-component/live-entry-grid-preview.component.css']
+    selector: 'kmc-live-entry-card',
+    templateUrl: './app/live-entry-card-component/live-entry-card.component.html',
+    styleUrls: ['./app/live-entry-card-component/live-entry-card.component.css']
 })
 
 
-export class LiveEntryGridPreviewComponent implements OnInit {
+export class LiveEntryCardComponent implements OnInit {
 
     @Input() entry : Entry;
     @Output() onOpen: EventEmitter<any> = new EventEmitter();

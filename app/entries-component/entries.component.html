@@ -41,11 +41,11 @@
   <button pButton type="text" (click)="onLiveOnlyFilter()" icon="fa-check" iconPos="right" label="Live Only" ></button>
   -->
   <span [hidden]="(entriesList && entriesList.length !== 0) || search.value.length != 0">Loading Entries...</span>
-  <div class="tableHolder" *ngIf="gridMode=='Grid'">
+  <div class="gridHolder" *ngIf="gridMode=='Grid'">
     <p-dataGrid [value]="entriesList" [paginator]="true" [rows]="30" [lazy]="true" (onLazyLoad)="loadData($event)" [totalRecords]="totalEntries">
       <template let-entry>
         <div class="ui-g-6 ui-md-3 ">
-          <kmc-live-entry-grid-preview (onOpen)="openEntry(entry)" [entry]="entry"></kmc-live-entry-grid-preview>
+          <kmc-live-entry-card (onOpen)="openEntry(entry)" [entry]="entry"></kmc-live-entry-card>
         </div>
 
       </template>

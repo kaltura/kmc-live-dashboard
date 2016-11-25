@@ -8,7 +8,7 @@ import { ButtonsModule } from 'ng2-bootstrap/components/buttons';
 import { AppComponent }  from './app.component';
 import { EntriesComponent }  from './entries-component/entries.component';
 import { LiveEntryComponent }  from './live-entry-component/live-entry.component';
-import { LiveEntryGridPreviewComponent }  from './live-entry-grid-preview-component/live-entry-grid-preview.component';
+import { LiveEntryCardComponent }  from './live-entry-card-component/live-entry-card.component';
 
 import { LiveStatusPipe } from './pipes/live.status.pipe';
 import { TimePipe } from './pipes/time.pipe';
@@ -50,7 +50,7 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       AppComponent,
       EntriesComponent,
       LiveEntryComponent,
-      LiveEntryGridPreviewComponent,
+      LiveEntryCardComponent,
       TimePipe,
       LiveStatusPipe,
       RecordStatusPipe

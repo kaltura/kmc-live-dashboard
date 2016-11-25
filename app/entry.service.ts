@@ -13,12 +13,20 @@ export class Stream {
     samplingRate: number;
 }
 
+export class InputEncoderSettings {
+    video_codec: string;
+    video_bitrate: number;
+    video_fps: number;
+    audio_codec: string;
+    audio_samplingRate: number;
+}
 export class Input {
     server: string;
     index: number;
     uptime: string;
     bitrate: number;
     address: string;
+    encoderSettings: InputEncoderSettings;
 }
 
 export class EntryServerNode {
@@ -66,7 +74,20 @@ export class Entry {
     public addEntryServerNode(entryServerNode) {
         this.entryServerNodes.push(entryServerNode);
 
-        entryServerNode.inputStreams = [{server:"abc", index: 1, uptime: "00:10:00", bitrate: 500, address: "128.5.4.3:3000"}];
+        entryServerNode.inputStreams = [
+            {server:"abc",
+                index: 1,
+                uptime: "00:10:00",
+                bitrate: 500,
+                address: "128.5.4.3:3000",
+                encoderSettings: {
+                    video_codec: "H264",
+                    video_bitrate: 100000,
+                    video_fps: 30,
+                    audio_codec: "AAC",
+                    audio_samplingRate: "44100"
+                }
+            }];
         entryServerNode.outputStreams=[];
         entryServerNode.isPrimary = (entryServerNode.serverType==0);
 
