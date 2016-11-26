@@ -26,8 +26,6 @@ import {LiveEntry, LiveEntryService} from "../entry.service";
 export class LiveEntriesComponent implements OnInit {
 
 
-    private entries$:Observable<any>;
-    private searchForm:FormGroup;
     private sub:any;
     private selectedEntry: LiveEntry = null;
     private gridMode:string = 'List';
@@ -37,7 +35,6 @@ export class LiveEntriesComponent implements OnInit {
     private pageSize:number = 4;
     private firstPage:number = 0;
 
-    private valueChanges:any;
     entriesList:LiveEntry[] = [];
 
     private fetching:boolean=true;
@@ -45,12 +42,6 @@ export class LiveEntriesComponent implements OnInit {
     constructor(private formBuilder:FormBuilder,
                 private kalturaAPIClient:KalturaAPIClient,
                 private entryService:LiveEntryService) {
-
-        this.searchForm = this.formBuilder.group({
-            'search': ['', Validators.required],
-            'favoritesOnly': false,
-            'liveOnly': false,
-        });
 
     }
 
@@ -70,21 +61,9 @@ export class LiveEntriesComponent implements OnInit {
                 ]
             }];
 
-        this.valueChanges=this.searchForm.controls['search'].valueChanges
-            .startWith('')
-            .debounceTime(500);
-        let valueChanges2=this.searchForm.controls['favoritesOnly'].valueChanges.subscribe( (value:boolean)=>{
-            this.entryService.favoritesOnly=value;
-            this.refresh();
-        })
-        let valueChanges3=this.searchForm.controls['liveOnly'].valueChanges.subscribe( (value:boolean)=>{
-            this.entryService.liveOnly=value;
-            this.refresh();
-        });
-
-        this.refresh();
-
     }
+
+
 
     loadData(event) {
         console.debug("loadData ",event);
@@ -94,7 +73,7 @@ export class LiveEntriesComponent implements OnInit {
     }
 
     ngOnDestroy() {
-        this.sub.unsubscribe();
+        //this.sub.unsubscribe();
     }
 
 
@@ -110,6 +89,7 @@ export class LiveEntriesComponent implements OnInit {
     }
 
     refresh() {
+
 
         this.fetching=true;
         this.entryService.list(this.firstPage/this.pageSize+1,this.pageSize).subscribe((entries) => {

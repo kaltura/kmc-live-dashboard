@@ -174,6 +174,7 @@ export class LiveEntryService {
     public totalEntries:number;
     public liveOnly: boolean = false;
     public favoritesOnly: boolean = false;
+    public searchText:string='';
     public entries: LiveEntry[];
 
     private id2entry : Map<string,LiveEntry>;
@@ -210,7 +211,7 @@ export class LiveEntryService {
             delete this.filter["isLive"];
         }
 
-        this.entries$ = LiveStreamService.list("", this.filter, this.responseProfile,pageSize,pageIndex)
+        this.entries$ = LiveStreamService.list(this.searchText, this.filter, this.responseProfile,pageSize,pageIndex)
                     .execute(this.kalturaAPIClient)
                     .map(response => {
                         this.totalEntries=response.totalCount;

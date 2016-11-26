@@ -1,10 +1,9 @@
 <div class="miniApp">
   <p>Live Entries</p>
-  <form [formGroup]="searchForm">
-    <input type="text" id="search" formControlName="search" placeholder="Search Entries" #search>
-    <p-checkbox id="favoritesOnly"  label="Favorites" formControlName="favoritesOnly" binary="true"></p-checkbox>
-    <p-checkbox id="liveOnly"  label="Only live" formControlName="liveOnly" binary="true"></p-checkbox>
-  </form>
+  <input type="text" pInputText [(ngModel)]="entryService.searchText" (onenter)="refresh()" (keyup.enter)="refresh()" placeholder="Search Entries" />
+  <p-checkbox id="favoritesOnly"  label="Favorites" [(ngModel)]="entryService.favoritesOnly"  (onChange)="refresh()" binary="true"></p-checkbox>
+  <p-checkbox id="liveOnly"  label="Only live" [(ngModel)]="entryService.liveOnly"  (onChange)="refresh()" binary="true"></p-checkbox>
+
   <div class="btn-group">
     <label class="btn btn-primary" [(ngModel)]="gridMode"  btnRadio="Grid">
       <i class="fa fa-table"></i> <span class="hidden-xs">Grid</span>
@@ -13,7 +12,7 @@
       <i class="fa fa-list"></i> <span class="hidden-xs">List</span>
     </label>
   </div>
-  <button pButton type="text" (click)="refresh(); search.value=''; dt.reset()" icon="fa-refresh" label="Refresh" title="Refresh" class="refreshBtn"></button>
+  <button pButton type="text" (click)="refresh()" icon="fa-refresh" label="Refresh" title="Refresh" class="refreshBtn"></button>
 
 
   <!--
@@ -76,7 +75,7 @@
       <template let-entry>
         <kmc-live-entry [entry]="entry"></kmc-live-entry>
       </template>
-      <p-column expander="true"  styleClass="col-icon" [style]="{'width':'30px'}"></p-column>
+      <p-column expander="true"  styleClass="col-icon" [style]="{'width':'50px'}"></p-column>
       <p-column field="tags" header="Favorite"  [style]="{'width':'80px', 'text-align': 'center'}">
         <template let-col let-entry="rowData" pTemplate type="body">
           <i [ngClass]="{'fa': true, 'fa-star-o': entry[col.field], 'fa-star': !entry[col.field]}"
