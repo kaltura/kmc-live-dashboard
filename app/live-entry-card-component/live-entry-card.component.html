@@ -30,9 +30,9 @@
         <dl>
             <dt>Incomming bitrate</dt><dd>1,204 Kbit/s</dd>
             <dt>Incomming FPS</dt><dd>29.97</dd>
-            <dt>Outgoing flavors</dt><dd>4</dd>
-            <dt>Redundant</dt><dd>YES</dd>
+            <dt>Outgoing flavors</dt><dd>{{entry.flavors}}</dd>
+            <dt>Redundant</dt><dd>{{entry.redundant ? "Yes" : "No"}}</dd>
         </dl>
-        <i class="live-entry-card-audience fa fa-users" aria-hidden="true">1240</i>
+        <i class="live-entry-card-audience fa fa-users" aria-hidden="true">{{entry.audience!==null ? entry.audience : "..." }}</i>
     </div>
 </div>

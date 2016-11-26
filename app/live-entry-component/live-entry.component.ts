@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import * as _ from "lodash";
-import {Entry} from "../entry.service";
+import {LiveEntry} from "../entry.service";
 import {TreeTableModule,TreeNode,SharedModule} from 'primeng/primeng';
 
 @Component({
@@ -12,7 +12,7 @@ import {TreeTableModule,TreeNode,SharedModule} from 'primeng/primeng';
 
 export class LiveEntryComponent implements OnInit {
 
-    @Input() entry : Entry;
+    @Input() entry : LiveEntry;
 
     constructor() {
 

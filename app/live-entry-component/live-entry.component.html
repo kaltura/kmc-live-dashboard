@@ -3,48 +3,52 @@
     <div class="ui-grid-col-6">
       <dl>
         <dt>Id</dt><dd>{{entry.id}}</dd>
-        <dt>Name</dt><dd>{{entry.name}}</dd>
       </dl>
     </div>
   </div>
   <div class="ui-grid-row">
-    <div class="ui-grid-col-4">
+    <div class="ui-grid-col-2">
       <span>Input streams</span>
+    </div>
+    <div class="ui-grid-col-10">
       <table class="table table-bordered stable">
-        <thead>
-          <tr>
-            <th style="width: 20px">Server</th>
-            <th style="width: 30px">index</th>
-            <th style="width: 30px">address</th>
-            <th style="width: 30px">uptime</th>
-            <th style="width: 30px">Kbit/s</th>
-            <th style="width: 30px">Video codec</th>
-            <th style="width: 30px">FPS</th>
-            <th style="width: 30px">Kbit/s</th>
-            <th style="width: 30px">Audio codec</th>
-            <th style="width: 30px">Audio sampling rate</th>
-          </tr>
-        </thead>
-        <tbody *ngFor="let entryServerNode of entry.entryServerNodes" >
-          <tr *ngFor="let stream of entryServerNode.inputStreams">
-            <td>{{entryServerNode.isPrimary ? "Primary" : "Backup"}}</td>
-            <td>{{stream.index}}</td>
-            <td>{{stream.address}}</td>
-            <td>{{stream.uptime}}</td>
-            <td>{{stream.bitrate | number:'.0-0'}}</td>
-            <td>{{stream.encoderSettings.video_codec}}</td>
-            <td>{{stream.encoderSettings.video_bitrate}}</td>
-            <td>{{stream.encoderSettings.video_fps}}</td>
-            <td>{{stream.encoderSettings.audio_codec}}</td>
-            <td>{{stream.encoderSettings.audio_samplingRate}}</td>
-          </tr>
-        </tbody>
+          <thead>
+            <tr>
+              <th style="width: 30px">Server</th>
+              <th style="width: 10px">Input</th>
+              <th style="width: 40px">address</th>
+              <th style="width: 30px">uptime</th>
+              <th style="width: 30px">Kbit/s</th>
+              <th style="width: 30px">Video codec</th>
+              <th style="width: 30px">FPS</th>
+              <th style="width: 30px">Kbit/s</th>
+              <th style="width: 30px">Audio codec</th>
+              <th style="width: 30px">Audio sampling rate</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let entryServerNode of entry.entryServerNodes" >
+            <tr *ngFor="let stream of entryServerNode.inputStreams">
+              <td>{{entryServerNode.isPrimary ? "Primary" : "Backup"}}</td>
+              <td>{{stream.index}}</td>
+              <td>{{stream.address}}</td>
+              <td>{{stream.uptime}}</td>
+              <td>{{stream.bitrate | number:'.0-0'}}</td>
+              <td>{{stream.encoderSettings.video_codec}}</td>
+              <td>{{stream.encoderSettings.video_bitrate}}</td>
+              <td>{{stream.encoderSettings.video_fps}}</td>
+              <td>{{stream.encoderSettings.audio_codec}}</td>
+              <td>{{stream.encoderSettings.audio_samplingRate}}</td>
+            </tr>
+          </tbody>
       </table>
     </div>
-    <div class="ui-grid-col-8">
+  </div>
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-2">
       <span>Output streams</span>
+    </div>
 
-
+    <div class="ui-grid-col-10">
       <table class="table table-bordered stable">
         <thead>
           <tr>
@@ -75,26 +79,5 @@
         </tbody>
       </table>
     </div>
-    <!--
-      <p-dataTable [value]="entry.outputStreams" >
-        <p-column  header="Encoder"  [style]="{'width':'80px'}">
-          <template let-stream="rowData" pTemplate type="body">
-            {{stream.isPrimary ? "Primary" : "Backup"}}
-          </template>
-        </p-column>
-        <p-column field="flavorId" header="Flavor Id"  [style]="{'width':'50px'}"></p-column>
-        <p-column field="Resolution"  header="Resolution"  [style]="{'width':'80px', 'text-align':'center'}">
-          <template let-stream="rowData" pTemplate type="body">
-              {{stream.width}}x{{stream.height}}
-          </template>
-        </p-column>
-        <p-column  field="Bitrate"   header="Bitrate"  [style]="{'width':'70px', 'text-align':'right'}">
-          <template let-stream="rowData" pTemplate type="body"  >
-            {{stream.bitrate/1024 | number:'.0-0'}}
-          </template>
-        </p-column>
-
-      </p-dataTable>
-      -->
   </div>
 </div>

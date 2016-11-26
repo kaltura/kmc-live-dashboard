@@ -1,4 +1,6 @@
-
+.stable {
+  font-size: 12px;
+}
 
 dt,dd {
     line-height: 1;

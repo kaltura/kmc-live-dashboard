@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import * as _ from "lodash";
-import {Entry} from "../entry.service";
+import {LiveEntry} from "../entry.service";
 import {TreeTableModule,TreeNode,SharedModule,ButtonModule} from 'primeng/primeng';
 
 @Component({
@@ -12,7 +12,7 @@ import {TreeTableModule,TreeNode,SharedModule,ButtonModule} from 'primeng/primen
 
 export class LiveEntryCardComponent implements OnInit {
 
-    @Input() entry : Entry;
+    @Input() entry : LiveEntry;
     @Output() onOpen: EventEmitter<any> = new EventEmitter();
 
 
