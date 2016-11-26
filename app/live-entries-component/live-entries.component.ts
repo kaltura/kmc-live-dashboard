@@ -13,17 +13,17 @@ import {LiveEntry, LiveEntryService} from "../entry.service";
 
 
 @Component({
-    selector: 'kmc-entries',
-    templateUrl: './app/entries-component/entries.component.html',
+    selector: 'kmc-live-entries',
+    templateUrl: './app/live-entries-component/live-entries.component.html',
     providers: [
         FormBuilder, LiveEntryService
     ],
-    styleUrls: ['./app/entries-component/entries.component.css'],
+    styleUrls: ['./app/live-entries-component/live-entries.component.css'],
 
 })
 
 
-export class EntriesComponent implements OnInit {
+export class LiveEntriesComponent implements OnInit {
 
 
     private entries$:Observable<any>;
@@ -34,7 +34,7 @@ export class EntriesComponent implements OnInit {
     private entryMenuItems: MenuItem[];
     private totalEntries:number = 0;
     private displayEntry:boolean = null;
-    private pageSize:number = 10;
+    private pageSize:number = 4;
     private firstPage:number = 0;
 
     private valueChanges:any;

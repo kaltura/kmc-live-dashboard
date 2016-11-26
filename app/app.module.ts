@@ -6,13 +6,14 @@ import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { ButtonsModule } from 'ng2-bootstrap/components/buttons';
 
 import { AppComponent }  from './app.component';
-import { EntriesComponent }  from './entries-component/entries.component';
+import { LiveEntriesComponent }  from './live-entries-component/live-entries.component';
 import { LiveEntryComponent }  from './live-entry-component/live-entry.component';
 import { LiveEntryCardComponent }  from './live-entry-card-component/live-entry-card.component';
 
 import { LiveStatusPipe } from './pipes/live.status.pipe';
 import { TimePipe } from './pipes/time.pipe';
 import { RecordStatusPipe } from './pipes/record.status.pipe';
+import { ValueWithSpinnerPipe } from './pipes/value-with-spinner.pipe';
 
 import { PanelModule, DialogModule, ToggleButtonModule, SelectButtonModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, MenuModule, ButtonModule, DataGridModule} from 'primeng/primeng';
 
@@ -48,11 +49,12 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
   declarations:
     [
       AppComponent,
-      EntriesComponent,
+      LiveEntriesComponent,
       LiveEntryComponent,
       LiveEntryCardComponent,
       TimePipe,
       LiveStatusPipe,
+      ValueWithSpinnerPipe,
       RecordStatusPipe
     ],
   providers:
@@ -60,6 +62,6 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       KalturaAPIConfig,
       KalturaAPIClient
     ],
-  bootstrap: [ EntriesComponent ]
+  bootstrap: [ LiveEntriesComponent ]
 })
 export class AppModule { }

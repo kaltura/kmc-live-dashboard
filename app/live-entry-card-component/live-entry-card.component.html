@@ -33,6 +33,7 @@
             <dt>Outgoing flavors</dt><dd>{{entry.flavors}}</dd>
             <dt>Redundant</dt><dd>{{entry.redundant ? "Yes" : "No"}}</dd>
         </dl>
-        <i class="live-entry-card-audience fa fa-users" aria-hidden="true">{{entry.audience!==null ? entry.audience : "..." }}</i>
+        <i class="live-entry-card-audience fa fa-users" aria-hidden="true"></i>
+        <span  [innerHTML]="entry.audience | valueWithSpinner"></span>
     </div>
 </div>

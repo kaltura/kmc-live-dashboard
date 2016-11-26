@@ -15,7 +15,6 @@
     <!-- Polyfill(s) for older browsers -->
     <script src="node_modules/core-js/client/shim.min.js"></script>
 
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <script src="node_modules/zone.js/dist/zone.js"></script>
     <script src="node_modules/reflect-metadata/Reflect.js"></script>
     <script src="node_modules/systemjs/dist/system.src.js"></script>
@@ -29,7 +28,7 @@
   </head>
 
   <body>
-
+<!--
     <div class="kmcSubNav" ng-class="{hidden : nonav}" ng-cloak >
       <a href="javascript:navigateToFlashAnalytics('contentDashboard')" class="btn">Content Reports</a>
       <a href="javascript:navigateToFlashAnalytics('usersandCommunity')" class="btn">Users & Community Reports</a>
@@ -38,8 +37,8 @@
       <a href="javascript:navigateToFlashAnalytics('liveContent')" class="btn">Live Reports</a>
       <a href="index.html" class="btn active">Live Dashboard</a>
     </div>
-
-    <kmc-entries>Loading...</kmc-entries>
+-->
+    <kmc-live-entries></kmc-live-entries>
   </body>
 
   <script>

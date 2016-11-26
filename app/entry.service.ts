@@ -71,7 +71,7 @@ export class LiveEntry {
     liveStatus: number;
     dvrWindow: number;
     recordStatus: number;
-    dvrStatus: number;
+    dvrStatus: boolean;
     redundant:boolean =false;
     startTime:Date = null;
     flavors: number = null;
@@ -147,7 +147,7 @@ export class LiveEntry {
             if (!_.isEmpty(lastValidData)) {
                 let lastUpdatedArray = _.split(lastValidData, ',');
                 if ( lastUpdatedArray && lastUpdatedArray.length>=1 ) {
-                    this.audience =  lastUpdatedArray[1];
+                    this.audience =  parseFloat(lastUpdatedArray[1]);
                     return;
                 }
             }
@@ -231,7 +231,7 @@ export class LiveEntryService {
         //fetching analytics data
         this.getAnalyticsData();
         //fetching entry server node data
-        this.getEntryServerNodeData();
+        return this.getEntryServerNodeData();
 
 
     }
@@ -297,22 +297,29 @@ export class LiveEntryService {
         let entries :LiveEntry[]=[];
 
         this.id2entry.forEach( (entry, entryId) => {
-            let filter = {
-                'entryIds': entryId,
-                'fromTime': -129600,
-                'toTime': -2
-            };
-            entries.push(entry);
-            multiRequest.addRequest(LiveAnalyticsService.getEvents('ENTRY_TIME_LINE', filter));
+
+            if (entry.liveStatus>0) {
+                let filter = {
+                    'entryIds': entryId,
+                    'fromTime': -129600,
+                    'toTime': -2
+                };
+                entries.push(entry);
+                multiRequest.addRequest(LiveAnalyticsService.getEvents('ENTRY_TIME_LINE', filter));
+            } else {
+                entry.audience=0;
+            }
         });
 
-        multiRequest.execute(this.kalturaAPIClient).toPromise()
-            .then(results => {
-                this.handleAnalyticsData(entries,results)
-            })
-            .catch(error => {
-                console.log(error)
-            });
+        if (entries.length>0) {
+            multiRequest.execute(this.kalturaAPIClient).toPromise()
+                .then(results => {
+                    this.handleAnalyticsData(entries, results)
+                })
+                .catch(error => {
+                    console.log(error)
+                });
+        }
     }
 
     private handleAnalyticsData(liveEntries :LiveEntry[],analyticsDatas) {

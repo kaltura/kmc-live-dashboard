@@ -42,6 +42,7 @@
   -->
   <span [hidden]="!fetching">Loading Entries...</span>
 
+
   <div class="gridHolder" *ngIf="gridMode=='Grid'">
     <p-dataGrid [value]="entriesList"
                 [paginator]="true"
@@ -67,8 +68,9 @@
                  [totalRecords]="totalEntries"
                  [paginator]="true"
                  [pageLinks]="10"
+                 [lazy]="true"
                  (onLazyLoad)="loadData($event)"
-                 [rowsPerPageOptions]="[5,10,20]"
+                 [rowsPerPageOptions]="[4,10,20]"
                  expandableRows="true"
                  scrollHeight="auto" >
       <template let-entry>
@@ -106,13 +108,13 @@
       </p-column>
       <p-column field="audience" header="Viewers"  [style]="{'width':'80px', 'text-align': 'center'}">
         <template let-col let-entry="rowData" pTemplate type="body">
-            {{entry[col.field]!==null ? entry[col.field] : "..." }}
+            <span  [innerHTML]="entry[col.field] | valueWithSpinner"></span>
         </template>
       </p-column>
       <p-column field="dvrStatus" header="DVR" [style]="{'width':'140px', 'text-align': 'center'}">
         <template let-col let-entry="rowData" pTemplate type="body">
-          <span class="dvrStatus" [hidden]="entry[col.field] === 0">{{entry['dvrWindow'] / 60}}h</span>
-          <span class="dvrStatus" [hidden]="entry[col.field] !== 0">No</span>
+          <span class="dvrStatus" [hidden]="!entry[col.field]">{{entry['dvrWindow'] / 60}}h</span>
+          <span class="dvrStatus" [hidden]="entry[col.field]">No</span>
         </template>
       </p-column>
       <p-column field="recordStatus" header="Recording" [style]="{'width':'100px'}">
