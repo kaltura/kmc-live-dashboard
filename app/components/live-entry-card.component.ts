@@ -1,12 +1,12 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import * as _ from "lodash";
 import {LiveEntry} from "../entry.service";
-import {TreeTableModule,TreeNode,SharedModule,ButtonModule} from 'primeng/primeng';
+import {TreeTableModule,TreeNode,SharedModule,ButtonModule} from '../../node_modules/primeng/primeng.d';
 
 @Component({
     selector: 'kmc-live-entry-card',
-    templateUrl: './app/live-entry-card-component/live-entry-card.component.html',
-    styleUrls: ['./app/live-entry-card-component/live-entry-card.component.css']
+    templateUrl: './app/components/live-entry-card.component.html',
+    styleUrls: ['./app/components/live-entry-card.component.css']
 })
 
 

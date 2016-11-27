@@ -1,28 +1,9 @@
-<!--
-<div class="live-entry-grid-preview"  >
-    <a class="live-entry-grid-preview-title">
-        <img class="center-image" [src]="entry.thumbnailUrl">
-    </a>
-    <button pButton type="button" icon="fa-bars" iconPos="left" class="live-entry-grid-preview-label"></button>
-    <i class="fa fa-heart live-entry-grid-preview-health" aria-hidden="true"></i>
-    <div class="live-entry-grid-preview-content" >
-        <a class="live-entry-grid-preview-title" (click)="openEntry()">{{entry.name}}</a>
-        <hr>
-        <dl>
-            <dt>Status</dt><dd><span [outerHTML]="entry.liveStatus | liveStatus" > </span></dd>
-            <dt>Health</dt><dd><span>Excellent</span></dd>
-            <dt>Health</dt><dd><span>111</span></dd>
-        </dl>
-    </div>
-</div>
--->
-
 <div class="live-entry-card">
     <div class="live-entry-card-preview">
         <img  [src]="entry.thumbnailUrl" style="width:100%">
         <i class="live-entry-card-stream-health fa fa-heartbeat" aria-hidden="true"></i>
         <div class="live-entry-card-status">
-            <span  [outerHTML]="entry.liveStatus | liveStatus" ></span>
+            <live-entry-status [entry]="entry"></live-entry-status>
         </div>
     </div>
     <div class="live-entry-card-container">

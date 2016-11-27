@@ -1,19 +1,21 @@
 <div class="miniApp">
-  <p>Live Entries</p>
-  <input type="text" pInputText [(ngModel)]="entryService.searchText" (onenter)="refresh()" (keyup.enter)="refresh()" placeholder="Search Entries" />
-  <p-checkbox id="favoritesOnly"  label="Favorites" [(ngModel)]="entryService.favoritesOnly"  (onChange)="refresh()" binary="true"></p-checkbox>
-  <p-checkbox id="liveOnly"  label="Only live" [(ngModel)]="entryService.liveOnly"  (onChange)="refresh()" binary="true"></p-checkbox>
+  <p-growl [value]="msgs"></p-growl>
 
-  <div class="btn-group">
-    <label class="btn btn-primary" [(ngModel)]="gridMode"  btnRadio="Grid">
-      <i class="fa fa-table"></i> <span class="hidden-xs">Grid</span>
-    </label>
-    <label class="btn btn-primary" [(ngModel)]="gridMode" btnRadio="List">
-      <i class="fa fa-list"></i> <span class="hidden-xs">List</span>
-    </label>
+  <div>
+    <input style="width: 300px" type="text" pInputText [(ngModel)]="entryService.searchText" (onenter)="refresh()" (keyup.enter)="refresh()" placeholder="Search Entries" />
+    <p-toggleButton onLabel="Favorites Only" offLabel="Favorites Only"
+                    onIcon="fa-check-square" offIcon="fa-square"  (onChange)="refresh()" [(ngModel)]="entryService.favoritesOnly"></p-toggleButton>
+    <p-toggleButton onLabel="Live only" offLabel="Live only"
+                    onIcon="fa-check-square" offIcon="fa-square"  (onChange)="refresh()" [(ngModel)]="entryService.liveOnly"></p-toggleButton>
+
+
+    <div class="tableActions">
+      <p-toggleButton onIcon="fa fa-table" onLabel="Grid" offLabel="Grid" offIcon="fa fa-table"  (onChange)="refresh()" [(ngModel)]="gridMode"></p-toggleButton>
+
+      <p-toggleButton onIcon="fa fa-list" onLabel="List" offLabel="List" offIcon="fa fa-list"  (onChange)="refresh()" [(ngModel)]="listMode"></p-toggleButton>
+      <button pButton type="text" (click)="refresh()" icon="fa-refresh" ></button>
+    </div>
   </div>
-  <button pButton type="text" (click)="refresh()" icon="fa-refresh" label="Refresh" title="Refresh" class="refreshBtn"></button>
-
 
   <!--
   <div class="btn-group pull-right" role="group">
@@ -42,7 +44,7 @@
   <span [hidden]="!fetching">Loading Entries...</span>
 
 
-  <div class="gridHolder" *ngIf="gridMode=='Grid'">
+  <div class="gridHolder" *ngIf="gridMode">
     <p-dataGrid [value]="entriesList"
                 [paginator]="true"
                 [rows]="pageSize"
@@ -60,7 +62,7 @@
     </p-dataGrid>
   </div>
 
-  <div class="tableHolder"  *ngIf="gridMode=='List'">
+  <div class="tableHolder"  *ngIf="!gridMode">
     <p-dataTable [value]="entriesList"
                  scrollable="true"
                  [rows]="pageSize"
@@ -97,7 +99,7 @@
       </p-column>
       <p-column field="liveStatus" header="Status" [style]="{'width':'90px', 'text-align': 'center'}">
         <template let-col let-entry="rowData" pTemplate type="body">
-          <span [outerHTML]="entry[col.field] | liveStatus" ></span>
+          <live-entry-status [entry]="entry"></live-entry-status>
         </template>
       </p-column>
       <p-column field="startTime" header="Start" [style]="{'width':'80px', 'text-align': 'center'}">

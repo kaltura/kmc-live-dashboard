@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { KalturaAPIClient } from './kaltura-api/kaltura-api-client';
 import { EntryServerNodeService } from './kaltura-api/entry-server-node/entry-server-node.service';
 import { LiveStreamService } from './kaltura-api/live-stream/live-stream.service';
 import { LiveAnalyticsService } from './kaltura-api/live-analytics/live-analytics.service';
 import { KalturaMultiRequest } from './kaltura-api/kaltura-multi-request';
+import { Observable } from 'rxjs/Observable';
+import {Message} from 'primeng/primeng';
+
 import * as _ from "lodash";
 
 
@@ -76,6 +78,7 @@ export class LiveEntry {
     startTime:Date = null;
     flavors: number = null;
     audience: number = null;
+    alerts: Message[] = [];
 
     public clearEntryServerNodes() {
         this.entryServerNodes=[];
@@ -110,6 +113,8 @@ export class LiveEntry {
             outputstream.isTranscoded = true;
             entryServerNode.outputStreams.push(outputstream);
         });
+        this.alerts.push({severity:'info', summary:'Key frame interval is not good', detail:'CHANGE IT '});
+        this.alerts.push({severity:'warn', summary:'Not recieving video', detail:'problem! '});
 
         this.flavors = entryServerNode.streams.length;
         this.redundant = (this.entryServerNodes.length > 1);
@@ -176,8 +181,9 @@ export class LiveEntryService {
     public favoritesOnly: boolean = false;
     public searchText:string='';
     public entries: LiveEntry[];
-
-    private id2entry : Map<string,LiveEntry>;
+    public analyticsRefreshInterval:number = 60;
+    public entryServerNodeRefreshInterval:number = 60;
+    private id2entry : Map<string,LiveEntry> = new Map<string,LiveEntry>();
 
     constructor(private kalturaAPIClient:KalturaAPIClient) {
         this.filter = {
@@ -196,6 +202,9 @@ export class LiveEntryService {
             "relatedProfiles:0:mappings:0:parentProperty": "id",
             "relatedProfiles:0:mappings:0:filterProperty": "entryIdEqual"
         };
+
+
+
     }
 
     list(pageIndex,pageSize):Observable<any> {
@@ -210,32 +219,29 @@ export class LiveEntryService {
         } else {
             delete this.filter["isLive"];
         }
+        this.id2entry.clear();
 
         this.entries$ = LiveStreamService.list(this.searchText, this.filter, this.responseProfile,pageSize,pageIndex)
                     .execute(this.kalturaAPIClient)
                     .map(response => {
                         this.totalEntries=response.totalCount;
-                        this.id2entry = new Map<string,LiveEntry>();
+
                         this.entries = response.objects.map( (apiEntry) => {
                             let obj=new LiveEntry(apiEntry);
                             this.id2entry.set(obj.id,obj);
                             return obj;
                         });
-                        return this.updateEntriesAdditionalData();
+                        this.getAnalyticsData();
+
+                        return this.getEntryServerNodeData();
                     });
 
         return this.entries$;
     }
 
 
-    private updateEntriesAdditionalData() {
-        //fetching analytics data
-        this.getAnalyticsData();
-        //fetching entry server node data
-        return this.getEntryServerNodeData();
 
 
-    }
 
 
     private getEntryServerNodeData() {
@@ -247,14 +253,21 @@ export class LiveEntryService {
         let filter = {
             'entryIdIn': _.join(liveEntriesIds)
         };
-        this.id2entry.forEach( (entry, id) => {
-            entry.clearEntryServerNodes();
-        });
 
 
         return EntryServerNodeService.list(filter).execute(this.kalturaAPIClient).toPromise()
             .then(results => {
-                this.handleEntryServerNodeResult(results)
+
+
+                this.handleEntryServerNodeResult(results);
+
+                if (this.entryServerNodeRefreshInterval>0) {
+                    let timer = Observable.timer(this.entryServerNodeRefreshInterval * 1000);
+                    timer.subscribe(t=> {
+                        this.getEntryServerNodeData();
+                    });
+                }
+
             })
             .catch(error => {
                 console.log(error)
@@ -262,6 +275,10 @@ export class LiveEntryService {
     }
 
     private handleEntryServerNodeResult(entryServerNodeResult) {
+
+        this.id2entry.forEach( (entry, id) => {
+            entry.clearEntryServerNodes();
+        });
 
         _.each(entryServerNodeResult.objects, (entryServerNode) => {
             let liveEntry = this.id2entry.get(entryServerNode.entryId);
@@ -320,6 +337,14 @@ export class LiveEntryService {
                 .catch(error => {
                     console.log(error)
                 });
+        }
+
+
+        if (this.analyticsRefreshInterval>0) {
+            let timer = Observable.timer(this.analyticsRefreshInterval * 1000);
+            timer.subscribe(t=> {
+                this.getAnalyticsData();
+            });
         }
     }
 

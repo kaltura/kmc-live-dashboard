@@ -6,16 +6,16 @@ import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { ButtonsModule } from 'ng2-bootstrap/components/buttons';
 
 import { AppComponent }  from './app.component';
-import { LiveEntriesComponent }  from './live-entries-component/live-entries.component';
-import { LiveEntryComponent }  from './live-entry-component/live-entry.component';
-import { LiveEntryCardComponent }  from './live-entry-card-component/live-entry-card.component';
+import { LiveEntriesComponent }  from './components/live-entries.component';
+import { LiveEntryComponent }  from './components/live-entry.component';
+import { LiveEntryCardComponent }  from './components/live-entry-card.component';
+import { LiveEntryStatusComponent }  from './components/live-entry-status.component';
 
-import { LiveStatusPipe } from './pipes/live.status.pipe';
 import { TimePipe } from './pipes/time.pipe';
 import { RecordStatusPipe } from './pipes/record.status.pipe';
 import { ValueWithSpinnerPipe } from './pipes/value-with-spinner.pipe';
 
-import { PanelModule, DialogModule, ToggleButtonModule, SelectButtonModule, CheckboxModule, DataTableModule, SharedModule, InputTextModule, MenuModule, ButtonModule, DataGridModule} from 'primeng/primeng';
+import { PanelModule, DialogModule, MessagesModule,SplitButtonModule,ToggleButtonModule, SelectButtonModule, CheckboxModule, GrowlModule,DataTableModule, SharedModule, InputTextModule, MenuModule, ButtonModule, DataGridModule,InputSwitchModule} from 'primeng/primeng';
 
 
 import { HttpModule }    from '@angular/http';
@@ -37,8 +37,12 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       DataTableModule,
       SharedModule,
       InputTextModule,
+      GrowlModule,
       SelectButtonModule,
       ToggleButtonModule,
+      InputSwitchModule,
+      SplitButtonModule,
+      MessagesModule,
       ButtonModule,
       MenuModule,
       DialogModule,
@@ -52,8 +56,8 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       LiveEntriesComponent,
       LiveEntryComponent,
       LiveEntryCardComponent,
+      LiveEntryStatusComponent,
       TimePipe,
-      LiveStatusPipe,
       ValueWithSpinnerPipe,
       RecordStatusPipe
     ],
