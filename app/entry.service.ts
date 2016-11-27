@@ -6,6 +6,7 @@ import { LiveAnalyticsService } from './kaltura-api/live-analytics/live-analytic
 import { KalturaMultiRequest } from './kaltura-api/kaltura-multi-request';
 import { Observable } from 'rxjs/Observable';
 import {Message} from 'primeng/primeng';
+import {LocalStorage} from 'ng2-webstorage';
 
 import * as _ from "lodash";
 
@@ -177,8 +178,13 @@ export class LiveEntryService {
     private responseProfile:any;
     public pageSize:number;
     public totalEntries:number;
-    public liveOnly: boolean = false;
-    public favoritesOnly: boolean = false;
+
+    @LocalStorage('liveOnly')
+    public liveOnly: boolean ;
+
+    @LocalStorage('favoritesOnly')
+    public favoritesOnly: boolean ;
+
     public searchText:string='';
     public entries: LiveEntry[];
     public analyticsRefreshInterval:number = 60;
@@ -186,6 +192,13 @@ export class LiveEntryService {
     private id2entry : Map<string,LiveEntry> = new Map<string,LiveEntry>();
 
     constructor(private kalturaAPIClient:KalturaAPIClient) {
+
+        if (this.liveOnly===null) {
+            this.liveOnly=false;
+        }
+        if (this.favoritesOnly===null) {
+            this.favoritesOnly=false;
+        }
         this.filter = {
             "objectType": "KalturaLiveStreamEntryFilter",
             "orderBy": "-createdAt"

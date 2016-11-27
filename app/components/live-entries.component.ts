@@ -5,6 +5,7 @@ import * as _ from "lodash";
 
 import {MenuModule,MenuItem,ToggleButtonModule,DialogModule,InputSwitchModule,GrowlModule,Message} from '../../node_modules/primeng/primeng.d';
 import {LiveEntry, LiveEntryService} from "./../entry.service";
+import {LocalStorage} from 'ng2-webstorage';
 
 
 @Component({
@@ -22,12 +23,19 @@ export class LiveEntriesComponent implements OnInit {
     public msgs: Message[] = [];
 
 
+    @LocalStorage('gridMode')
+    private gridMode:boolean;
+
+    @LocalStorage('pageSize')
+    private pageSize:number;
+
     private selectedEntry: LiveEntry = null;
-    private gridMode:boolean = false;
+
     private entryMenuItems: MenuItem[];
     private totalEntries:number = 0;
     private displayEntry:boolean = null;
-    private pageSize:number = 8;
+
+
     private firstPage:number = 0;
     private refreshInterval:number = 0;
 
@@ -36,7 +44,12 @@ export class LiveEntriesComponent implements OnInit {
     private fetching:boolean=true;
 
     constructor(private entryService:LiveEntryService) {
-
+        if (this.pageSize===null) {
+            this.pageSize=8;
+        }
+        if (this.gridMode===null) {
+            this.gridMode=true;
+        }
     }
 
     ngOnInit() {

@@ -11,10 +11,12 @@ import { LiveEntryStatusComponent }  from './components/live-entry-status.compon
 import { LiveEntryVideoPreviewComponent }  from './components/live-entry-video-preview.component';
 
 import { TimePipe } from './pipes/time.pipe';
+import { SafePipe } from './pipes/safe.pipe';
 import { RecordStatusPipe } from './pipes/record.status.pipe';
 import { ValueWithSpinnerPipe } from './pipes/value-with-spinner.pipe';
 
 import { PanelModule, DialogModule, DropdownModule, MessagesModule,SplitButtonModule,ToggleButtonModule, SelectButtonModule, CheckboxModule, GrowlModule,DataTableModule, SharedModule, InputTextModule, MenuModule, ButtonModule, DataGridModule,InputSwitchModule} from 'primeng/primeng';
+import {Ng2Webstorage} from 'ng2-webstorage';
 
 
 import { HttpModule }    from '@angular/http';
@@ -46,7 +48,8 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       MenuModule,
       DialogModule,
       DropdownModule,
-      CheckboxModule
+      CheckboxModule,
+      Ng2Webstorage
     ],
   declarations:
     [
@@ -57,6 +60,7 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       LiveEntryStatusComponent,
       LiveEntryVideoPreviewComponent,
       TimePipe,
+      SafePipe,
       ValueWithSpinnerPipe,
       RecordStatusPipe
     ],

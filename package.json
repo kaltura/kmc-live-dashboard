@@ -34,6 +34,7 @@
     "core-js": "^2.4.1",
     "font-awesome": "^4.6.3",
     "moment": "^2.14.1",
+    "ng2-webstorage": "^1.4.1",
     "primeng": "^1.0.0",
     "ramda": "^0.22.1",
     "reflect-metadata": "^0.1.3",

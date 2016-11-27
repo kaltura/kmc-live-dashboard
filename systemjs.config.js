@@ -27,6 +27,7 @@
       'moment':                     'node_modules/moment/moment.js',
       'lodash':                     'node_modules/lodash/lodash.js',
       'ramda':                      'node_modules/ramda//dist/ramda.js',
+      'ng2-webstorage':             'node_modules/ng2-webstorage',
       'rxjs':                       'npm:rxjs',
       'primeng':                    'npm:primeng',
       'ng2-bootstrap':              'npm:ng2-bootstrap',
@@ -56,7 +57,12 @@
       },
       'lodash': {
         defaultExtension: 'js'
+      },
+      'ng2-webstorage': {
+        main: 'bundles/core.umd.js',
+        defaultExtension: 'js'
       }
+
 
     }
   });

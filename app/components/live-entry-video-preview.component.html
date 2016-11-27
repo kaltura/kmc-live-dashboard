@@ -1,9 +1,9 @@
-<div style="width:640px;height:360px;">
-        <p-dropdown [options]="players" [(ngModel)]="selectedPlayer"></p-dropdown>
-
-        <iframe [src]="playerIFrameUrl"
-            width="640"
-            height="360"
+<div style="width:100%;height:360px;">
+    <div>
+    <p-dropdown  [style]="{'width':'calc(100% - 40px)' }" [options]="players" [(ngModel)]="selectedPlayer"></p-dropdown>
+    <button style="float:right; right:0; width:36px" pButton  (click)="refreshPlayers()" icon="fa-refresh" ></button>
+    </div>
+    <iframe [src]="playerIFrameUrl | safe"
             allowfullscreen
             webkitallowfullscreen
             mozAllowFullScreen
