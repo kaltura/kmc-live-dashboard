@@ -4,7 +4,7 @@ import {LiveEntry} from "../entry.service";
 
 @Component({
     selector: 'live-entry-status',
-    template: '<span class="ldb-entry-status ldb-entry-status-live" [class]="className">{{status}}</span>',
+    template: '<span class="ldb-entry-status" [class]="className">{{status}}</span>',
     styleUrls: ['./app/components/live-entry-status.component.css']
 })
 

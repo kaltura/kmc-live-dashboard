@@ -51,34 +51,37 @@
     <div class="ui-grid-col-10">
       <table class="table table-bordered stable">
         <thead>
-          <tr>
-            <th style="width: 20px">Server</th>
-            <th style="width: 30px">Flavor</th>
-            <th style="width: 30px">Resolution</th>
-            <th style="width: 30px">Kbit/s</th>
-            <th style="width: 30px">FPS</th>
-            <th style="width: 30px">GOP len.</th>
-          </tr>
+        <tr>
+          <th style="width: 20px">Server</th>
+          <th style="width: 30px">Flavor</th>
+          <th style="width: 30px">Resolution</th>
+          <th style="width: 30px">Kbit/s</th>
+          <th style="width: 30px">FPS</th>
+          <th style="width: 30px">GOP len.</th>
+        </tr>
         </thead>
         <tbody *ngFor="let entryServerNode of entry.entryServerNodes" >
-          <tr>
-            <td colspan="6">
-              {{entryServerNode.isPrimary ? "Primary" : "Backup"}}
-              {{entryServerNode.startTime | date:"M/d/yy HH:mm"}}
-              <!--, running time  {{ getControllerUpTime(controller_diag)  | duration}})-->
-            </td>
-          </tr>
-          <tr *ngFor="let stream of entryServerNode.outputStreams">
-            <td></td>
-            <td>{{stream.flavorId}}</td>
-            <td class="text-right"> {{stream.width}}x{{stream.height}}</td>
-            <td class="text-right">{{stream.bitrate/1000 | number:'.0-0'}}</td>
-            <td>N/A</td>
-            <td>N/A</td>
-          </tr>
+        <tr>
+          <td colspan="6">
+            {{entryServerNode.isPrimary ? "Primary" : "Backup"}}
+            {{entryServerNode.startTime | date:"M/d/yy HH:mm"}}
+            <!--, running time  {{ getControllerUpTime(controller_diag)  | duration}})-->
+          </td>
+        </tr>
+        <tr *ngFor="let stream of entryServerNode.outputStreams">
+          <td></td>
+          <td>{{stream.flavorId}}</td>
+          <td class="text-right"> {{stream.width}}x{{stream.height}}</td>
+          <td class="text-right">{{stream.bitrate/1000 | number:'.0-0'}}</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
         </tbody>
       </table>
     </div>
+  </div>
+  <div class="ui-grid-row">
+    <kmc-live-entry-video-preview [entry]="entry"></kmc-live-entry-video-preview>
   </div>
   <div class="ui-grid-row">
     <p-messages [value]="entry.alerts" [closable]="false"></p-messages>

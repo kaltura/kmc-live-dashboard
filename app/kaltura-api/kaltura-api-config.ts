@@ -14,7 +14,7 @@ export class KalturaAPIConfig {
         if (this.kmcConfig) {
             return this.kmcConfig.vars.ks;
         }
-        return "OWNlM2Y4Njc3NmM3ZTRkZmM1MDQ4ZTc1ZDZmNTgwMWEwNTlhNzE4NnwtNTstNTsxNDgwMjUyMTUwOzI7MTQ4MDE2NTc1MC4zNzQ0Ozs7Ow=="
+        return "djJ8MTgwMjM4MXzsPCZ1oaxPuBvErQZ6viTHqbchAhjjvJuvLYPStbsDWy40DkVQFG5nBILCpfJ3bI52xwR0-WbsrP0ryHr4WucXcp1JvbEcF_rQ5hy0uebgoyFIreIFA8D0Pg1PbyLMHtw="
     }
 
     get apiUrl():string {

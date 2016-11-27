@@ -2,20 +2,19 @@ import  'moment';
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
-import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
-import { ButtonsModule } from 'ng2-bootstrap/components/buttons';
 
 import { AppComponent }  from './app.component';
 import { LiveEntriesComponent }  from './components/live-entries.component';
 import { LiveEntryComponent }  from './components/live-entry.component';
 import { LiveEntryCardComponent }  from './components/live-entry-card.component';
 import { LiveEntryStatusComponent }  from './components/live-entry-status.component';
+import { LiveEntryVideoPreviewComponent }  from './components/live-entry-video-preview.component';
 
 import { TimePipe } from './pipes/time.pipe';
 import { RecordStatusPipe } from './pipes/record.status.pipe';
 import { ValueWithSpinnerPipe } from './pipes/value-with-spinner.pipe';
 
-import { PanelModule, DialogModule, MessagesModule,SplitButtonModule,ToggleButtonModule, SelectButtonModule, CheckboxModule, GrowlModule,DataTableModule, SharedModule, InputTextModule, MenuModule, ButtonModule, DataGridModule,InputSwitchModule} from 'primeng/primeng';
+import { PanelModule, DialogModule, DropdownModule, MessagesModule,SplitButtonModule,ToggleButtonModule, SelectButtonModule, CheckboxModule, GrowlModule,DataTableModule, SharedModule, InputTextModule, MenuModule, ButtonModule, DataGridModule,InputSwitchModule} from 'primeng/primeng';
 
 
 import { HttpModule }    from '@angular/http';
@@ -47,8 +46,7 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       MenuModule,
       DialogModule,
       DropdownModule,
-      CheckboxModule,
-      ButtonsModule
+      CheckboxModule
     ],
   declarations:
     [
@@ -57,6 +55,7 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       LiveEntryComponent,
       LiveEntryCardComponent,
       LiveEntryStatusComponent,
+      LiveEntryVideoPreviewComponent,
       TimePipe,
       ValueWithSpinnerPipe,
       RecordStatusPipe

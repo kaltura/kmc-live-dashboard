@@ -1,0 +1,24 @@
+<div style="width:640px;height:360px;">
+        <p-dropdown [options]="players" [(ngModel)]="selectedPlayer"></p-dropdown>
+
+        <iframe [src]="playerIFrameUrl"
+            width="640"
+            height="360"
+            allowfullscreen
+            webkitallowfullscreen
+            mozAllowFullScreen
+            frameborder="0"
+            style="width: 640px; height: 360px;"
+            itemprop="video"
+            itemscope
+            itemtype="http://schema.org/VideoObject">
+<!--
+        <span itemprop="name" content="Aflivede hunde"></span>
+        <span itemprop="description" content=""></span>
+        <span itemprop="duration" content="116"></span>
+        <span itemprop="thumbnail" content="{{entry.thumbnailUrl}}"></span>
+        <span itemprop="width" content="640"></span>
+        <span itemprop="height" content="360"></span>
+-->
+    </iframe>
+</div>

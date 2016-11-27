@@ -165,22 +165,3 @@ nav a.router-link-active {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
-.ldb-entry-status {
-}
-
-.ldb-entry-status-live {
-  color: white;
-  padding: 5px;
-  background-color: red;
-}
-
-.ldb-entry-status-offline {
-  font-weight: bold;
-}
-
-.ldb-entry-status-pending {
-  color: white;
-  padding: 5px;
-  background-color: orange;
-}
