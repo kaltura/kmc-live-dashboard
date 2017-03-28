@@ -1,0 +1,75 @@
+img{
+  max-height:100%;
+  max-width:100%;
+  vertical-align: middle;
+}
+.miniApp {
+  padding: 10px;
+}
+
+.miniApp .tableActions{
+  float: right;
+}
+.miniApp p{
+  text-align: left;
+}
+
+.miniApp .actionsBtn{
+  color: #fff;
+  background-color: #2399e5;
+  border-color: #1f89ce;
+}
+
+.thumbnailHolder{
+  width: 75px;
+  height: 50px;
+  background-color: black;
+  white-space: nowrap;
+  text-align: center;
+}
+.helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+.tableHolder{
+  height: calc(100% - 200px);
+}
+
+.favorite-entry {
+  cursor: pointer;
+}
+
+.favorites-filter{
+  position: absolute;
+  top: 40px;
+  left: 250px;
+}
+
+
+.miniApp  .ui-widget-content {
+  background-color: #039be5 !important;
+}
+
+
+dt,dd {
+  line-height: 1;
+}
+dt {
+  float: left;
+  clear: left;
+  width: 150px;
+  text-align: right;
+  font-weight: bold;
+  color: green;
+  margin-right: 5px;
+}
+dt:after {
+  content: ":  ";
+}
+dd {
+  padding: 0 0 0.3em 0;
+}
+
+
+

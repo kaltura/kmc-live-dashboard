@@ -2,19 +2,21 @@ import  'moment';
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
-import { DropdownModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { AppComponent }  from './app.component';
-import { EntriesComponent }  from './entries-component/entries.component';
+import { LiveEntriesComponent }  from './components/live-entries.component';
+import { LiveEntryComponent }  from './components/live-entry.component';
+import { LiveEntryCardComponent }  from './components/live-entry-card.component';
+import { LiveEntryStatusComponent }  from './components/live-entry-status.component';
+import { LiveEntryVideoPreviewComponent }  from './components/live-entry-video-preview.component';
 
-import { EntryTypePipe } from './pipes/entry.type.pipe';
-import { LiveStatusPipe } from './pipes/live.status.pipe';
-import { RecordStatusPipe } from './pipes/record.status.pipe';
-import { EntryStatusPipe } from './pipes/entry.status.pipe';
-import { FavoriteEntryPipe } from './pipes/favorite.entry.pipe';
 import { TimePipe } from './pipes/time.pipe';
+import { SafePipe } from './pipes/safe.pipe';
+import { RecordStatusPipe } from './pipes/record.status.pipe';
+import { ValueWithSpinnerPipe } from './pipes/value-with-spinner.pipe';
 
-import { DataTableModule, SharedModule, InputTextModule, ButtonModule} from 'primeng/primeng';
+import { PanelModule, DialogModule, DropdownModule, MessagesModule,SplitButtonModule,ToggleButtonModule, SelectButtonModule, CheckboxModule, GrowlModule,DataTableModule, SharedModule, InputTextModule, MenuModule, ButtonModule, DataGridModule,InputSwitchModule} from 'primeng/primeng';
+import {Ng2Webstorage} from 'ng2-webstorage';
 
 
 import { HttpModule }    from '@angular/http';
@@ -23,6 +25,7 @@ import { HttpModule }    from '@angular/http';
 import {KalturaAPIConfig} from './kaltura-api/kaltura-api-config';
 import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
 
+
 @NgModule({
   imports:
     [
@@ -30,28 +33,42 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       HttpModule,
       FormsModule,
       ReactiveFormsModule,
+      DataGridModule,
+      PanelModule,
       DataTableModule,
       SharedModule,
       InputTextModule,
+      GrowlModule,
+      SelectButtonModule,
+      ToggleButtonModule,
+      InputSwitchModule,
+      SplitButtonModule,
+      MessagesModule,
       ButtonModule,
-      DropdownModule
+      MenuModule,
+      DialogModule,
+      DropdownModule,
+      CheckboxModule,
+      Ng2Webstorage
     ],
   declarations:
     [
       AppComponent,
-      EntriesComponent,
-      EntryStatusPipe,
-      EntryTypePipe,
+      LiveEntriesComponent,
+      LiveEntryComponent,
+      LiveEntryCardComponent,
+      LiveEntryStatusComponent,
+      LiveEntryVideoPreviewComponent,
       TimePipe,
-      LiveStatusPipe,
-      RecordStatusPipe,
-      FavoriteEntryPipe
+      SafePipe,
+      ValueWithSpinnerPipe,
+      RecordStatusPipe
     ],
   providers:
     [
       KalturaAPIConfig,
       KalturaAPIClient
     ],
-  bootstrap: [ EntriesComponent ]
+  bootstrap: [ LiveEntriesComponent ]
 })
 export class AppModule { }

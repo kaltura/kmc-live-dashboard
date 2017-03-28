@@ -1,0 +1,169 @@
+<div class="miniApp">
+  <p-growl [value]="msgs"></p-growl>
+
+  <div>
+    <input style="width: 300px" type="text" pInputText [(ngModel)]="entryService.searchText" (onenter)="refresh()" (keyup.enter)="refresh()" placeholder="Search Entries" />
+    <p-toggleButton onLabel="Favorites Only" offLabel="Favorites Only"
+                    onIcon="fa-check-square" offIcon="fa-square"  (onChange)="refresh()" [(ngModel)]="entryService.favoritesOnly"></p-toggleButton>
+    <p-toggleButton onLabel="Live only" offLabel="Live only"
+                    onIcon="fa-check-square" offIcon="fa-square"  (onChange)="refresh()" [(ngModel)]="entryService.liveOnly"></p-toggleButton>
+
+
+    <div class="tableActions">
+      <p-toggleButton onIcon="fa fa-table" onLabel="Grid" offLabel="Grid" offIcon="fa fa-table"  (onChange)="refresh()" [(ngModel)]="gridMode"></p-toggleButton>
+
+      <p-toggleButton onIcon="fa fa-list" onLabel="List" offLabel="List" offIcon="fa fa-list"  (onChange)="refresh()" [(ngModel)]="listMode"></p-toggleButton>
+      <button pButton type="text" (click)="refresh()" icon="fa-refresh" ></button>
+    </div>
+  </div>
+
+  <!--
+  <div class="btn-group pull-right" role="group">
+    <a href="" class="btn btn-default active" [ngClass]="{'active': !gridMode }" (click)="setGridMode(false)" style="">
+      <i class="fa fa-list"></i> <span class="hidden-xs">List</span>
+    </a>
+    <a href="" class="btn btn-default" [ngClass]="{'active': gridMode}" (click)="setGridMode(true)" style="">
+      <i class="fa fa-table"></i> <span class="hidden-xs">Grid</span>
+    </a>
+  </div>-->
+
+  <!--
+  <p-toggleButton onLabel="Grid" offLabel="Grid"
+                  onIcon="fa-th" offIcon="fa-th" [(ngModel)]="gridMode"></p-toggleButton>
+
+  <p-toggleButton onLabel="List" offLabel="List"
+                  onIcon="fa-list" offIcon="fa-list" [(ngModel)]="!gridMode"></p-toggleButton>
+                  -->
+  <br>
+
+<!--
+
+  <button pButton type="text" (click)="onFavoritesFilter()" icon="fa-check" iconPos="right" label="Favorites" class="favorites-filter"></button>
+  <button pButton type="text" (click)="onLiveOnlyFilter()" icon="fa-check" iconPos="right" label="Live Only" ></button>
+  -->
+  <span [hidden]="!fetching">Loading Entries...</span>
+
+
+  <div class="gridHolder" *ngIf="gridMode">
+    <p-dataGrid [value]="entriesList"
+                [paginator]="true"
+                [rows]="pageSize"
+                [lazy]="true"
+                [pageLinks]="10"
+                [rowsPerPageOptions]="[4,8,16,20,40]"
+                (onLazyLoad)="loadData($event)"
+                [totalRecords]="totalEntries">
+      <template let-entry>
+        <div class="ui-g-6 ui-md-3 ">
+          <kmc-live-entry-card (onOpen)="openEntry(entry)" [entry]="entry"></kmc-live-entry-card>
+        </div>
+
+      </template>
+    </p-dataGrid>
+  </div>
+
+  <div class="tableHolder"  *ngIf="!gridMode">
+    <p-dataTable [value]="entriesList"
+                 scrollable="true"
+                 [rows]="pageSize"
+                 [totalRecords]="totalEntries"
+                 [paginator]="true"
+                 [pageLinks]="10"
+                 [lazy]="true"
+                 (onLazyLoad)="loadData($event)"
+                 [rowsPerPageOptions]="[4,10,20]"
+                 expandableRows="true"
+                 scrollHeight="auto" >
+      <template let-entry>
+        <kmc-live-entry [entry]="entry"></kmc-live-entry>
+      </template>
+      <p-column expander="true"  styleClass="col-icon" [style]="{'width':'50px'}"></p-column>
+      <p-column field="tags" header="Favorite"  [style]="{'width':'80px', 'text-align': 'center'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <i [ngClass]="{'fa': true, 'fa-star-o': entry[col.field], 'fa-star': !entry[col.field]}"
+             aria-hidden="true"
+             (click)="toggleEntryFavorite(entry)">
+          </i>
+        </template>
+      </p-column>
+      <p-column field="thumbnailUrl" header="Thumbnail"  [style]="{'width':'95px', 'text-align': 'center'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <div class="thumbnailHolder"><span class="helper"></span><img src="{{entry[col.field]}}"></div>
+        </template>
+      </p-column>
+      <p-column field="id" header="ID"  [style]="{'width':'100px'}"></p-column>
+      <p-column field="name" header="Name" >
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <a (click)="openEntry(entry)">{{entry[col.field]}}</a>
+        </template>
+      </p-column>
+      <p-column field="liveStatus" header="Status" [style]="{'width':'90px', 'text-align': 'center'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <live-entry-status [entry]="entry"></live-entry-status>
+        </template>
+      </p-column>
+      <p-column field="startTime" header="Start" [style]="{'width':'80px', 'text-align': 'center'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+            {{entry[col.field] | date: "HH:mm"}}
+        </template>
+      </p-column>
+      <p-column field="audience" header="Viewers"  [style]="{'width':'80px', 'text-align': 'center'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+            <span  [innerHTML]="entry[col.field] | valueWithSpinner"></span>
+        </template>
+      </p-column>
+      <p-column field="dvrStatus" header="DVR" [style]="{'width':'140px', 'text-align': 'center'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <span class="dvrStatus" [hidden]="!entry[col.field]">{{entry['dvrWindow'] / 60}}h</span>
+          <span class="dvrStatus" [hidden]="entry[col.field]">No</span>
+        </template>
+      </p-column>
+      <p-column field="recordStatus" header="Recording" [style]="{'width':'100px'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <span>{{entry[col.field] | recordStatus}}</span>
+        </template>
+      </p-column>
+      <p-column field="flavors" header="Flavors"  [style]="{'width':'50px'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+            {{entry[col.field]}}
+        </template>
+      </p-column>
+      <p-column field="redundant" header="Redundancy" [style]="{'width':'50px'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <span *ngIf="entry[col.field]">
+            {{(entry[col.field]) ? "Yes" : "No"}}
+          </span>
+        </template>
+      </p-column>
+
+
+      <p-column header="Action" [style]="{'overflow':'visible', 'width':'180px'}">
+        <template let-col let-entry="rowData" pTemplate type="body">
+          <!--
+          <p-menu  popup="popup" [model]="entryMenuItems"></p-menu>
+          <button type="button" pButton icon="fa fa-bars" iconPos="left" label="Show" (click)="menu.toggle($event)"></button>
+          -->
+          <!--
+          <div class="btn-group" dropdown>
+            <button id="single-button" type="button" class="btn btn-xs actionsBtn" dropdownToggle>
+              Select Action <span class="caret"></span>
+            </button>
+            <ul dropdownMenu role="menu" aria-labelledby="single-button" style="z-index: 1000">
+              <li role="men~uitem"><a class="dropdown-item" (click)="onActionSelected('embed',entry.id)">Preview & Embed</a></li>
+              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('delete',entry.id)">Delete</a></li>
+              <li role="menuitem"><a class="dropdown-item" (click)="onActionSelected('view',entry.id)">View Details</a></li>
+            </ul>
+          </div>-->
+        </template>
+      </p-column>
+
+    </p-dataTable>
+
+  </div>
+  <div *ngIf="displayEntry">
+    <p-dialog  [header]="selectedEntry.name" [(visible)]="displayEntry" [responsive]="true" [width]="1000" [height]="600" [modal]="true" >
+      <kmc-live-entry [entry]="selectedEntry"></kmc-live-entry>
+    </p-dialog>
+  </div>
+
+</div>

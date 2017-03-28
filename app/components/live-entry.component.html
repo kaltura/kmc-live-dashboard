@@ -1,0 +1,89 @@
+<div class="ui-grid ui-grid-responsive ui-fluid" style="font-size:16px;padding:20px">
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-6">
+      <dl>
+        <dt>Id</dt><dd>{{entry.id}}</dd>
+      </dl>
+    </div>
+  </div>
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-2">
+      <span>Input streams</span>
+    </div>
+    <div class="ui-grid-col-10">
+      <table class="table table-bordered stable">
+          <thead>
+            <tr>
+              <th style="width: 30px">Server</th>
+              <th style="width: 10px">Input</th>
+              <th style="width: 40px">address</th>
+              <th style="width: 30px">uptime</th>
+              <th style="width: 30px">Kbit/s</th>
+              <th style="width: 30px">Video codec</th>
+              <th style="width: 30px">FPS</th>
+              <th style="width: 30px">Kbit/s</th>
+              <th style="width: 30px">Audio codec</th>
+              <th style="width: 30px">Audio sampling rate</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let entryServerNode of entry.entryServerNodes" >
+            <tr *ngFor="let stream of entryServerNode.inputStreams">
+              <td>{{entryServerNode.isPrimary ? "Primary" : "Backup"}}</td>
+              <td>{{stream.index}}</td>
+              <td>{{stream.address}}</td>
+              <td>{{stream.uptime}}</td>
+              <td>{{stream.bitrate | number:'.0-0'}}</td>
+              <td>{{stream.encoderSettings.video_codec}}</td>
+              <td>{{stream.encoderSettings.video_bitrate}}</td>
+              <td>{{stream.encoderSettings.video_fps}}</td>
+              <td>{{stream.encoderSettings.audio_codec}}</td>
+              <td>{{stream.encoderSettings.audio_samplingRate}}</td>
+            </tr>
+          </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="ui-grid-row">
+    <div class="ui-grid-col-2">
+      <span>Output streams</span>
+    </div>
+
+    <div class="ui-grid-col-10">
+      <table class="table table-bordered stable">
+        <thead>
+        <tr>
+          <th style="width: 20px">Server</th>
+          <th style="width: 30px">Flavor</th>
+          <th style="width: 30px">Resolution</th>
+          <th style="width: 30px">Kbit/s</th>
+          <th style="width: 30px">FPS</th>
+          <th style="width: 30px">GOP len.</th>
+        </tr>
+        </thead>
+        <tbody *ngFor="let entryServerNode of entry.entryServerNodes" >
+        <tr>
+          <td colspan="6">
+            {{entryServerNode.isPrimary ? "Primary" : "Backup"}}
+            {{entryServerNode.startTime | date:"M/d/yy HH:mm"}}
+            <!--, running time  {{ getControllerUpTime(controller_diag)  | duration}})-->
+          </td>
+        </tr>
+        <tr *ngFor="let stream of entryServerNode.outputStreams">
+          <td></td>
+          <td>{{stream.flavorId}}</td>
+          <td class="text-right"> {{stream.width}}x{{stream.height}}</td>
+          <td class="text-right">{{stream.bitrate/1000 | number:'.0-0'}}</td>
+          <td>N/A</td>
+          <td>N/A</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="ui-grid-row">
+    <kmc-live-entry-video-preview [entry]="entry"></kmc-live-entry-video-preview>
+  </div>
+  <div class="ui-grid-row">
+    <p-messages [value]="entry.alerts" [closable]="false"></p-messages>
+  </div>
+</div>
