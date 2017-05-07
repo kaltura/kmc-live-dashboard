@@ -1,0 +1,38 @@
+.additional-settings {
+  margin-top: 28px;
+
+  .conversion-profile {
+    display: flex;
+    flex-flow: column nowrap;
+    margin-bottom: 40px;
+
+    /*.ui-dropdown  {
+      width: 210px;
+      height: 34px;
+    }*/
+
+    label {
+      margin-bottom: 12px;
+    }
+  }
+
+  .entry-options {
+    .dvr {
+      margin-bottom: 40px;
+    }
+
+    .recording {
+      margin-bottom: 40px;
+
+      div {
+        margin: 12px 0 12px 40px;
+        display: flex;
+        flex-flow: row nowrap;
+
+        label {
+          margin: 0 40px 0 16px;
+        }
+      }
+    }
+  }
+}

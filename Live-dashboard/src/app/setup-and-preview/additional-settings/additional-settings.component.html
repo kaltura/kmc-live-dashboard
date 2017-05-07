@@ -1,0 +1,31 @@
+<div class="additional-settings">
+  <div class="conversion-profile">
+    <label>Conversion Profile</label>
+    <p-dropdown [options]="conversionProfilesList" [(ngModel)]="selectedConversionProfile"
+                [style]="{'width':'210px', 'height':'34px'}"></p-dropdown>
+  </div>
+  <div class="entry-options">
+    <div class="dvr">
+      <p-checkbox [(ngModel)]="dvr" label="Enable Live DVR" binary="true"></p-checkbox>
+    </div>
+    <div class="recording" *ngIf="recording">
+      <p-checkbox [(ngModel)]="recording.enabled" label="Enable Live Recording" binary="true"></p-checkbox>
+      <div *ngIf="recording.enabled">
+        <p-radioButton name="recordingNewEntrySessionType"
+                       value="newEntryPerSession"
+                       [(ngModel)]="recording.type"></p-radioButton>
+        <label>Create new entry for every broadcast session</label>
+      </div>
+      <div *ngIf="recording.enabled">
+        <p-radioButton name="recordingAppendRecordingType"
+                       value="appendRecording"
+                       label="Append recorded content to a single entry"
+                       [(ngModel)]="recording.type"></p-radioButton>
+        <!--label>Append recorded content to a single entry<label-->
+      </div>
+    </div>
+    <div class="previewMode">
+      <p-checkbox [(ngModel)]="previewMode" label="Preview Mode" binary="true"></p-checkbox>
+    </div>
+  </div>
+</div>

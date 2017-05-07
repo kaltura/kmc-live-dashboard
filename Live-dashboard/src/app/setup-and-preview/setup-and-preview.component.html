@@ -1,0 +1,30 @@
+<div class="setup-and-preview">
+  <div class="stream-health">
+    <span>Stream Health</span>
+    <i class="fa fa-question-circle" aria-hidden="true"></i>
+    <div>
+      <label>Offline</label>
+    </div>
+  </div>
+  <div class="stream-info">
+    <span>To start broadcasting, copy the contents of the fields below into your encoder settings. <span class="learn-more">Learn more</span></span>
+  </div>
+  <div class="main">
+    <div class="main-left">
+      <p-tabView class="general-settings">
+        <p-tabPanel header="BASIC">
+          <basic-settings></basic-settings>
+        </p-tabPanel>
+        <p-tabPanel header="SETTINGS">
+          <additional-settings></additional-settings>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+    <div class="main-right">
+      <encoder-settings></encoder-settings>
+    </div>
+  </div>
+  <footer>
+    <button pButton type="button" class="ui-button-secondary saveInfo" label="Save"></button>
+  </footer>
+</div>

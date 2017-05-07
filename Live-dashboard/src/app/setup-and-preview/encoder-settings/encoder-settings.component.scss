@@ -1,0 +1,78 @@
+.encoder-settings {
+  margin: 0 0 53px 34px;
+}
+
+header {
+  font-size: 12px;
+
+  margin: 26px 0 44px 0;
+  color: #999999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  .streamState {
+    float: right;
+    border: 2px solid #CCCCCC;
+    border-radius: 4px;
+    padding: 2px 6px 2px 7px;
+    font-weight: bold;
+  }
+}
+
+.encoder-urls {
+  display: flex;
+  flex-flow: column nowrap;
+
+  border-radius: 3px;
+  height: 272px;
+
+  .url-box {
+    display: flex;
+    flex-flow: row wrap;
+
+    label {
+      height: 18px;
+      line-height: 18px;
+      margin-right: 7px;
+    }
+
+    span {
+      margin-left: auto;
+      text-align: right;
+      color: #1B4A97;
+      text-decoration: underline;
+    }
+
+    input {
+      flex: 1 100%;
+      padding: 0 0 0 16px;
+
+      border: none;
+      height: 34px;
+      width: 100%;
+      background-color: #EBEBEB;
+      border-radius: 3px;
+      line-height: 18px;
+      box-sizing: border-box;
+    }
+  }
+}
+
+.encoder-urls > * {
+  margin: 1px;
+  flex: auto;
+}
+
+footer {
+  margin-top: 10px;
+
+  .generateToken {
+    float: right;
+  }
+
+  /deep/ .ui-button-text-only .ui-button-text {
+    font-weight: bold;
+    font-size: 14px;
+    margin: 4px 0 4px 0;
+  }
+}
