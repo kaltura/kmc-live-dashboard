@@ -9,6 +9,7 @@ import { KalturaApiService } from './kaltura-api.service';
 import { LiveEntryService } from './live-entry.service';
 
 import { AppComponent } from './app.component';
+import { StreamInfoComponent } from './stream-info/stream-info.component';
 import { SetupAndPreviewComponent } from './setup-and-preview/setup-and-preview.component';
 import { EncoderSettingsComponent } from './setup-and-preview/encoder-settings/encoder-settings.component';
 import { BasicSettingsComponent } from './setup-and-preview/basic-settings/basic-settings.component';
@@ -20,7 +21,8 @@ import { AdditionalSettingsComponent } from './setup-and-preview/additional-sett
     SetupAndPreviewComponent,
     EncoderSettingsComponent,
     BasicSettingsComponent,
-    AdditionalSettingsComponent
+    AdditionalSettingsComponent,
+    StreamInfoComponent
   ],
   imports: [
     BrowserModule,

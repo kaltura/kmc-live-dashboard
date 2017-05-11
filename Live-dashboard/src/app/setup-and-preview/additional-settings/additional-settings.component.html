@@ -1,31 +1,30 @@
-<div class="additional-settings">
+<div class="additional-settings kUseKMCngIcons">
   <div class="conversion-profile">
     <label>Conversion Profile</label>
-    <p-dropdown [options]="conversionProfilesList" [(ngModel)]="selectedConversionProfile"
+    <p-dropdown [options]="_conversionProfilesList" [(ngModel)]="_selectedConversionProfile"
                 [style]="{'width':'210px', 'height':'34px'}"></p-dropdown>
   </div>
   <div class="entry-options">
     <div class="dvr">
-      <p-checkbox [(ngModel)]="dvr" label="Enable Live DVR" binary="true"></p-checkbox>
+      <p-checkbox [(ngModel)]="_dvr" label="Enable Live DVR" binary="true"></p-checkbox>
     </div>
-    <div class="recording" *ngIf="recording">
-      <p-checkbox [(ngModel)]="recording.enabled" label="Enable Live Recording" binary="true"></p-checkbox>
-      <div *ngIf="recording.enabled">
+    <div class="recording" *ngIf="_recording">
+      <p-checkbox [(ngModel)]="_recording.enabled" label="Enable Live Recording" (click)="_onClickRecordingCheck()" binary="true"></p-checkbox>
+      <div *ngIf="_recording.enabled">
         <p-radioButton name="recordingNewEntrySessionType"
                        value="newEntryPerSession"
-                       [(ngModel)]="recording.type"></p-radioButton>
-        <label>Create new entry for every broadcast session</label>
+                       [(ngModel)]="_recording.type"
+                       label="Create new entry for every broadcast session"></p-radioButton>
       </div>
-      <div *ngIf="recording.enabled">
+      <div *ngIf="_recording.enabled">
         <p-radioButton name="recordingAppendRecordingType"
                        value="appendRecording"
-                       label="Append recorded content to a single entry"
-                       [(ngModel)]="recording.type"></p-radioButton>
-        <!--label>Append recorded content to a single entry<label-->
+                       [(ngModel)]="_recording.type"
+                       label="Append recorded content to a single entry"></p-radioButton>
       </div>
     </div>
     <div class="previewMode">
-      <p-checkbox [(ngModel)]="previewMode" label="Preview Mode" binary="true"></p-checkbox>
+      <p-checkbox [(ngModel)]="_previewMode" label="Preview Mode" binary="true"></p-checkbox>
     </div>
   </div>
 </div>

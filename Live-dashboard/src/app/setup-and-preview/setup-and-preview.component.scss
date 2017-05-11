@@ -1,6 +1,10 @@
 @import '../../styles/_variables';
 
 .setup-and-preview {
+  border: 1px solid $kGrayscale4;
+  border-radius: 3px;
+  background-color: $mainLinkHoverColor;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
   display: flex;
   flex-flow: row wrap;
 
@@ -9,19 +13,17 @@
 
     margin: 23px 0 0 0;
     color: $kGrayscale3;
-    font-size: 15px;
-    line-height: 18px;
+    font-size: 13px;
+    line-height: 16px;
     text-align: center;
 
     div {
       margin: 12px;
-      font-size: 15px;
       line-height: 18px;
-      font-weight: normal;
     }
   }
 
-  .stream-info {
+  .learn-more {
     flex: 1 100%;
 
     margin: 0 28px 0 28px;
@@ -30,9 +32,13 @@
     padding: 22px 0 25px 0;
     text-align: center;
 
-    .learn-more {
+    .learn-more-link {
       text-decoration: underline;
       color: $kTertiary;
+
+      &:hover {
+        color: darken($kTertiary, 20%);
+      }
     }
   }
 
@@ -52,47 +58,10 @@
       .general-settings {
         margin: 28px;
 
-        /*/deep/ {
-          .ui-widget-header .ui-state-default, .ui-widget-content .ui-state-default, .ui-state-default {
-            border: none;
-          }
-
-          ui-widget-header {
-            border: none;
-          }
-
-          .ui-tabview .ui-tabview-nav > li.ui-state-default {
-            background: none;
-          }
-
-          .ui-state-default.ui-state-active {
-            border-bottom: 3px solid #102C5A;
-          }
-
-          .ui-widget-header .ui-state-active a, .ui-widget-content .ui-state-active a, .ui-state-active a {
-            color: #102C5A;
-          }
-        }*/
-
-        /*/deep/ .ui-widget-header .ui-state-default, .ui-widget-content .ui-state-default, .ui-state-default {
-          border: none;
-        }
-
-        /deep/ .ui-widget-header {
-          border: none;
-        }
-
+        // TODO: Move to theme.scss
         /deep/ .ui-tabview .ui-tabview-nav > li.ui-state-default {
           background: none;
         }
-
-        /deep/ .ui-state-default.ui-state-active {
-          border-bottom: 3px solid #102C5A;
-        }
-
-        /deep/ .ui-widget-header .ui-state-active a, .ui-widget-content .ui-state-active a, .ui-state-active a {
-          color: #102C5A;
-        }*/
       }
 
     }
@@ -105,8 +74,12 @@
 
   footer {
     flex: 1 100%;
-
+    padding: 23px 0 17px 0;
     border-top: 1px solid $kGrayscale6;
     text-align: center;
+
+    .kButtonBranded {
+      width: 100px;
+    }
   }
 }

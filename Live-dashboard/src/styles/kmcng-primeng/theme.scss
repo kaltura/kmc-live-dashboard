@@ -1,3 +1,5 @@
+@import '../_variables';
+
 $fontFamily: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $fontSize: 1em;
 $borderRadius: 3px;
@@ -87,31 +89,69 @@ textarea.ui-inputtext {
 	color: $kGrayscale3;
 }
 
+/* tab menu */
+.ui-tabview-nav.ui-widget-header {
+  border: none;
+}
+
+.ui-tabview .ui-tabview-nav {
+  .ui-state-default {
+    border: none;
+  }
+
+  .ui-state-default a {
+    color: $kGrayscale3;
+    letter-spacing: 1px;
+  }
+
+  .ui-state-active a {
+    color: $menuBkgColor;
+
+    span {
+      padding-bottom: 15px;
+      border-bottom: 3px solid $menuBkgColor;
+    }
+  }
+}
+
 /* checkboxes */
 .ui-chkbox .ui-chkbox-box, .ui-datatable .ui-selection-column .ui-chkbox-box, .ui-tree .ui-chkbox-box{
-    width: 16px;
-    height: 16px;
-    border: 1px solid $kGrayscale4;
-    border-radius: 3px;
-    font-size: 10px;
-    &.ui-state-active{
-        background-color: $kPrimary;
-        border: 1px solid $kPrimary;
-        color: #ffffff;
-    }
-    .ui-chkbox-icon{
-        margin-left: 0px;
-        margin-top: 3px;
-    }
-}
-.ui-chkbox-box:not(.ui-state-disabled):not(.ui-state-active):hover{
-	border: 1px solid $kGrayscale4;
-}
-/* radio buttons */
-.ui-radiobutton-box.ui-state-active{
+  width: 16px;
+  height: 16px;
+  border: 1px solid $kGrayscale4;
+  border-radius: 3px;
+  font-size: 10px;
+
+  &.ui-state-active{
     background-color: $kPrimary;
     border: 1px solid $kPrimary;
     color: #ffffff;
+  }
+
+  &.ui-state-focus {
+    box-shadow: none;
+    background: none;
+  }
+
+  &.ui-state-focus.ui-state-active {
+    background: $kPrimary;
+  }
+
+  .ui-chkbox-icon{
+    margin-left: 0px;
+    margin-top: 2px;
+  }
+}
+.ui-chkbox-box:not(.ui-state-disabled):not(.ui-state-active):hover {
+	border: 1px solid $kGrayscale4;
+}
+
+/* radio buttons */
+.ui-radiobutton-box.ui-state-active {
+  background-color: $kPrimary;
+  background: $kPrimary;
+  border: 1px solid $kPrimary;
+  color: #ffffff;
 }
 
 /* data table */
@@ -247,9 +287,8 @@ td.ui-datatable-emptymessage{
 	}
 }
 
-/* buttons */
 .ui-button{
-    font-weight: 700;
+    font-weight: 500;
     border-radius: 3px;
 }
 .disabled{
@@ -260,41 +299,46 @@ td.ui-datatable-emptymessage{
 }
 .ui-button.kButtonBranded {
     &.ui-state-default {
-        color: #ffffff;
-        background: $kPrimary;
+      color: #ffffff;
+      background: $kPrimary;
+      border: none;
+      height: 34px;
     }
-    &:hover {
-        background: darken($kPrimary, 10%);
+    &.ui-state-default:hover {
+      background: darken($kPrimary, 10%);
+      border: none;
     }
     &:active {
-        box-shadow: inset 0px 1px 3px 0 rgba(0, 0, 0, 0.50);
+      box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.50);
     }
     &:disabled {
-        color: $kGrayscale4;
-        background: transparent;
-        border: 1px solid $kGrayscale4;
-        cursor: none;
-		box-shadow: none;
+      color: $kGrayscale4;
+      background: transparent;
+      border: 1px solid $kGrayscale4;
+      cursor: none;
+      box-shadow: none;
     }
 }
 .ui-button.kButtonDefault {
     &.ui-state-default{
-        color: $kGrayscale1;
-        background: #ffffff;
-        border: 1px solid $kGrayscale4;
-        height: 34px;
+      height: 34px;
+      color: $kGrayscale1;
+      background: #ffffff;
+      border: 1px solid $kGrayscale4;
     }
-    &:hover{
-        color: $kPrimary;
+    &.ui-state-default:hover {
+      color: $kPrimary;
+      background: #ffffff;
+      border: 1px solid $kGrayscale4;
     }
-    &:active:not(:disabled){
-        box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+    &:active:not(:disabled) {
+      box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.50);
     }
     &:disabled{
-		color: $kGrayscale4;
-		background: transparent;
-		border: 1px solid $kGrayscale4;
-		cursor: none;
+      color: $kGrayscale4;
+      background: transparent;
+      border: 1px solid $kGrayscale4;
+      cursor: none;
     }
 }
 .ui-button.kButtonDanger {
@@ -351,7 +395,6 @@ td.ui-datatable-emptymessage{
     padding-left: 0px;
     padding-right: 0px;
 }
-
 .ui-paginator .ui-paginator-rpp-options {
     float: right;
     margin-top: 4px;
@@ -426,12 +469,12 @@ td.ui-datatable-emptymessage{
         background: #01ACCD;
     }
     .ui-inputtext {
-        width: 100px;
-		float: right;
-		margin-left: 28px;
-		background-color: white;
-		border: 0px solid white;
-		outline: hidden;
+      width: 100px;
+      float: right;
+      margin-left: 28px;
+      background-color: white;
+      border: 0px solid white;
+      outline: hidden;
 		&:focus{
 			border: 0px solid $kGrayscale4;
 		}
@@ -491,6 +534,7 @@ td.ui-datatable-emptymessage{
     }
 
 }
+
 // tooltips
 .ui-tooltip .ui-tooltip-text {
 	background-color: #000000;
@@ -548,6 +592,26 @@ td.ui-datatable-emptymessage{
 }
 
 // drop down
+.ui-dropdown.ui-state-default {
+  &.ui-dropdown-open {
+    .ui-dropdown-label.ui-inputtext {
+      color: $kPrimary;
+    }
+  }
+
+  &.ui-state-focus {
+    box-shadow: none;
+  }
+}
+.ui-dropdown-label.ui-inputtext {
+  height: 32px;
+  padding: 8px 0 0 10px;
+
+  &:hover {
+    color: $kPrimary;
+  }
+}
+
 .ui-dropdown-item.ui-corner-all.ui-state-highlight{
 	background-color: $kGrayscale6;
 	color: #000000;
@@ -648,6 +712,7 @@ td.ui-datatable-emptymessage{
 		top: 13px;
 	}
 }
+
 // tooltip
 .ng-tooltip {
 	max-width: 200px;
@@ -708,6 +773,7 @@ td.ui-datatable-emptymessage{
 	border-width: 5px;
 	border-color: transparent black transparent transparent;
 }
+
 // spinner animation
 .k-spinner-background {
 	width: 100%;

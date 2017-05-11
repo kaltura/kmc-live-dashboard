@@ -1,17 +1,12 @@
+@import '../styles/_variables';
+
 .dashboardWindow {
-  border: 1px solid #CCCCCC;
-  border-radius: 3px;
-}
+  display: flex;
+  flex-flow: row nowrap;
 
-:host .preview-tabs /deep/ {
-  .ui-widget-header .ui-state-active, .ui-widget-content .ui-state-active, .ui-state-active {
-    border: none;
-    text-decoration: underline;
-  }
+  background-color: $appBkgColor;
 
-  .ui-widget-header .ui-state-default, .ui-widget-content .ui-state-default, .ui-state-default
-  {
-    border:none;
+  stream-info {
+    margin-left: 28px;
   }
 }
-

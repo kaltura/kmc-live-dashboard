@@ -1,3 +1,5 @@
+@import '../../../styles/_variables';
+
 .additional-settings {
   margin-top: 28px;
 
@@ -6,10 +8,16 @@
     flex-flow: column nowrap;
     margin-bottom: 40px;
 
-    /*.ui-dropdown  {
-      width: 210px;
-      height: 34px;
-    }*/
+    /deep/ .ui-dropdown {
+      .ui-widget-content .ui-state-default, .ui-state-default {
+        border: none;
+      }
+
+      span {
+        margin: 7px auto;
+        padding-right: 10px;
+      }
+    }
 
     label {
       margin-bottom: 12px;
@@ -28,11 +36,42 @@
         margin: 12px 0 12px 40px;
         display: flex;
         flex-flow: row nowrap;
-
-        label {
-          margin: 0 40px 0 16px;
-        }
       }
+    }
+  }
+}
+
+:host /deep/ p-radiobutton
+{
+  &:after {
+    clear:both;
+    content:" ";
+    display:block;
+  }
+
+  .ui-radiobutton
+  {
+    float:left;
+  }
+
+  .ui-radiobutton-label {
+    margin-left: 34px;
+    margin-top: -30px;
+    color: $kGrayscale1;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+  }
+
+  .ui-radiobutton-box.ui-state-active {
+    background-color: $kPrimary;
+    background: $kPrimary;
+    border: 1px solid $kPrimary;
+    color: #ffffff;
+
+    .ui-radiobutton-icon {
+      margin-top: -7px;
     }
   }
 }

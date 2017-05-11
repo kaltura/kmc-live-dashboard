@@ -37,8 +37,8 @@ export class LiveEntryService {
   // TODO:
   //id: string = '0_objn1w04'; // nothing
   //id: string = '0_yl7e56ym'; // Dvr
-  id: string = '0_2m4p0bm1'; // Recording append
-  //id: string = '0_qsjnf3kk'; // Recording new
+  //id: string = '0_2m4p0bm1'; // Recording append
+  id: string = '0_qsjnf3kk'; // Recording new
   //
   private _streamStatus = new BehaviorSubject<StreamStatus>({status : 'initial'});
   public streamStatus$ = this._streamStatus.asObservable();
