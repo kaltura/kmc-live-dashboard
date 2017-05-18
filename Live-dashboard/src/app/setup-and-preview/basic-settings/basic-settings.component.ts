@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {LiveEntryService} from "../../live-entry.service";
+import { LiveEntryService } from "../../live-entry.service";
+import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
 
 @Component({
   selector: 'basic-settings',
@@ -7,16 +8,14 @@ import {LiveEntryService} from "../../live-entry.service";
   styleUrls: ['basic-settings.component.scss']
 })
 export class BasicSettingsComponent implements OnInit {
-  public entryName: string;
-  public entryDescription : string;
+  public _currentEntry: KalturaLiveStreamEntry;
 
-  constructor(private _liveEntryService : LiveEntryService) { }
+  constructor(private _liveEntryService: LiveEntryService) { }
 
   ngOnInit() {
-    this._liveEntryService.streamInfo$.subscribe(result => {
-      if (result) {
-        this.entryName = result.name;
-        this.entryDescription = result.description;
+    this._liveEntryService.liveStream$.subscribe(response => {
+      if (response) {
+        this._currentEntry = response;
       }
     });
   }

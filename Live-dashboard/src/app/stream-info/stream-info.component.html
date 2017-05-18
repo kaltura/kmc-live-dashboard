@@ -13,19 +13,15 @@
     <div class="content">
       <div class="row">
         <span class="left">Creator</span>
-        <span class="right">One</span>
+        <span class="right">{{_creator}}</span>
       </div>
       <div class="row">
         <span class="left">Creation Date</span>
-        <span class="right">Two</span>
+        <span class="right">{{_date | date:'MM/dd/y HH:MM'}}</span>
       </div>
       <div class="row">
         <span class="left">Type</span>
         <span class="right">Three</span>
-      </div>
-      <div class="row">
-        <span class="left">Duration</span>
-        <span class="right">Four</span>
       </div>
       <div class="row">
         <span class="left">Moderation</span>
@@ -33,7 +29,7 @@
       </div>
       <div class="row">
         <span class="left">Plays</span>
-        <span class="right">Six</span>
+        <span class="right">{{_plays}}</span>
       </div>
     </div>
   </div>

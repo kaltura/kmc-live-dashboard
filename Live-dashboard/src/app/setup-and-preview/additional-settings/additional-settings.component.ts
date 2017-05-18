@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/primeng';
 import { LiveEntryService } from "../../live-entry.service";
-
-import * as _ from 'lodash';
-
-declare type Recording = {
-  enabled: boolean;
-  type?: 'appendRecording' | 'newEntryPerSession';
-}
+import { ConversionProfileService } from "../../conversion-profile.service";
+//types
+import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStatus";
+import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
+import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
 
 @Component({
   selector: 'additional-settings',
@@ -15,52 +13,51 @@ declare type Recording = {
   styleUrls: ['./additional-settings.component.scss']
 })
 export class AdditionalSettingsComponent implements OnInit {
-  _conversionProfilesList: SelectItem[];
-  _selectedConversionProfile: number;
-  _dvr: boolean;
-  _recording: Recording;
-  _previewMode: boolean;
+  public _conversionProfilesList: SelectItem[];
+  public _currentEntry: KalturaLiveStreamEntry;
+  // TODO: Find a better solution to not use the boolean!
+  public _recording: boolean;
+  public _previewMode: boolean;
 
-  constructor(private _liveEntryService: LiveEntryService) {
-    this._conversionProfilesList = [];
-    this._getConversionProfilesList();
-  }
+  constructor(private _liveEntryService: LiveEntryService, private _conversionProfilesService: ConversionProfileService) { }
 
   ngOnInit() {
-    this._liveEntryService.streamInfo$.subscribe(result => {
-      if (result) {
-        this._selectedConversionProfile = result.conversionProfileId;
-        this._dvr = (result.dvrStatus);
-        this._recording = this._parseRecordingConfiguration(result.recordingStatus);
+    this._conversionProfilesList = [];
+    this._getConversionProfilesList();
+    this._liveEntryService.liveStream$.subscribe(response => {
+      if (response) {
+        this._currentEntry = response;
+        this._recording = (response.recordStatus !== KalturaRecordStatus.disabled);
         // TODO: Add support for Preview-Mode in backend API calls
       }
     });
   }
 
-  private _parseRecordingConfiguration(configured: number): Recording {
-    switch (configured) {
-      case 0:
-        return { enabled: false };
-      case 1:
-        return { enabled: true, type: 'appendRecording' };
-      case 2:
-        return { enabled: true, type: 'newEntryPerSession' };
-    }
-  }
-
   private _getConversionProfilesList(): void {
-    this._liveEntryService.getConversionProfiles()
+    this._conversionProfilesService.getConversionProfiles()
       .subscribe(result => {
-        _.forEach(result, (cp) => {
+        result.objects.forEach((cp) => {
           this._conversionProfilesList.push({ label: cp.name, value: cp.id });
         });
       })
   }
 
-  public _onClickRecordingCheck(): void {
-    if (!this._recording.enabled && this._recording.type) {
-      delete this._recording.type;
+  public _onDvrCheckChange(event: any): void {
+    this._currentEntry.dvrStatus = (event) ? KalturaDVRStatus.enabled : KalturaDVRStatus.disabled;
+  }
+
+  public _onRecordingCheckChange(event: any): void {
+    if (!event) {
+      this._currentEntry.recordStatus = KalturaRecordStatus.disabled;
     }
-    debugger;
+  }
+
+  public _onClickRecordingRadio(event: any): void {
+    if (event === 'appendRecording') {
+      this._currentEntry.recordStatus = KalturaRecordStatus.appended;
+    }
+    else if (event === 'newEntryPerSession') {
+      this._currentEntry.recordStatus = KalturaRecordStatus.perSession;
+    }
   }
 }

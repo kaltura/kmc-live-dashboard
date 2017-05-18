@@ -7,20 +7,20 @@
     <div class="url-box">
       <label>Primary URL</label>
       <i class="kIconhelp" aria-hidden="true"></i>
-      <span>Copy</span>
-      <input type="text" [value]="primaryUrl" readonly/>
+      <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_rtmpUrls.primary)" label="Copy"></button>
+      <input type="text" [value]="_rtmpUrls.primary" readonly/>
     </div>
     <div class="url-box">
       <label>Backup URL</label>
       <i class="fa fa-question-circle" aria-hidden="true"></i>
-      <span>Copy</span>
-      <input type="text" [value]="secondaryUrl" readonly/>
+      <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_rtmpUrls.secondary)" label="Copy"></button>
+      <input type="text" [value]="_rtmpUrls.secondary" readonly/>
     </div>
     <div class="url-box">
       <label>Stream Name</label>
       <i class="fa fa-question-circle" aria-hidden="true"></i>
-      <span>Copy</span>
-      <input type="text" [value]="streamName" readonly/>
+      <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_streamName)" label="Copy"></button>
+      <input type="text" [value]="_streamName" readonly/>
     </div>
   </div>
   <footer>

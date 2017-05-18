@@ -1,0 +1,20 @@
+import { Pipe, PipeTransform } from '@angular/core';
+import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
+
+@Pipe({
+  name: 'recordingEnum'
+})
+export class RecordingEnumPipe implements PipeTransform {
+
+  transform(value: KalturaRecordStatus): string {
+    switch (value) {
+      case KalturaRecordStatus.disabled:
+        return "";
+      case KalturaRecordStatus.appended:
+        return 'appendRecording';
+      case KalturaRecordStatus.perSession:
+        return 'newEntryPerSession';
+    }
+  }
+
+}

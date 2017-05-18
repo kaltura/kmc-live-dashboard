@@ -1,10 +1,10 @@
-<div class="basic-settings">
+<div class="basic-settings" *ngIf="_currentEntry">
   <div class="entry-name">
     <label>Entry Name</label>
-    <input type="text" pInputText [(ngModel)]="entryName"/>
+    <input type="text" pInputText [(ngModel)]="_currentEntry.name"/>
   </div>
   <div class="description">
     <label>Description</label>
-    <textarea pInputTextarea [(ngModel)]="entryDescription"></textarea>
+    <textarea pInputTextarea [(ngModel)]="_currentEntry.description"></textarea>
   </div>
 </div>

@@ -34,10 +34,19 @@ header {
       margin-right: 7px;
     }
 
-    span {
+    .copyBtn {
+      background-color: #FFFFFF;
+      border: none;
+      height: 20px;
+      width: auto;
       margin-left: auto;
       color: $kTertiary;
-      text-decoration: underline;
+      /deep/ .ui-button-text {
+        text-decoration: underline;
+      }
+      &:hover {
+        color: darken($kPrimary, 20%);
+      }
     }
 
     input {

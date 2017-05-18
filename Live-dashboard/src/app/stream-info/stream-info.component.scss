@@ -41,6 +41,7 @@
     border-top: 1px solid $kGrayscale4;
     height: 58%;
     padding: 24px 16px;
+    overflow: scroll;
 
     box-sizing: border-box;
 
@@ -68,6 +69,7 @@
         .right {
           flex: 1;
           color: $kGrayscale1;
+          overflow-x: scroll;
         }
       }
     }

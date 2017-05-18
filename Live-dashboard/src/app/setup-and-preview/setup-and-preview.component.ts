@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService } from "../live-entry.service";
+import { LiveEntryService, StreamStatus } from "../live-entry.service";
 
 @Component({
   selector: 'setup-and-preview',
@@ -9,15 +9,18 @@ import { LiveEntryService } from "../live-entry.service";
 
 export class SetupAndPreviewComponent implements OnInit {
 
-  public status: string;
+  public _streamStatus: StreamStatus;
 
-  constructor(private _liveEntryService : LiveEntryService) { }
+  constructor(public _liveEntryService : LiveEntryService) { }
 
   ngOnInit() {
-    this._liveEntryService.streamStatus$.subscribe(result => {
-      this.status = result.status;
+    this._liveEntryService.streamStatus$.subscribe(response => {
+      this._streamStatus = response;
     });
     this._liveEntryService.getStreamInfo();
   }
 
+  public onClickSaveBtn(): void {
+    this._liveEntryService.saveLiveStreamEntry();
+  }
 }

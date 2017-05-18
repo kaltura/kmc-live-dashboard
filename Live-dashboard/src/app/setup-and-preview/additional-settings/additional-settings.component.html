@@ -1,25 +1,27 @@
-<div class="additional-settings kUseKMCngIcons">
+<div class="additional-settings kUseKMCngIcons" *ngIf="_currentEntry">
   <div class="conversion-profile">
     <label>Conversion Profile</label>
-    <p-dropdown [options]="_conversionProfilesList" [(ngModel)]="_selectedConversionProfile"
+    <p-dropdown *ngIf="_conversionProfilesList.length" [options]="_conversionProfilesList" [(ngModel)]="_currentEntry.conversionProfileId"
                 [style]="{'width':'210px', 'height':'34px'}"></p-dropdown>
   </div>
   <div class="entry-options">
     <div class="dvr">
-      <p-checkbox [(ngModel)]="_dvr" label="Enable Live DVR" binary="true"></p-checkbox>
+      <p-checkbox [ngModel]="_currentEntry.dvrStatus" (ngModelChange)="_onDvrCheckChange($event)" label="Enable Live DVR" binary="true"></p-checkbox>
     </div>
-    <div class="recording" *ngIf="_recording">
-      <p-checkbox [(ngModel)]="_recording.enabled" label="Enable Live Recording" (click)="_onClickRecordingCheck()" binary="true"></p-checkbox>
-      <div *ngIf="_recording.enabled">
+    <div class="recording">
+      <p-checkbox [(ngModel)]="_recording" (onChange)="_onRecordingCheckChange($event)" label="Enable Live to VOD Recording" binary="true"></p-checkbox>
+      <div *ngIf="_recording">
         <p-radioButton name="recordingNewEntrySessionType"
                        value="newEntryPerSession"
-                       [(ngModel)]="_recording.type"
+                       [ngModel]="_currentEntry.recordStatus | recordingEnum"
+                       (ngModelChange)="_onClickRecordingRadio($event)"
                        label="Create new entry for every broadcast session"></p-radioButton>
       </div>
-      <div *ngIf="_recording.enabled">
+      <div *ngIf="_recording">
         <p-radioButton name="recordingAppendRecordingType"
                        value="appendRecording"
-                       [(ngModel)]="_recording.type"
+                       [ngModel]="_currentEntry.recordStatus | recordingEnum"
+                       (ngModelChange)="_onClickRecordingRadio($event)"
                        label="Append recorded content to a single entry"></p-radioButton>
       </div>
     </div>
