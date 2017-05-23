@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LiveEntryService } from '../../live-entry.service';
+import { Message } from 'primeng/primeng';
+
 
 declare type EncoderUrls = {
   primary: string;
@@ -16,6 +18,7 @@ export class EncoderSettingsComponent implements OnInit {
   public _rtspUrls: EncoderUrls = { primary: "", secondary: "" };
   public _streamName: string = "";
   public _copyToClipBoardEnabled: boolean = false;
+  public _msgs: Message[] = [];
 
   constructor(private _liveEntryService : LiveEntryService) { }
 
@@ -29,11 +32,11 @@ export class EncoderSettingsComponent implements OnInit {
         this._streamName = response.streamName;
       }
     });
-    this._copyToClipBoardEnabled = this.copyToClipboardEnabled();
+    this._copyToClipBoardEnabled = this._copyToClipboardEnabled();
   }
 
   // TODO: Should be moved to a proper service?
-  private copyToClipboardEnabled(): boolean {
+  private _copyToClipboardEnabled(): boolean {
     let enabled = true;
     // detect Safari version lower than 10
     let isChrome = !!window['chrome'] && !!window['chrome'].webstore;
@@ -55,7 +58,7 @@ export class EncoderSettingsComponent implements OnInit {
     return enabled;
   }
 
-  public _copyToClipboard(text: string): boolean {
+  private _copyToClipboardAction(text: string): boolean {
     let copied = false;
     let textArea = document.createElement("textarea");
     textArea.style.position = 'fixed';
@@ -70,5 +73,15 @@ export class EncoderSettingsComponent implements OnInit {
     }
     document.body.removeChild(textArea);
     return copied;
+  }
+
+  public _copyToClipboard(text: string): void {
+    let copied: boolean = this._copyToClipboardAction(text);
+    if (copied) {
+      this._msgs.push({ severity: 'success', summary: '', detail: 'Copied to clipboard' });
+    }
+    else {
+      this._msgs.push({ severity: 'error', summary: '', detail: 'Copy operation failed' });
+    }
   }
 }

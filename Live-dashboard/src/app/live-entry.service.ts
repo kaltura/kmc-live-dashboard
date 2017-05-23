@@ -6,7 +6,6 @@ import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamG
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
 import { LiveStreamUpdateAction } from "kaltura-typescript-client/types/LiveStreamUpdateAction";
 import * as _ from 'lodash';
-import {forEach} from "@angular/router/src/utils/collection";
 
 export interface StreamStatus {
   status: 'initial' | 'loading' | 'loaded' | 'error';
@@ -17,8 +16,8 @@ export interface StreamStatus {
 export class LiveEntryService {
   // TODO:
   //id: string = '0_objn1w04'; // nothing
-  id: string = '0_yl7e56ym'; // Dvr
-  //id: string = '0_2m4p0bm1'; // Recording append
+  // id: string = '0_yl7e56ym'; // Dvr
+  id: string = '0_2m4p0bm1'; // Recording append
   // id: string = '0_qsjnf3kk'; // Recording new
   //
   private _streamStatus = new BehaviorSubject<StreamStatus>({status : 'initial'});

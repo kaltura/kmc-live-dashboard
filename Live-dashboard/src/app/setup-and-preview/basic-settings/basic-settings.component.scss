@@ -1,3 +1,5 @@
+@import '../../../styles/_variables';
+
 .basic-settings {
   margin-top: 28px;
 
@@ -19,12 +21,12 @@
 
   input, textarea {
     border-radius: 3px;
-    background-color: #EBEBEB;
+    background-color: $kGrayscale6;
     margin: 12px 0 0 0;
 
     font-size: 15px;
     line-height: 18px;
-    padding-left: 16px;
+    padding: 8px 10px 8px 16px;
   }
 
   .entry-name {
@@ -32,10 +34,6 @@
     flex-flow: column nowrap;
 
     margin-bottom: 20px;
-
-    input {
-      height: 34px;
-    }
   }
 
   .description {
@@ -47,6 +45,14 @@
       padding-top: 8px;
 
       resize: none;
+    }
+  }
+
+  /deep/ .ui-inputtext {
+    &:focus {
+      background: #FFFFFF;
+      box-shadow: none;
+      border: solid 1px $kGrayscale4;
     }
   }
 }

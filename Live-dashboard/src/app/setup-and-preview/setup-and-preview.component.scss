@@ -26,15 +26,20 @@
   .learn-more {
     flex: 1 100%;
 
+    div {
+      width: 489px;
+      margin: auto;
+    }
     margin: 0 28px 0 28px;
     border-top: 1px solid $kGrayscale6;
     border-bottom: 1px solid $kGrayscale6;
-    padding: 22px 0 25px 0;
+    padding: 32px 0 32px 0;
     text-align: center;
 
     .learn-more-link {
       text-decoration: underline;
       color: $kTertiary;
+      margin-left: 5px;
 
       &:hover {
         color: darken($kTertiary, 20%);
@@ -61,6 +66,9 @@
         // TODO: Move to theme.scss
         /deep/ .ui-tabview .ui-tabview-nav > li.ui-state-default {
           background: none;
+        }
+        /deep/ .ui-tabview-title {
+          font-size: 14px;
         }
       }
 

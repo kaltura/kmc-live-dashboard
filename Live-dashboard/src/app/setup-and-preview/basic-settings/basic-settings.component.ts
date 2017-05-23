@@ -13,10 +13,10 @@ export class BasicSettingsComponent implements OnInit {
   constructor(private _liveEntryService: LiveEntryService) { }
 
   ngOnInit() {
-    this._liveEntryService.liveStream$.subscribe(response => {
-      if (response) {
-        this._currentEntry = response;
-      }
+    this._liveEntryService.liveStream$.subscribe((entry: KalturaLiveStreamEntry) => {
+      if (entry) {
+        this._currentEntry = entry;
+       }
     });
   }
 }

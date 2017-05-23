@@ -602,10 +602,18 @@ td.ui-datatable-emptymessage{
   &.ui-state-focus {
     box-shadow: none;
   }
+
+  .ui-dropdown-trigger {
+    border: none;
+    .fa.fa-caret-down {
+      color: $kGrayscale1;
+    }
+  }
+
 }
 .ui-dropdown-label.ui-inputtext {
   height: 32px;
-  padding: 8px 0 0 10px;
+  padding: 8px 10px 5px 10px;
 
   &:hover {
     color: $kPrimary;
@@ -675,8 +683,8 @@ td.ui-datatable-emptymessage{
 }
 
 // messages
-.ui-growl-item-container.ui-state-highlight{
 
+.ui-growl-item-container.ui-state-highlight.ui-corner-all.ui-shadow{
 	color: white;
 	.ui-growl-title{
 		display: none;
@@ -684,6 +692,12 @@ td.ui-datatable-emptymessage{
 	.ui-growl-image{
 		margin-top: 5px;
 		margin-left: 10px;
+    &.fa-check{
+      font-size: 15px;
+    }
+    &.fa-close{
+      display: none;
+    }
 		&.fa-check:before{
 			@extend .kIconcheck_large:before;
 		}

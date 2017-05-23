@@ -1,7 +1,7 @@
-<div class="encoder-settings">
+<div class="encoder-settings kUseKMCngIcons">
   <header>
-    <span>Encoder Settings</span>
-    <span class="streamState">OFFLINE</span>
+    <span class="title">Encoder Settings</span>
+    <span class="rtmp-rtsp">OFFLINE</span>
   </header>
   <div class="encoder-urls">
     <div class="url-box">
@@ -12,13 +12,13 @@
     </div>
     <div class="url-box">
       <label>Backup URL</label>
-      <i class="fa fa-question-circle" aria-hidden="true"></i>
+      <i class="kIconhelp" aria-hidden="true"></i>
       <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_rtmpUrls.secondary)" label="Copy"></button>
       <input type="text" [value]="_rtmpUrls.secondary" readonly/>
     </div>
     <div class="url-box">
       <label>Stream Name</label>
-      <i class="fa fa-question-circle" aria-hidden="true"></i>
+      <i class="kIconhelp" aria-hidden="true"></i>
       <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_streamName)" label="Copy"></button>
       <input type="text" [value]="_streamName" readonly/>
     </div>
@@ -27,4 +27,5 @@
     <button pButton type="button" class="ui-button kButtonDefault exportXml" label="Export XML"></button>
     <button pButton type="button" class="ui-button kButtonDefault generateToken" label="Re - Generate Token"></button>
   </footer>
+  <p-growl [value]="_msgs"></p-growl>
 </div>
