@@ -13,14 +13,14 @@
       <div *ngIf="_recording">
         <p-radioButton name="recordingNewEntrySessionType"
                        value="newEntryPerSession"
-                       [ngModel]="_currentEntry.recordStatus | recordingEnum"
+                       [ngModel]="_currentEntry.recordStatus | recordingType"
                        (ngModelChange)="_onClickRecordingRadio($event)"
                        label="Create new entry for every broadcast session"></p-radioButton>
       </div>
       <div *ngIf="_recording">
         <p-radioButton name="recordingAppendRecordingType"
                        value="appendRecording"
-                       [ngModel]="_currentEntry.recordStatus | recordingEnum"
+                       [ngModel]="_currentEntry.recordStatus | recordingType"
                        (ngModelChange)="_onClickRecordingRadio($event)"
                        label="Append recorded content to a single entry"></p-radioButton>
       </div>

@@ -17,8 +17,9 @@ import { SetupAndPreviewComponent } from './setup-and-preview/setup-and-preview.
 import { EncoderSettingsComponent } from './setup-and-preview/encoder-settings/encoder-settings.component';
 import { BasicSettingsComponent } from './setup-and-preview/basic-settings/basic-settings.component';
 import { AdditionalSettingsComponent } from './setup-and-preview/additional-settings/additional-settings.component';
+import { StreamConfigurationsComponent } from './setup-and-preview/stream-configurations/stream-configurations.component';
 // Pipes
-import { RecordingEnumPipe } from '../pipes/recording-status-enum.pipe';
+import { RecordingTypePipe } from '../pipes/recording-type.pipe';
 import { ModerationPipe } from '../pipes/moderation.pipe';
 import { EntryTypePipe } from '../pipes/entry-type.pipe';
 
@@ -31,7 +32,8 @@ import { EntryTypePipe } from '../pipes/entry-type.pipe';
     BasicSettingsComponent,
     AdditionalSettingsComponent,
     StreamInfoComponent,
-    RecordingEnumPipe,
+    StreamConfigurationsComponent,
+    RecordingTypePipe,
     ModerationPipe,
     EntryTypePipe
   ],

@@ -1,0 +1,37 @@
+@import '../../../styles/_variables';
+
+.stream-configurations {
+  height: 126px;
+
+  padding: 0 40px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+
+  .property {
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: left;
+
+    .configuration-label {
+      font-size: 13px;
+      font-weight: 400;
+      color: $kGrayscale3;
+    }
+
+    .configuration-status {
+      margin-top: 12px;
+      margin-left: -5px;
+
+      .icon {
+        font-size: 75px;
+      }
+
+      .state {
+        margin-left: 2px;
+        vertical-align: top;
+      }
+    }
+  }
+}

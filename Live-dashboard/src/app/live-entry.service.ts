@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from "rxjs";
+import * as _ from 'lodash';
 
 import { KalturaClientConfiguration, KalturaClient } from "@kaltura-ng/kaltura-client";
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
 import { LiveStreamUpdateAction } from "kaltura-typescript-client/types/LiveStreamUpdateAction";
-import * as _ from 'lodash';
+import { EntryServerNodeListAction } from "kaltura-typescript-client/types/EntryServerNodeListAction";
+import { KalturaEntryServerNodeFilter } from "kaltura-typescript-client/types/KalturaEntryServerNodeFilter";
 
 export interface StreamStatus {
   status: 'initial' | 'loading' | 'loaded' | 'error';
@@ -15,9 +17,9 @@ export interface StreamStatus {
 @Injectable()
 export class LiveEntryService {
   // TODO:
-  //id: string = '0_objn1w04'; // nothing
+  id: string = '0_objn1w04'; // nothing
   // id: string = '0_yl7e56ym'; // Dvr
-  id: string = '0_2m4p0bm1'; // Recording append
+  // id: string = '0_2m4p0bm1'; // Recording append
   // id: string = '0_qsjnf3kk'; // Recording new
   //
   private _streamStatus = new BehaviorSubject<StreamStatus>({status : 'initial'});
@@ -25,7 +27,7 @@ export class LiveEntryService {
   private _liveStream = new BehaviorSubject<KalturaLiveStreamEntry>(null);
   public liveStream$ = this._liveStream.asObservable();
   private _cachedLiveStream: KalturaLiveStreamEntry;
-  private _propertiestoUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
+  private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
 
   constructor(private _kalturaClient: KalturaClient, private _kalturaClientConfig: KalturaClientConfiguration) {
     _kalturaClientConfig.ks = 'ODFkZjUzZDQ5YzZhNDM0MDg4ZTJiODdhY2MwYmIzNzJmMTVkMWZiNnwxMDI7MTAyOzE0OTU3MDQyODY7MjsxNDkzMTEyMjg2LjY0MjI7Ozs7';
@@ -51,7 +53,7 @@ export class LiveEntryService {
   }
 
   public saveLiveStreamEntry(): void {
-    let diffProperties = _.filter(this._propertiestoUpdate, (p) => {
+    let diffProperties = _.filter(this._propertiesToUpdate, (p) => {
       return (this._liveStream.value[p] !== this._cachedLiveStream[p]);
     });
     let liveStreamArgument = new KalturaLiveStreamEntry();
@@ -64,20 +66,16 @@ export class LiveEntryService {
     }))
       .subscribe(response => {
         this._liveStream.next(response);
+        this._cachedLiveStream = JSON.parse(JSON.stringify(response));
       });
   }
 
-  /*private update(key: string, value: any): Observable<LiveStreamEntry> {
-    return this.apiRequest(
-      {
-        service: 'livestream',
-        action: 'update',
-        entryId: entry.id,
-        'liveStreamEntry:objectType': 'KalturaLiveStreamEntry',
-        `liveStreamEntry:${key}`: value
-      })
-    .map(res => {
-      return res as LiveStreamEntry;
-    });
-  }*/
+  private getEntryServerNodes(): void {
+    this._kalturaClient.request(new EntryServerNodeListAction({
+      filter: new KalturaEntryServerNodeFilter({ entryIdEqual: this.id })
+    }))
+      .subscribe(response => {
+        debugger;
+      });
+  }
 }

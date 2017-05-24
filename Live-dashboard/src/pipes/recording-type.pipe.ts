@@ -2,9 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
 
 @Pipe({
-  name: 'recordingEnum'
+  name: 'recordingType'
 })
-export class RecordingEnumPipe implements PipeTransform {
+export class RecordingTypePipe implements PipeTransform {
 
   transform(value: KalturaRecordStatus): string {
     switch (value) {

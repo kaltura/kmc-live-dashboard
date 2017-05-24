@@ -39,9 +39,6 @@ export class AdditionalSettingsComponent implements OnInit {
         this._conversionProfilesList = result.objects.map( cp=> {
           return { label: cp.name, value: cp.id };
         });
-        // result.objects.forEach((cp) => {
-        //   this._conversionProfilesList.push({ label: cp.name, value: cp.id });
-        // });
       })
   }
 
