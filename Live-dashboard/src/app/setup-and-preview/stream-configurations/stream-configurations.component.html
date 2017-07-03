@@ -31,14 +31,14 @@
   <div class="property">
     <label class="configuration-label">Recording</label>
     <div class="configuration-status">
-      <span class="icon">•</span>
+      <span class="icon" [class.configuration-on]="checkBooleanConfigurationState(_recordingStatus)">•</span>
       <span class="state">{{_recordingStatus}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">DVR</label>
     <div class="configuration-status">
-      <span class="icon">•</span>
+      <span class="icon" [class.configuration-on]="checkBooleanConfigurationState(_dvrStatus)">•</span>
       <span class="state">{{_dvrStatus}}</span>
     </div>
   </div>

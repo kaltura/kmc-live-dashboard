@@ -9,11 +9,7 @@ import { Observable } from "rxjs";
 @Injectable()
 export class ConversionProfileService {
 
-  constructor(private _kalturaClient: KalturaClient, private _kalturaClientConfig: KalturaClientConfiguration) {
-    _kalturaClientConfig.ks = 'ODFkZjUzZDQ5YzZhNDM0MDg4ZTJiODdhY2MwYmIzNzJmMTVkMWZiNnwxMDI7MTAyOzE0OTU3MDQyODY7MjsxNDkzMTEyMjg2LjY0MjI7Ozs7';
-    _kalturaClientConfig.clientTag = 'KalturaLiveDashboard';
-    _kalturaClientConfig.endpointUrl = 'http://10.0.80.11/api_v3/index.php';
-  }
+  constructor(private _kalturaClient: KalturaClient) { }
 
   public getConversionProfiles(): Observable<KalturaConversionProfileListResponse> {
     return this._kalturaClient.request(new ConversionProfileListAction({

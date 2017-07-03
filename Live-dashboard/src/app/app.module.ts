@@ -24,6 +24,30 @@ import { ModerationPipe } from '../pipes/moderation.pipe';
 import { EntryTypePipe } from '../pipes/entry-type.pipe';
 
 
+
+(<any>window).kmc = (<any>window).kmc || {};
+(<any>window).kmc.vars = (<any>window).kmc.vars || {};
+
+(<any>window).kmc = {
+  vars : {
+    ks : 'YWQwODZiOTA5NDU4MmI4YzBiNjQ3NmU4OTc1N2U2YmYyYjZkYTE0NXwxMDI7MTAyOzE0OTg1NTQzNDM7MjsxNDk1OTYyMzQzLjQ4MDY7Ozs7',
+    endpoint : 'http://10.0.80.11/api_v3/index.php'
+  }
+};
+
+/*function getKalturaClientConfigurations(): KalturaClientConfiguration {
+  const result = new KalturaClientConfiguration();
+
+  if ((<any>window).kmc && (<any>window).kmc.vars) {
+    const { ks, endpoint } = (<any>window).kmc.vars;
+    result.ks = ks;
+    result.endpointUrl = endpoint;
+  }
+  result.clientTag = 'KalturaLiveDashboard';
+
+  return result;
+}*/
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,7 +78,21 @@ import { EntryTypePipe } from '../pipes/entry-type.pipe';
   ],
   providers: [
     KalturaClient,
-    KalturaClientConfiguration,
+    {
+      provide: KalturaClientConfiguration,
+      useFactory: () => {
+        const result = new KalturaClientConfiguration();
+
+        if ((<any>window).kmc && (<any>window).kmc.vars) {
+          const { ks, endpoint } = (<any>window).kmc.vars;
+          result.ks = ks;
+          result.endpointUrl = endpoint;
+        }
+        result.clientTag = 'KalturaLiveDashboard';
+
+        return result;
+      }
+    },
     KalturaApiService,
     LiveEntryService,
     ConversionProfileService

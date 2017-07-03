@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import * as _ from 'lodash';
 
-import { KalturaClientConfiguration, KalturaClient } from "@kaltura-ng/kaltura-client";
+import { KalturaClient } from "@kaltura-ng/kaltura-client";
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
 import { LiveStreamUpdateAction } from "kaltura-typescript-client/types/LiveStreamUpdateAction";
@@ -17,10 +17,10 @@ export interface StreamStatus {
 @Injectable()
 export class LiveEntryService {
   // TODO:
-  id: string = '0_objn1w04'; // nothing
+  // id: string = '0_objn1w04'; // nothing
   // id: string = '0_yl7e56ym'; // Dvr
   // id: string = '0_2m4p0bm1'; // Recording append
-  // id: string = '0_qsjnf3kk'; // Recording new
+  id: string = '0_qsjnf3kk'; // Recording new
   //
   private _streamStatus = new BehaviorSubject<StreamStatus>({status : 'initial'});
   public streamStatus$ = this._streamStatus.asObservable();
@@ -29,16 +29,12 @@ export class LiveEntryService {
   private _cachedLiveStream: KalturaLiveStreamEntry;
   private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
 
-  constructor(private _kalturaClient: KalturaClient, private _kalturaClientConfig: KalturaClientConfiguration) {
-    _kalturaClientConfig.ks = 'ODFkZjUzZDQ5YzZhNDM0MDg4ZTJiODdhY2MwYmIzNzJmMTVkMWZiNnwxMDI7MTAyOzE0OTU3MDQyODY7MjsxNDkzMTEyMjg2LjY0MjI7Ozs7';
-    _kalturaClientConfig.clientTag = 'KalturaLiveDashboard';
-    _kalturaClientConfig.endpointUrl = 'http://10.0.80.11/api_v3/index.php';
-  }
+  constructor(private _kalturaClient: KalturaClient) { }
 
   public getStreamInfo(): void {
     // TODO: Should I create an instance for unsubscribe?
     this._streamStatus.next({ status: 'loading' });
-    this._kalturaClient.request(new LiveStreamGetAction({ entryId : this.id }))
+    this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this.id }))
       .subscribe(response => {
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
         this._liveStream.next(response);
@@ -48,6 +44,7 @@ export class LiveEntryService {
           status: 'error',
           error: error
         });
+        console.log(this._streamStatus.value);
       }
     );
   }
@@ -70,12 +67,17 @@ export class LiveEntryService {
       });
   }
 
-  private getEntryServerNodes(): void {
+  private _getEntryServerNodesList(): void {
     this._kalturaClient.request(new EntryServerNodeListAction({
       filter: new KalturaEntryServerNodeFilter({ entryIdEqual: this.id })
-    }))
+      }))
       .subscribe(response => {
+        console.log("I found myselg here... now what?");
         debugger;
-      });
+      })
+  }
+
+  public startEntryServerNodeMonitoring(): void {
+    return this._getEntryServerNodesList()
   }
 }

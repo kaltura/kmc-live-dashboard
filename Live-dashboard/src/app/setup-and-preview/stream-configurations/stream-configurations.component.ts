@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { LiveEntryService } from "../../live-entry.service";
 import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStatus";
 import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
-import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
 
 @Component({
   selector: 'stream-configurations',
@@ -22,6 +21,10 @@ export class StreamConfigurationsComponent implements OnInit {
         this._recordingStatus = (response.recordStatus !== KalturaRecordStatus.disabled) ? "On" : "N/A";
       }
     })
+  }
+
+  checkBooleanConfigurationState(state: string): boolean {
+    return state === "On";
   }
 
 }
