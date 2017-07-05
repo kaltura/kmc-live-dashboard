@@ -4,5 +4,9 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  "kaltura": {
+    "apiUrl": "http://10.0.80.11/api_v3/index.php",
+    "cdnUrl": "http://cdnapi.kaltura.com"
+  }
 };

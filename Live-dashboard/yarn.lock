@@ -116,9 +116,21 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@kaltura-ng/kaltura-client@ng4":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-1.0.1.tgz#e9143ac27a0e1bff19d3a4f616aab296e2e26056"
+"@kaltura-ng/kaltura-client@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-0.1.0.tgz#80e7f2dc4b0fce144c747c4854b2981719b8321d"
+
+"@kaltura-ng/kaltura-primeng-ui@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.2.0.tgz#1790129b0bc3bcff6dbaefeb7269e9629f90f1c3"
+
+"@kaltura-ng/kaltura-ui@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-0.2.0.tgz#4da62069e240d0b9730ec2b58702e85a494dd7e7"
+
+"@kaltura-ng/mc-theme@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.1.0.tgz#736c804dd0234eb99fcd2c85453503a4be0b4c84"
 
 "@ngtools/json-schema@1.0.5":
   version "1.0.5"
@@ -2626,9 +2638,9 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.3.6"
 
-kaltura-typescript-client@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/kaltura-typescript-client/-/kaltura-typescript-client-1.1.0.tgz#5ce726c68c0ceccd6ec33a8520dc9491d0e1f52e"
+kaltura-typescript-client@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/kaltura-typescript-client/-/kaltura-typescript-client-2.1.0.tgz#0b4beba88238cfb13276e1dae0250d5c477ad2e9"
 
 karma-chrome-launcher@~2.0.0:
   version "2.0.0"
@@ -3168,6 +3180,10 @@ normalize-url@^1.4.0:
     prepend-http "^1.0.0"
     query-string "^4.1.0"
     sort-keys "^1.0.0"
+
+normalize.css@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/normalize.css/-/normalize.css-7.0.0.tgz#abfb1dd82470674e0322b53ceb1aaf412938e4bf"
 
 npm-run-path@^1.0.0:
   version "1.0.0"
@@ -3714,9 +3730,9 @@ pretty-error@^2.0.2:
     renderkid "^2.0.1"
     utila "~0.4"
 
-primeng@^4.0.0-rc.2:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/primeng/-/primeng-4.0.0.tgz#6e813341fb30cf35cefde5f2e5d0c4cc000652e6"
+primeng@^4.1.0-rc.3:
+  version "4.1.0-rc.3"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-4.1.0-rc.3.tgz#535a4bc5cdac28bb0a649787e6405c79a7faecf7"
 
 process-nextick-args@~1.0.6:
   version "1.0.7"

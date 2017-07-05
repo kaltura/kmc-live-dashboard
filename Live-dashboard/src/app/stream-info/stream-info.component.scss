@@ -1,21 +1,20 @@
-@import '../../styles/_variables';
+@import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
 
 .streamInfo {
   height: 517px;
   width: 279px;
   background-color: $mainLinkHoverColor;
-  border: 1px solid $kGrayscale4;
+  //border: 1px solid $kGrayscale4;
   border-radius: 3px;
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
 
   .preview-player {
-    height: 42%;
+    height: 30%;
     display: flex;
     flex-flow: column nowrap;
 
     .player-div {
       height: 158px;
-      margin-bottom: 12px;
       background-color: $kGrayscale6;
       display: flex;
       flex-flow: column nowrap;
@@ -37,9 +36,10 @@
       text-align: center;
     }
   }
+
   .details {
     border-top: 1px solid $kGrayscale4;
-    height: 58%;
+    height: 70%;
     padding: 24px 16px;
 
     box-sizing: border-box;

@@ -77,6 +77,7 @@ export class EncoderSettingsComponent implements OnInit {
 
   public _copyToClipboard(text: string): void {
     let copied: boolean = this._copyToClipboardAction(text);
+    this._msgs = [];
     if (copied) {
       this._msgs.push({ severity: 'success', summary: '', detail: 'Copied to clipboard' });
     }

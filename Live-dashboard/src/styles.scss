@@ -1,9 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-@import './styles/_variables';
-@import './styles/_icons';
-@import './styles/kmcng-primeng/index';
+
+$mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts';
+
+@import '../node_modules/@kaltura-ng/mc-theme/themes/default/scss/variables.scss';
+@import '../node_modules/@kaltura-ng/mc-theme/themes/default/scss/index.scss';
 
 * {
-  font-family: $fontFamily;
   font-size: 15px;
 }

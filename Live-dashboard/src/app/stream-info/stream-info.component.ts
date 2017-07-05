@@ -14,18 +14,19 @@ export class StreamInfoComponent implements OnInit {
   public _type: KalturaMediaType;
   public _moderation: KalturaEntryModerationStatus;
   public _plays: number;
+  public _entryId: string;
 
   constructor(private _liveEntryService : LiveEntryService) { }
 
   ngOnInit() {
     this._liveEntryService.liveStream$.subscribe(response => {
       if (response) {
-        // this.currentEntry = resposne;
         this._creator = response.creatorId;
         this._date = response.createdAt;
         this._type = response.mediaType;
         this._moderation = response.moderationStatus;
         this._plays = response.plays;
+        this._entryId = response.id;
       }
     })
   }

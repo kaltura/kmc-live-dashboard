@@ -1,10 +1,10 @@
-@import '../../styles/_variables';
+@import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
 
 .setup-and-preview {
-  border: 1px solid $kGrayscale4;
+  //border: 1px solid $kGrayscale4;
   border-radius: 3px;
   background-color: $mainLinkHoverColor;
-  box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
+  //box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
   display: flex;
   flex-flow: row wrap;
 
@@ -35,11 +35,14 @@
     border-bottom: 1px solid $kGrayscale6;
     padding: 32px 0 32px 0;
     text-align: center;
+    .learn-more-text {
+      color: $kGrayscale2;
+    }
 
     .learn-more-link {
+      margin-top: 5px;
       text-decoration: underline;
       color: $kTertiary;
-      margin-left: 5px;
 
       &:hover {
         color: darken($kTertiary, 20%);

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// PrimeNG
 import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule } from 'primeng/primeng';
 // Services
 import { KalturaClient } from '@kaltura-ng/kaltura-client/kaltura-client.service';
@@ -22,7 +23,8 @@ import { StreamConfigurationsComponent } from './setup-and-preview/stream-config
 import { RecordingTypePipe } from '../pipes/recording-type.pipe';
 import { ModerationPipe } from '../pipes/moderation.pipe';
 import { EntryTypePipe } from '../pipes/entry-type.pipe';
-
+// Configuration
+import { environment } from '../environments/environment';
 
 
 (<any>window).kmc = (<any>window).kmc || {};
@@ -30,23 +32,24 @@ import { EntryTypePipe } from '../pipes/entry-type.pipe';
 
 (<any>window).kmc = {
   vars : {
-    ks : 'YWQwODZiOTA5NDU4MmI4YzBiNjQ3NmU4OTc1N2U2YmYyYjZkYTE0NXwxMDI7MTAyOzE0OTg1NTQzNDM7MjsxNDk1OTYyMzQzLjQ4MDY7Ozs7',
-    endpoint : 'http://10.0.80.11/api_v3/index.php'
+    ks : 'ODBiYmFhZTllMGQzZDgxNmU3NDFiNWM3OWZlZjUyNTUxNTQ1NTIxYXwxMDI7MTAyOzE1MDE2NjI0OTM7MjsxNDk5MDcwNDkzLjYzNTs7Ozs=',
+    endpoint : environment.kaltura.apiUrl
   }
 };
 
-/*function getKalturaClientConfigurations(): KalturaClientConfiguration {
+export function clientConfigurationFactory() : KalturaClientConfiguration  {
   const result = new KalturaClientConfiguration();
 
   if ((<any>window).kmc && (<any>window).kmc.vars) {
-    const { ks, endpoint } = (<any>window).kmc.vars;
-    result.ks = ks;
-    result.endpointUrl = endpoint;
+    result.endpointUrl = (<any>window).kmc.vars.endpoint;
+  }
+  else {
+    throw new Error('Missing kalturaServerEndpoint');
   }
   result.clientTag = 'KalturaLiveDashboard';
 
   return result;
-}*/
+}
 
 @NgModule({
   declarations: [
@@ -80,18 +83,7 @@ import { EntryTypePipe } from '../pipes/entry-type.pipe';
     KalturaClient,
     {
       provide: KalturaClientConfiguration,
-      useFactory: () => {
-        const result = new KalturaClientConfiguration();
-
-        if ((<any>window).kmc && (<any>window).kmc.vars) {
-          const { ks, endpoint } = (<any>window).kmc.vars;
-          result.ks = ks;
-          result.endpointUrl = endpoint;
-        }
-        result.clientTag = 'KalturaLiveDashboard';
-
-        return result;
-      }
+      useFactory: clientConfigurationFactory
     },
     KalturaApiService,
     LiveEntryService,
@@ -100,6 +92,12 @@ import { EntryTypePipe } from '../pipes/entry-type.pipe';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-
-
+  constructor(private _kalturaClient: KalturaClient) {
+    if ((<any>window).kmc && (<any>window).kmc.vars) {
+      _kalturaClient.ks = (<any>window).kmc.vars.ks;
+    }
+    else {
+      throw new Error('Missing kalturaServerKs');
+    }
+  }
 }
