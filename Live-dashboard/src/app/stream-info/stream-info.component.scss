@@ -1,7 +1,7 @@
 @import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
 
 .streamInfo {
-  height: 517px;
+  height: 490px;
   width: 279px;
   background-color: $mainLinkHoverColor;
   //border: 1px solid $kGrayscale4;
@@ -9,7 +9,7 @@
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
 
   .preview-player {
-    height: 30%;
+    height: 157px;
     display: flex;
     flex-flow: column nowrap;
 
@@ -39,7 +39,7 @@
 
   .details {
     border-top: 1px solid $kGrayscale4;
-    height: 70%;
+    //height: 70%;
     padding: 24px 16px;
 
     box-sizing: border-box;
@@ -66,6 +66,7 @@
           flex: none;
           width: 120px;
           color: $kGrayscale3;
+          font-weight: 300;
         }
         .right {
           flex: none;

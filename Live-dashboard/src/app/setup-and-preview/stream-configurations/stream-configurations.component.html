@@ -21,28 +21,28 @@
     <label class="configuration-label">Elapsed Time</label>
     <div class="configuration-status elapsed-time">
       <span class="bullet">•</span>
-      <span class="state">{{_elapsedTime}}</span>
+      <span class="state">{{_elapsedTime | date:'hh:mm:ss' }}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">Transcoding</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_transcoding === 'On')">•</span>
-      <span class="state">{{_transcoding}}</span>
+      <span class="bullet" [class.bullet-green]="(_staticConfiguration.transcoding)">•</span>
+      <span class="state">{{_staticConfiguration.transcoding | entryBooleanConfiguration}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">Recording</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_recording === 'On')">•</span>
-      <span class="state">{{_recording}}</span>
+      <span class="bullet" [class.bullet-green]="(_staticConfiguration.recording)">•</span>
+      <span class="state">{{_staticConfiguration.recording | entryBooleanConfiguration}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">DVR</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_dvr === 'On')">•</span>
-      <span class="state">{{_dvr}}</span>
+      <span class="bullet" [class.bullet-green]="(_staticConfiguration.dvr)">•</span>
+      <span class="state">{{_staticConfiguration.dvr | entryBooleanConfiguration}}</span>
     </div>
   </div>
   <div class="property">

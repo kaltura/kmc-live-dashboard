@@ -24,6 +24,8 @@ import { StreamConfigurationsComponent } from './setup-and-preview/stream-config
 import { RecordingTypePipe } from '../pipes/recording-type.pipe';
 import { ModerationPipe } from '../pipes/moderation.pipe';
 import { EntryTypePipe } from '../pipes/entry-type.pipe';
+import { EntryBooleanConfigurationPipe } from '../pipes/entry-boolean-configuration.pipe';
+import { EntryDynamicInformationPipe } from '../pipes/entry-dynamic-information.pipe';
 // Configuration
 import { environment } from '../environments/environment';
 
@@ -63,7 +65,9 @@ export function clientConfigurationFactory() : KalturaClientConfiguration  {
     StreamConfigurationsComponent,
     RecordingTypePipe,
     ModerationPipe,
-    EntryTypePipe
+    EntryTypePipe,
+    EntryBooleanConfigurationPipe,
+    EntryDynamicInformationPipe
   ],
   imports: [
     BrowserModule,

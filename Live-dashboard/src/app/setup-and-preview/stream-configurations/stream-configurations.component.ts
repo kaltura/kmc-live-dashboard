@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { LiveEntryService, LiveStreamStatusEnum } from "../../live-entry.service";
+import { LiveEntryService, LiveStreamStatusEnum, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo } from "../../live-entry.service";
 
 @Component({
   selector: 'stream-configurations',
@@ -8,12 +8,18 @@ import { LiveEntryService, LiveStreamStatusEnum } from "../../live-entry.service
   styleUrls: ['stream-configurations.component.scss']
 })
 export class StreamConfigurationsComponent implements OnInit {
-  public _elapsedTime: string = "00:00:00";
+  public _elapsedTime: number = Date.now();
   // Static configuration
-  public _dvr: string = "";
-  public _recording: string = "";
-  public _transcoding: string = "";
+  public _staticConfiguration: LiveEntryStaticConfiguration = {
+    dvr: false,
+    recording: false,
+    transcoding: false
+  };
   // Dynamic configuration
+  public _dynaminConfiguration: LiveEntryDynamicStreamInfo = {
+    redundancy: false,
+    streamStatus: LiveStreamStatusEnum.Offline
+  };
   public _redundancy: string = "";
   public _streamStatus: string = "";
 
@@ -22,9 +28,7 @@ export class StreamConfigurationsComponent implements OnInit {
   ngOnInit() {
     this._liveEntryService.entryStaticConfiguration$.subscribe(response => {
       if (response) {
-        this._dvr = (response.dvr) ? "On" : "Off";
-        this._recording = (response.recording) ? "On" : "Off";
-        this._transcoding = (response.transcoding) ? "On" : "Off";
+        this._staticConfiguration = response;
       }
     });
     this._liveEntryService.entryDynmicConfiguration$.subscribe(response => {
@@ -40,11 +44,14 @@ export class StreamConfigurationsComponent implements OnInit {
       case LiveStreamStatusEnum.Live:
         return 'Live';
       case LiveStreamStatusEnum.Broadcasting:
+        this._startLiveEntryTimer();
         return 'Initializing';
       default:
         return 'Offline';
     }
   }
 
-  // public _checkStreamStatusLiveState(state: string): boolean { }
+  private _startLiveEntryTimer(): void {
+
+  }
 }

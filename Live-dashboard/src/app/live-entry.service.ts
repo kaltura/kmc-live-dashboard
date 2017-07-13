@@ -38,10 +38,11 @@ export interface LiveEntryStaticConfiguration {
   transcoding?: boolean,
 }
 
-export interface LiveEntryDynamicConfiguration {
+export interface LiveEntryDynamicStreamInfo {
   redundancy?: boolean,
   streamHealth?: boolean, // TODO create StreamHealth type
   streamStatus?: LiveStreamStatusEnum;
+
 }
 
 @Injectable()
@@ -64,7 +65,7 @@ export class LiveEntryService {
   // BehaviorSubjects subscribed configuration display component
   private _entryStaticConfiguration = new BehaviorSubject<LiveEntryStaticConfiguration>(null);
   public entryStaticConfiguration$ = this._entryStaticConfiguration.asObservable();
-  private _entryDynamicConfiguration = new BehaviorSubject<LiveEntryDynamicConfiguration>(null);
+  private _entryDynamicConfiguration = new BehaviorSubject<LiveEntryDynamicStreamInfo>(null);
   public entryDynmicConfiguration$ = this._entryDynamicConfiguration.asObservable();
 
   private _pullRequestEntryStatusMonitoring: ISubscription;
@@ -143,8 +144,7 @@ export class LiveEntryService {
         return this._kalturaClient.request(new EntryServerNodeListAction({
           filter: new KalturaEntryServerNodeFilter({entryIdEqual: this.id})
         })).map(response => {
-          let x: LiveEntryDynamicConfiguration = this._parseEntryServeNodeList(response.objects);
-          this._entryDynamicConfiguration.next(x);
+          this._entryDynamicConfiguration.next(this._parseEntryServeNodeList(response.objects));
           return;
         });
     }, 3000)
@@ -155,7 +155,7 @@ export class LiveEntryService {
       });
   }
 
-  private _parseEntryServeNodeList(snList: KalturaEntryServerNode[]): LiveEntryDynamicConfiguration {
+  private _parseEntryServeNodeList(snList: KalturaEntryServerNode[]): LiveEntryDynamicStreamInfo {
     function getStreamStatus(): LiveStreamStatusEnum {
       // Check stream status by order:
       // (1) If one serverNode is Playable -> Live
@@ -172,7 +172,8 @@ export class LiveEntryService {
 
       return LiveStreamStatusEnum.Offline;
     }
-    let dynamicConfigObj: LiveEntryDynamicConfiguration = {};
+
+    let dynamicConfigObj: LiveEntryDynamicStreamInfo = {};
     // Check redundancy if more than one serverNode was returned
     dynamicConfigObj.redundancy = (snList.length > 1);
     dynamicConfigObj.streamStatus = getStreamStatus();
