@@ -11,16 +11,16 @@ import 'rxjs/Rx';
 
 export class SetupAndPreviewComponent implements OnInit {
 
-  public _streamStatus: StreamStatus;
+  public _applicationStatus: StreamStatus;
 
   constructor(public _liveEntryService : LiveEntryService) { }
 
   ngOnInit() {
-    this._liveEntryService.streamStatus$.subscribe(response => {
-      this._streamStatus = response;
+    this._liveEntryService.applicationStatus$.subscribe(response => {
+      this._applicationStatus = response;
     });
-    this._liveEntryService.getStreamInfo();
-    // this._liveEntryService.startEntryServerNodeMonitoring();
+    this._liveEntryService.getLiveEntryInformation();
+    this._liveEntryService.runEntryStatusMonitoring();
   }
 
   public onClickSaveBtn(): void {

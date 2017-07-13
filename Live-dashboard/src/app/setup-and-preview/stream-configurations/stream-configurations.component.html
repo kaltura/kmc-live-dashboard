@@ -1,52 +1,55 @@
-<div class="stream-configurations">
+<div class="stream-configurations kOverrideFAIcons">
   <div class="property">
     <label class="configuration-label">Stream Status</label>
     <div class="configuration-status">
-      <span class="icon">•</span>
-      <span class="state">Offline</span>
+      <span class="bullet" [class.bullet-green]="(_streamStatus === 'Live')"
+                           [class.bullet-yellow]="(_streamStatus === 'Initializing')">•</span>
+      <span class="state">{{_streamStatus}}</span>
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">Stream Health</label>
-    <!--<i class="kIconhelp" aria-hidden="true"></i>-->
+    <div class="stream-health">
+      <label class="configuration-label">Stream Health</label>
+      <i class="kIconhelp" aria-hidden="true"></i>
+    </div>
     <div class="configuration-status">
-      <span class="icon">•</span>
+      <span class="bullet">•</span>
       <span class="state">B</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">Elapsed Time</label>
-    <div class="configuration-status">
-      <span class="icon">•</span>
-      <span class="state">C</span>
+    <div class="configuration-status elapsed-time">
+      <span class="bullet">•</span>
+      <span class="state">{{_elapsedTime}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">Transcoding</label>
     <div class="configuration-status">
-      <span class="icon">•</span>
-      <span class="state">D</span>
+      <span class="bullet" [class.bullet-green]="(_transcoding === 'On')">•</span>
+      <span class="state">{{_transcoding}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">Recording</label>
     <div class="configuration-status">
-      <span class="icon" [class.configuration-on]="checkBooleanConfigurationState(_recordingStatus)">•</span>
-      <span class="state">{{_recordingStatus}}</span>
+      <span class="bullet" [class.bullet-green]="(_recording === 'On')">•</span>
+      <span class="state">{{_recording}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">DVR</label>
     <div class="configuration-status">
-      <span class="icon" [class.configuration-on]="checkBooleanConfigurationState(_dvrStatus)">•</span>
-      <span class="state">{{_dvrStatus}}</span>
+      <span class="bullet" [class.bullet-green]="(_dvr === 'On')">•</span>
+      <span class="state">{{_dvr}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">Redundancy</label>
     <div class="configuration-status">
-      <span class="icon">•</span>
-      <span class="state">G</span>
+      <span class="bullet" [class.bullet-green]="(_redundancy === 'On')">•</span>
+      <span class="state">{{_redundancy}}</span>
     </div>
   </div>
 </div>

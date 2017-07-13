@@ -11,6 +11,7 @@ import { KalturaClientConfiguration } from '@kaltura-ng/kaltura-client/kaltura-c
 import { KalturaApiService } from './kaltura-api.service';
 import { LiveEntryService } from './live-entry.service';
 import { ConversionProfileService } from "./conversion-profile.service";
+import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 // Components
 import { AppComponent } from './app.component';
 import { StreamInfoComponent } from './stream-info/stream-info.component';
@@ -87,7 +88,8 @@ export function clientConfigurationFactory() : KalturaClientConfiguration  {
     },
     KalturaApiService,
     LiveEntryService,
-    ConversionProfileService
+    ConversionProfileService,
+    LiveEntryTimerTaskService
   ],
   bootstrap: [AppComponent]
 })

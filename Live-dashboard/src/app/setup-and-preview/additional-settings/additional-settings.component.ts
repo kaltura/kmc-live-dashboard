@@ -36,7 +36,7 @@ export class AdditionalSettingsComponent implements OnInit {
   private _getConversionProfilesList(): void {
     this._conversionProfilesService.getConversionProfiles()
       .subscribe(result => {
-        this._conversionProfilesList = result.objects.map( cp=> {
+        this._conversionProfilesList = result.objects.map(cp=> {
           return { label: cp.name, value: cp.id };
         });
       })

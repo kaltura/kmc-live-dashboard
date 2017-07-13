@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
   "kaltura": {
-    "apiUrl": "http://10.0.80.11/api_v3/index.php",
+    "apiUrl": "http://dev-backend28.dev.kaltura.com/api_v3/index.php",
     "cdnUrl": "http://cdnapi.kaltura.com"
   }
 };

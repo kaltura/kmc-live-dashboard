@@ -20,7 +20,7 @@ export class EncoderSettingsComponent implements OnInit {
   public _copyToClipBoardEnabled: boolean = false;
   public _msgs: Message[] = [];
 
-  constructor(private _liveEntryService : LiveEntryService) { }
+  constructor(private _liveEntryService: LiveEntryService) { }
 
   ngOnInit() {
     this._liveEntryService.liveStream$.subscribe(response => {

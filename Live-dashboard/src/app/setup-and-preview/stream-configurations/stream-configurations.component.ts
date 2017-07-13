@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService } from "../../live-entry.service";
-import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStatus";
-import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
+
+import { LiveEntryService, LiveStreamStatusEnum } from "../../live-entry.service";
 
 @Component({
   selector: 'stream-configurations',
@@ -9,22 +8,43 @@ import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaReco
   styleUrls: ['stream-configurations.component.scss']
 })
 export class StreamConfigurationsComponent implements OnInit {
-  public _dvrStatus: String = "";
-  public _recordingStatus: String = "";
+  public _elapsedTime: string = "00:00:00";
+  // Static configuration
+  public _dvr: string = "";
+  public _recording: string = "";
+  public _transcoding: string = "";
+  // Dynamic configuration
+  public _redundancy: string = "";
+  public _streamStatus: string = "";
 
   constructor(private _liveEntryService: LiveEntryService) { }
 
   ngOnInit() {
-    this._liveEntryService.liveStream$.subscribe(response => {
+    this._liveEntryService.entryStaticConfiguration$.subscribe(response => {
       if (response) {
-        this._dvrStatus = (response.dvrStatus === KalturaDVRStatus.enabled) ? "On" : "N/A";
-        this._recordingStatus = (response.recordStatus !== KalturaRecordStatus.disabled) ? "On" : "N/A";
+        this._dvr = (response.dvr) ? "On" : "Off";
+        this._recording = (response.recording) ? "On" : "Off";
+        this._transcoding = (response.transcoding) ? "On" : "Off";
+      }
+    });
+    this._liveEntryService.entryDynmicConfiguration$.subscribe(response => {
+      if (response) {
+        this._redundancy = (response.redundancy) ? "On" : "N/A";
+        this._streamStatus = this._parseStreamStatus(response.streamStatus);
       }
     })
   }
 
-  checkBooleanConfigurationState(state: string): boolean {
-    return state === "On";
+  private _parseStreamStatus(status: LiveStreamStatusEnum): 'Offline' | 'Initializing' | 'Live' {
+    switch (status) {
+      case LiveStreamStatusEnum.Live:
+        return 'Live';
+      case LiveStreamStatusEnum.Broadcasting:
+        return 'Initializing';
+      default:
+        return 'Offline';
+    }
   }
 
+  // public _checkStreamStatusLiveState(state: string): boolean { }
 }
