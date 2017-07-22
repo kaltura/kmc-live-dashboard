@@ -2,9 +2,9 @@
   <div class="property">
     <label class="configuration-label">Stream Status</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_streamStatus === 'Live')"
-                           [class.bullet-yellow]="(_streamStatus === 'Initializing')">•</span>
-      <span class="state">{{_streamStatus}}</span>
+      <span class="bullet" [class.bullet-green]="((_dynamicConfiguration.streamStatus | entryDynamicInformation) === 'Live')"
+                           [class.bullet-yellow]="((_dynamicConfiguration.streamStatus | entryDynamicInformation) === 'Initializing')">•</span>
+      <span class="state">{{_dynamicConfiguration.streamStatus | entryDynamicInformation}}</span>
     </div>
   </div>
   <div class="property">
@@ -48,8 +48,8 @@
   <div class="property">
     <label class="configuration-label">Redundancy</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_redundancy === 'On')">•</span>
-      <span class="state">{{_redundancy}}</span>
+      <span class="bullet" [class.bullet-green]="(_dynamicConfiguration.redundancy)">•</span>
+      <span class="state">{{_dynamicConfiguration.redundancy | entryDynamicInformation: _dynamicConfiguration.streamStatus}}</span>
     </div>
   </div>
 </div>

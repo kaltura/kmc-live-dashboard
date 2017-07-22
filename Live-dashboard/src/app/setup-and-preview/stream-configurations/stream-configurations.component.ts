@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
+import { Observable } from "rxjs";
 
 import { LiveEntryService, LiveStreamStatusEnum, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo } from "../../live-entry.service";
 
@@ -8,7 +10,7 @@ import { LiveEntryService, LiveStreamStatusEnum, LiveEntryStaticConfiguration, L
   styleUrls: ['stream-configurations.component.scss']
 })
 export class StreamConfigurationsComponent implements OnInit {
-  public _elapsedTime: number = Date.now();
+  public _elapsedTime: number = 0;
   // Static configuration
   public _staticConfiguration: LiveEntryStaticConfiguration = {
     dvr: false,
@@ -16,12 +18,11 @@ export class StreamConfigurationsComponent implements OnInit {
     transcoding: false
   };
   // Dynamic configuration
-  public _dynaminConfiguration: LiveEntryDynamicStreamInfo = {
+  public _dynamicConfiguration: LiveEntryDynamicStreamInfo = {
     redundancy: false,
-    streamStatus: LiveStreamStatusEnum.Offline
+    streamStatus: LiveStreamStatusEnum.Offline,
+    streamStartTime: 0
   };
-  public _redundancy: string = "";
-  public _streamStatus: string = "";
 
   constructor(private _liveEntryService: LiveEntryService) { }
 
@@ -31,27 +32,10 @@ export class StreamConfigurationsComponent implements OnInit {
         this._staticConfiguration = response;
       }
     });
-    this._liveEntryService.entryDynmicConfiguration$.subscribe(response => {
+    this._liveEntryService.entryDynamicConfiguration$.subscribe(response => {
       if (response) {
-        this._redundancy = (response.redundancy) ? "On" : "N/A";
-        this._streamStatus = this._parseStreamStatus(response.streamStatus);
+        this._dynamicConfiguration = response;
       }
-    })
-  }
-
-  private _parseStreamStatus(status: LiveStreamStatusEnum): 'Offline' | 'Initializing' | 'Live' {
-    switch (status) {
-      case LiveStreamStatusEnum.Live:
-        return 'Live';
-      case LiveStreamStatusEnum.Broadcasting:
-        this._startLiveEntryTimer();
-        return 'Initializing';
-      default:
-        return 'Offline';
-    }
-  }
-
-  private _startLiveEntryTimer(): void {
-
+    });
   }
 }

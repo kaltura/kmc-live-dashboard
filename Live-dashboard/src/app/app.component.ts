@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import { BootstrapService } from "./bootstrap.service";
 
 @Component({
   selector: 'app-root',
@@ -6,6 +7,11 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  public _bootstrapInitStatus: boolean = false;
 
-  ngOnInit() { }
+  constructor(private _boostrapService: BootstrapService) { }
+
+  ngOnInit() {
+    this._bootstrapInitStatus = this._boostrapService.initStatus;
+  }
 }
