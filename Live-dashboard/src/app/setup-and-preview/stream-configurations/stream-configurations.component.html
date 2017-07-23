@@ -1,6 +1,6 @@
 <div class="stream-configurations kOverrideFAIcons">
   <div class="property">
-    <label class="configuration-label">Stream Status</label>
+    <label class="configuration-label">{{ 'STREAM_CONFIG.stream_status' | translate }}</label>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="(_streamStatus === 'Live')"
                            [class.bullet-yellow]="(_streamStatus === 'Initializing')">•</span>
@@ -9,7 +9,7 @@
   </div>
   <div class="property">
     <div class="stream-health">
-      <label class="configuration-label">Stream Health</label>
+      <label class="configuration-label">{{ 'STREAM_CONFIG.stream_health' | translate }}</label>
       <i class="kIconhelp" aria-hidden="true"></i>
     </div>
     <div class="configuration-status">
@@ -18,35 +18,35 @@
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">Elapsed Time</label>
+    <label class="configuration-label">{{ 'STREAM_CONFIG.elapsed_time' | translate }}</label>
     <div class="configuration-status elapsed-time">
       <span class="bullet">•</span>
       <span class="state">{{_elapsedTime}}</span>
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">Transcoding</label>
+    <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="(_transcoding === 'On')">•</span>
       <span class="state">{{_transcoding}}</span>
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">Recording</label>
+    <label class="configuration-label">{{ 'STREAM_CONFIG.recording' | translate }}</label>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="(_recording === 'On')">•</span>
       <span class="state">{{_recording}}</span>
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">DVR</label>
+    <label class="configuration-label">{{ 'STREAM_CONFIG.dvr' | translate }}</label>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="(_dvr === 'On')">•</span>
       <span class="state">{{_dvr}}</span>
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">Redundancy</label>
+    <label class="configuration-label">{{ 'STREAM_CONFIG.redundancy' | translate }}</label>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="(_redundancy === 'On')">•</span>
       <span class="state">{{_redundancy}}</span>
