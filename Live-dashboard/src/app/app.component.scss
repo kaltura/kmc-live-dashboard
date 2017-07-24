@@ -1,20 +1,28 @@
 @import '../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/variables.scss';
 
-.dashboardWindow {
+.app-window {
   max-width: 1500px;
   min-width: 1035px;
-  display: flex;
-  flex-flow: row nowrap;
-  padding: 28px 28px 98px 28px;
 
+  padding: 28px 28px 98px 28px;
   background-color: #FFFFFF;
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
 
-  setup-and-preview {
-    background-color: #FFFFFF;
+  .dashboard-window {
+    display: flex;
+    flex-flow: row nowrap;
+
+    setup-and-preview {
+      background-color: #FFFFFF;
+    }
+
+    stream-info {
+      margin-left: 28px;
+    }
   }
 
-  stream-info {
-    margin-left: 28px;
+  .parameters-error {
+    text-align: center;
+    vertical-align: middle;
   }
 }
