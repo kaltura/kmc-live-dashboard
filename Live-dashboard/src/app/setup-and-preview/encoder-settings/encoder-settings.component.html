@@ -1,31 +1,31 @@
 <div class="encoder-settings kOverrideFAIcons">
   <header>
-    <span class="title">Encoder Settings</span>
-    <span class="rtmp-rtsp">OFFLINE</span>
+    <span class="title">{{ 'ENCODER_SETTINGS.encoder_settings' | translate }}</span>
+    <span class="rtmp-rtsp">{{ 'ENCODER_SETTINGS.status.offline' | translate }}</span>
   </header>
   <div class="encoder-urls">
     <div class="url-box">
-      <label>Primary URL</label>
+      <label>{{ 'ENCODER_SETTINGS.primary_url' | translate }}</label>
       <i class="kIconhelp" aria-hidden="true"></i>
-      <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_rtmpUrls.primary)" label="Copy"></button>
+      <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_rtmpUrls.primary)" label="{{ 'ENCODER_SETTINGS.copy' | translate }}"></button>
       <input type="text" [value]="_rtmpUrls.primary" readonly/>
     </div>
     <div class="url-box">
-      <label>Backup URL</label>
+      <label>{{ 'ENCODER_SETTINGS.backup_url' | translate }}</label>
       <i class="kIconhelp" aria-hidden="true"></i>
-      <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_rtmpUrls.secondary)" label="Copy"></button>
+      <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_rtmpUrls.secondary)" label="{{ 'ENCODER_SETTINGS.copy' | translate }}"></button>
       <input type="text" [value]="_rtmpUrls.secondary" readonly/>
     </div>
     <div class="url-box">
-      <label>Stream Name</label>
+      <label>{{ 'ENCODER_SETTINGS.stream_name' | translate }}</label>
       <i class="kIconhelp" aria-hidden="true"></i>
-      <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_streamName)" label="Copy"></button>
+      <button *ngIf="_copyToClipBoardEnabled" pButton class="ui-button copyBtn" (click)="_copyToClipboard(_streamName)" label="{{ 'ENCODER_SETTINGS.copy' | translate }}"></button>
       <input type="text" [value]="_streamName" readonly/>
     </div>
   </div>
   <footer>
-    <button pButton type="button" class="ui-button kButtonDefault exportXml" label="Export XML"></button>
-    <button pButton type="button" class="ui-button kButtonDefault generateToken" label="Re - Generate Token"></button>
+    <button pButton type="button" class="ui-button kButtonDefault exportXml" label="{{ 'ENCODER_SETTINGS.export_xml' | translate }}"></button>
+    <button pButton type="button" class="ui-button kButtonDefault generateToken" label="{{ 'ENCODER_SETTINGS.re_generate_token' | translate }}"></button>
   </footer>
   <p-growl [value]="_msgs"></p-growl>
 </div>

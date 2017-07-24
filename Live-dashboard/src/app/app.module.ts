@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import {HttpModule, Http} from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // PrimeNG
 import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule } from 'primeng/primeng';
@@ -26,6 +26,7 @@ import { ModerationPipe } from '../pipes/moderation.pipe';
 import { EntryTypePipe } from '../pipes/entry-type.pipe';
 // Configuration
 import { environment } from '../environments/environment';
+import {TranslateModule} from "ng2-translate";
 
 
 (<any>window).kmc = (<any>window).kmc || {};
@@ -67,8 +68,9 @@ export function clientConfigurationFactory() : KalturaClientConfiguration  {
   ],
   imports: [
     BrowserModule,
-    FormsModule,
     HttpModule,
+    TranslateModule.forRoot(),
+    FormsModule,
     BrowserAnimationsModule,
     TabMenuModule,
     TabViewModule,
