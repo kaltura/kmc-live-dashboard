@@ -1,0 +1,51 @@
+{
+  "STREAM_CONFIG": {
+    "stream_status": "Stream Status",
+    "stream_health": "Stream Health",
+    "elapsed_time": "Elapsed Time",
+    "transcoding": "Transcoding",
+    "recording": "Recording",
+    "dvr": "DVR",
+    "redundancy": "Redundancy"
+  },
+  "DASHBOARD": {
+    "learn_more": "Learn more",
+    "broadcasting_troubleshoot_config_encoder": "To start broadcasting, configure your encoder and start streaming.",
+    "save": "Save"
+  },
+  "STREAM_INFO": {
+    "not_broadcasting": "Currently not broadcasting",
+    "video_no_available_explanation": "video will play once broadcasting start",
+    "details": "Details",
+    "creator": "Creator",
+    "creation_date": "Creation Date",
+    "type": "Type",
+    "moderation": "Moderation",
+    "plays": "Plays",
+    "entry_id": "Entry ID"
+  },
+  "ENCODER_SETTINGS": {
+    "encoder_settings": "Encoder Settings",
+    "primary_url": "Primary URL",
+    "copy": "Copy",
+    "backup_url": "Backup URL",
+    "stream_name": "Stream Name",
+    "export_xml": "Export XML",
+    "re_generate_token": "Re - Generate Token",
+    "status": {
+      "offline": "OFFLINE"
+    }
+  },
+  "BASIC_SETTINGS": {
+    "entry_name": "Entry Name",
+    "description": "Description"
+  },
+  "ADDITIONAL_SETTINGS": {
+    "conversion_profile": "Conversion Profile",
+    "enable_live_dvr": "Enable Live DVR",
+    "enable_live_to_dvr_recording": "Enable Live to VOD Recording",
+    "create_entry_for_every_broadcast": "Create new entry for every broadcast session",
+    "append_recorded_content_to_single_entry": "Append recorded content to a single entry",
+    "preview_mode": "Preview Mode"
+  }
+}

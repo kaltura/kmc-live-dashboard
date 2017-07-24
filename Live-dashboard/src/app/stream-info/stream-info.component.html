@@ -1,38 +1,38 @@
 <div class="streamInfo">
   <div class="preview-player">
     <div class="player-div">
-      <p id="firstRow">Currently not broadcasting</p>
-      <p id="secondRow">video will play once broadcasting start</p>
+      <p id="firstRow">{{ 'STREAM_INFO.not_broadcasting' | translate }}</p>
+      <p id="secondRow">{{ 'STREAM_INFO.video_no_available_explanation' | translate }}</p>
     </div>
     <!--<div class="goLive-div">
       <button pButton type="button" class="ui-button kButtonBranded goLive-button" label="Go Live"></button>
     </div>-->
   </div>
   <div class="details">
-    <h1>Details</h1>
+    <h1>{{ 'STREAM_INFO.details' | translate }}</h1>
     <div class="content">
       <div class="row">
-        <span class="left">Creator</span>
+        <span class="left">{{ 'STREAM_INFO.creator' | translate }}</span>
         <span class="right">{{_creator}}</span>
       </div>
       <div class="row">
-        <span class="left">Creation Date</span>
+        <span class="left">{{ 'STREAM_INFO.creation_date' | translate }}</span>
         <span class="right">{{_date | date:'MM/dd/y HH:MM'}}</span>
       </div>
       <div class="row">
-        <span class="left">Type</span>
+        <span class="left">{{ 'STREAM_INFO.type' | translate }}</span>
         <span class="right">{{_type | entryType}}</span>
       </div>
       <div class="row">
-        <span class="left">Moderation</span>
+        <span class="left">{{ 'STREAM_INFO.moderation' | translate }}</span>
         <span class="right">{{_moderation | moderation}}</span>
       </div>
       <div class="row">
-        <span class="left">Plays</span>
+        <span class="left">{{ 'STREAM_INFO.plays' | translate }}</span>
         <span class="right">{{_plays}}</span>
       </div>
       <div class="row">
-        <span class="left">Entry ID</span>
+        <span class="left">{{ 'STREAM_INFO.entry_id' | translate }}</span>
         <span class="right">{{_entryId}}</span>
       </div>
     </div>

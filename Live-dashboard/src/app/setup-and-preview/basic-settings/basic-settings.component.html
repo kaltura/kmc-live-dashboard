@@ -1,10 +1,10 @@
 <div class="basic-settings" *ngIf="_currentEntry">
   <div class="entry-name">
-    <label>Entry Name</label>
+    <label>{{ 'BASIC_SETTINGS.entry_name' | translate }}</label>
     <input type="text" pInputText [(ngModel)]="_currentEntry.name"/>
   </div>
   <div class="description">
-    <label>Description</label>
+    <label>{{ 'BASIC_SETTINGS.description' | translate }}</label>
     <textarea pInputTextarea [(ngModel)]="_currentEntry.description"></textarea>
   </div>
 </div>

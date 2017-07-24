@@ -29,6 +29,7 @@
     "font-awesome": "^4.7.0",
     "kaltura-typescript-client": "^2.1.0",
     "lodash": "^4.17.4",
+    "ng2-translate": "^5.0.0",
     "normalize.css": "^7.0.0",
     "primeng": "^4.1.0-rc.3",
     "rxjs": "^5.1.0",
