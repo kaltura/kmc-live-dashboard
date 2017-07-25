@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { ISubscription } from "rxjs/Subscription";
+import { Observable } from "rxjs";
 
-import { LiveEntryService, LiveStreamStatusEnum } from "../../live-entry.service";
+import { LiveEntryService, LiveStreamStatusEnum, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo } from "../../live-entry.service";
 
 @Component({
   selector: 'stream-configurations',
@@ -8,43 +10,32 @@ import { LiveEntryService, LiveStreamStatusEnum } from "../../live-entry.service
   styleUrls: ['stream-configurations.component.scss']
 })
 export class StreamConfigurationsComponent implements OnInit {
-  public _elapsedTime: string = "00:00:00";
+  public _elapsedTime: number = 0;
   // Static configuration
-  public _dvr: string = "";
-  public _recording: string = "";
-  public _transcoding: string = "";
+  public _staticConfiguration: LiveEntryStaticConfiguration = {
+    dvr: false,
+    recording: false,
+    transcoding: false
+  };
   // Dynamic configuration
-  public _redundancy: string = "";
-  public _streamStatus: string = "";
+  public _dynamicConfiguration: LiveEntryDynamicStreamInfo = {
+    redundancy: false,
+    streamStatus: LiveStreamStatusEnum.Offline,
+    streamStartTime: 0
+  };
 
   constructor(private _liveEntryService: LiveEntryService) { }
 
   ngOnInit() {
     this._liveEntryService.entryStaticConfiguration$.subscribe(response => {
       if (response) {
-        this._dvr = (response.dvr) ? "On" : "Off";
-        this._recording = (response.recording) ? "On" : "Off";
-        this._transcoding = (response.transcoding) ? "On" : "Off";
+        this._staticConfiguration = response;
       }
     });
-    this._liveEntryService.entryDynmicConfiguration$.subscribe(response => {
+    this._liveEntryService.entryDynamicConfiguration$.subscribe(response => {
       if (response) {
-        this._redundancy = (response.redundancy) ? "On" : "N/A";
-        this._streamStatus = this._parseStreamStatus(response.streamStatus);
+        this._dynamicConfiguration = response;
       }
-    })
+    });
   }
-
-  private _parseStreamStatus(status: LiveStreamStatusEnum): 'Offline' | 'Initializing' | 'Live' {
-    switch (status) {
-      case LiveStreamStatusEnum.Live:
-        return 'Live';
-      case LiveStreamStatusEnum.Broadcasting:
-        return 'Initializing';
-      default:
-        return 'Offline';
-    }
-  }
-
-  // public _checkStreamStatusLiveState(state: string): boolean { }
 }

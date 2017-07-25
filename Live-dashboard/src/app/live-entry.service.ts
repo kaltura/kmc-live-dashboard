@@ -1,13 +1,14 @@
 // General
-import { Injectable } from '@angular/core';
+import { Injectable, Input } from '@angular/core';
 import { BehaviorSubject } from "rxjs";
 import { ISubscription } from "rxjs/Subscription";
 import * as _ from 'lodash';
 import { isUndefined } from "util";
-// Services
+// Services and Configuration
 import { KalturaClient } from "@kaltura-ng/kaltura-client";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { ConversionProfileService } from "./conversion-profile.service";
+import { environment } from "../environments/environment";
 // Kaltura objects and types
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
@@ -39,22 +40,16 @@ export interface LiveEntryStaticConfiguration {
   transcoding?: boolean,
 }
 
-export interface LiveEntryDynamicConfiguration {
+export interface LiveEntryDynamicStreamInfo {
   redundancy?: boolean,
   streamHealth?: boolean, // TODO create StreamHealth type
-  streamStatus?: LiveStreamStatusEnum;
+  streamStatus?: LiveStreamStatusEnum,
+  streamStartTime?: number
 }
 
 @Injectable()
 export class LiveEntryService {
-  // TODO:
-  //  id: string = '0_o3v14r0z'; // nothing passthrough
-  id: string = '0_objn1w04'; // nothing cloudtranscode
-  // id: string = '0_yl7e56ym'; // Dvr
-  // id: string = '0_2m4p0bm1'; // Recording append
-  // id: string = '0_qsjnf3kk'; // Recording new
-  // id: string ='0_7qtj5v0m';
-  //
+  id: string = environment.kaltura.entryId;
   // BehaviorSubject subscribed by application
   private _applicationStatus = new BehaviorSubject<StreamStatus>({status : 'initial'});
   public applicationStatus$ = this._applicationStatus.asObservable();
@@ -65,8 +60,8 @@ export class LiveEntryService {
   // BehaviorSubjects subscribed configuration display component
   private _entryStaticConfiguration = new BehaviorSubject<LiveEntryStaticConfiguration>(null);
   public entryStaticConfiguration$ = this._entryStaticConfiguration.asObservable();
-  private _entryDynamicConfiguration = new BehaviorSubject<LiveEntryDynamicConfiguration>(null);
-  public entryDynmicConfiguration$ = this._entryDynamicConfiguration.asObservable();
+  private _entryDynamicConfiguration = new BehaviorSubject<LiveEntryDynamicStreamInfo>(null);
+  public entryDynamicConfiguration$ = this._entryDynamicConfiguration.asObservable();
 
   private _pullRequestEntryStatusMonitoring: ISubscription;
   private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
@@ -144,11 +139,10 @@ export class LiveEntryService {
         return this._kalturaClient.request(new EntryServerNodeListAction({
           filter: new KalturaEntryServerNodeFilter({entryIdEqual: this.id})
         })).map(response => {
-          let x: LiveEntryDynamicConfiguration = this._parseEntryServeNodeList(response.objects);
-          this._entryDynamicConfiguration.next(x);
+          this._entryDynamicConfiguration.next(this._parseEntryServeNodeList(response.objects));
           return;
         });
-    }, 3000)
+    }, 1000)
       .subscribe(response => {
         if (response.status === 'timeout') {
           // show network connectivity issue
@@ -156,27 +150,30 @@ export class LiveEntryService {
       });
   }
 
-  private _parseEntryServeNodeList(snList: KalturaEntryServerNode[]): LiveEntryDynamicConfiguration {
-    function getStreamStatus(): LiveStreamStatusEnum {
-      // Check stream status by order:
-      // (1) If one serverNode is Playable -> Live
-      // (2) If one serverNode is Broadcasting -> Initializing
-      // (3) Just return the first status (Stopped or Authenticated) - Offline
-      let isPlaying = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
-      if (!isUndefined(isPlaying)) {
-        return LiveStreamStatusEnum.Live;
-      }
-      let isBroadcasting = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.broadcasting; });
-      if (!isUndefined(isBroadcasting)) {
-        return LiveStreamStatusEnum.Broadcasting;
-      }
-
-      return LiveStreamStatusEnum.Offline;
-    }
-    let dynamicConfigObj: LiveEntryDynamicConfiguration = {};
+  private _parseEntryServeNodeList(snList: KalturaEntryServerNode[]): LiveEntryDynamicStreamInfo {
+    let dynamicConfigObj: LiveEntryDynamicStreamInfo = {};
+    // Initialize streamStartTime
+    dynamicConfigObj.streamStartTime = 0;
     // Check redundancy if more than one serverNode was returned
     dynamicConfigObj.redundancy = (snList.length > 1);
-    dynamicConfigObj.streamStatus = getStreamStatus();
+    // Check stream status by order:
+    // (1) If one serverNode is Playable -> Live
+    // (2) If one serverNode is Broadcasting -> Broadcasting
+    // (3) Any other state -> Offline
+    let isPlaying = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
+    if (!isUndefined(isPlaying)) {
+      dynamicConfigObj.streamStatus = LiveStreamStatusEnum.Live;
+    }
+    else {
+      let isBroadcasting = snList.find(sn => { return (sn.status === KalturaEntryServerNodeStatus.broadcasting); });
+      if (!isUndefined(isBroadcasting)) {
+        dynamicConfigObj.streamStatus = LiveStreamStatusEnum.Broadcasting;
+        dynamicConfigObj.streamStartTime = Date.now();
+      }
+      else {
+        dynamicConfigObj.streamStatus = LiveStreamStatusEnum.Offline;
+      }
+    }
 
     return dynamicConfigObj;
   }

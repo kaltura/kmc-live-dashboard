@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {HttpModule, Http} from '@angular/http';
+import { HttpModule, Http } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // PrimeNG
 import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule } from 'primeng/primeng';
@@ -12,6 +12,7 @@ import { KalturaApiService } from './kaltura-api.service';
 import { LiveEntryService } from './live-entry.service';
 import { ConversionProfileService } from "./conversion-profile.service";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
+import { BootstrapService } from "./bootstrap.service";
 // Components
 import { AppComponent } from './app.component';
 import { StreamInfoComponent } from './stream-info/stream-info.component';
@@ -24,34 +25,11 @@ import { StreamConfigurationsComponent } from './setup-and-preview/stream-config
 import { RecordingTypePipe } from '../pipes/recording-type.pipe';
 import { ModerationPipe } from '../pipes/moderation.pipe';
 import { EntryTypePipe } from '../pipes/entry-type.pipe';
+import { EntryBooleanConfigurationPipe } from '../pipes/entry-boolean-configuration.pipe';
+import { EntryDynamicInformationPipe } from '../pipes/entry-dynamic-information.pipe';
 // Configuration
-import { environment } from '../environments/environment';
 import {TranslateModule} from "ng2-translate";
 import { TooltipModule } from '@kaltura-ng/kaltura-ui';
-
-(<any>window).kmc = (<any>window).kmc || {};
-(<any>window).kmc.vars = (<any>window).kmc.vars || {};
-
-(<any>window).kmc = {
-  vars : {
-    ks : 'ODBiYmFhZTllMGQzZDgxNmU3NDFiNWM3OWZlZjUyNTUxNTQ1NTIxYXwxMDI7MTAyOzE1MDE2NjI0OTM7MjsxNDk5MDcwNDkzLjYzNTs7Ozs=',
-    endpoint : environment.kaltura.apiUrl
-  }
-};
-
-export function clientConfigurationFactory() : KalturaClientConfiguration  {
-  const result = new KalturaClientConfiguration();
-
-  if ((<any>window).kmc && (<any>window).kmc.vars) {
-    result.endpointUrl = (<any>window).kmc.vars.endpoint;
-  }
-  else {
-    throw new Error('Missing kalturaServerEndpoint');
-  }
-  result.clientTag = 'KalturaLiveDashboard';
-
-  return result;
-}
 
 @NgModule({
   declarations: [
@@ -64,7 +42,9 @@ export function clientConfigurationFactory() : KalturaClientConfiguration  {
     StreamConfigurationsComponent,
     RecordingTypePipe,
     ModerationPipe,
-    EntryTypePipe
+    EntryTypePipe,
+    EntryBooleanConfigurationPipe,
+    EntryDynamicInformationPipe
   ],
   imports: [
     BrowserModule,
@@ -85,24 +65,17 @@ export function clientConfigurationFactory() : KalturaClientConfiguration  {
   ],
   providers: [
     KalturaClient,
-    {
-      provide: KalturaClientConfiguration,
-      useFactory: clientConfigurationFactory
-    },
+    KalturaClientConfiguration,
     KalturaApiService,
     LiveEntryService,
     ConversionProfileService,
-    LiveEntryTimerTaskService
+    LiveEntryTimerTaskService,
+    BootstrapService
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(private _kalturaClient: KalturaClient) {
-    if ((<any>window).kmc && (<any>window).kmc.vars) {
-      _kalturaClient.ks = (<any>window).kmc.vars.ks;
-    }
-    else {
-      throw new Error('Missing kalturaServerKs');
-    }
+  constructor(private _bootstrapService: BootstrapService) {
+    // TODO: Handle a case where initialization has failed!!!
   }
 }

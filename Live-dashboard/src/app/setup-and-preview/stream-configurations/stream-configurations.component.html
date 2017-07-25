@@ -2,9 +2,9 @@
   <div class="property">
     <label class="configuration-label">{{ 'STREAM_CONFIG.stream_status' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_streamStatus === 'Live')"
-                           [class.bullet-yellow]="(_streamStatus === 'Initializing')">•</span>
-      <span class="state">{{_streamStatus}}</span>
+      <span class="bullet" [class.bullet-green]="((_dynamicConfiguration.streamStatus | entryDynamicInformation) === 'Live')"
+                           [class.bullet-yellow]="((_dynamicConfiguration.streamStatus | entryDynamicInformation) === 'Initializing')">•</span>
+      <span class="state">{{_dynamicConfiguration.streamStatus | entryDynamicInformation}}</span>
     </div>
   </div>
   <div class="property">
@@ -21,35 +21,35 @@
     <label class="configuration-label">{{ 'STREAM_CONFIG.elapsed_time' | translate }}</label>
     <div class="configuration-status elapsed-time">
       <span class="bullet">•</span>
-      <span class="state">{{_elapsedTime}}</span>
+      <span class="state">{{_elapsedTime | date:'hh:mm:ss' }}</span>
     </div>
   </div>
   <div class="property" [kTooltip]="_streamStatus !== 'Offline' ? 'transcoding info' : ''">
     <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
-    <div class="configuration-status" >
-      <span class="bullet" [class.bullet-green]="(_transcoding === 'On')">•</span>
-      <span class="state">{{_transcoding}}</span>
+    <div class="configuration-status">
+      <span class="bullet" [class.bullet-green]="(_staticConfiguration.transcoding)">•</span>
+      <span class="state">{{_staticConfiguration.transcoding | entryBooleanConfiguration}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">{{ 'STREAM_CONFIG.recording' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_recording === 'On')">•</span>
-      <span class="state">{{_recording}}</span>
+      <span class="bullet" [class.bullet-green]="(_staticConfiguration.recording)">•</span>
+      <span class="state">{{_staticConfiguration.recording | entryBooleanConfiguration}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">{{ 'STREAM_CONFIG.dvr' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_dvr === 'On')">•</span>
-      <span class="state">{{_dvr}}</span>
+      <span class="bullet" [class.bullet-green]="(_staticConfiguration.dvr)">•</span>
+      <span class="state">{{_staticConfiguration.dvr | entryBooleanConfiguration}}</span>
     </div>
   </div>
   <div class="property">
     <label class="configuration-label">{{ 'STREAM_CONFIG.redundancy' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_redundancy === 'On')">•</span>
-      <span class="state">{{_redundancy}}</span>
+      <span class="bullet" [class.bullet-green]="(_dynamicConfiguration.redundancy)">•</span>
+      <span class="state">{{_dynamicConfiguration.redundancy | entryDynamicInformation: _dynamicConfiguration.streamStatus}}</span>
     </div>
   </div>
 </div>
