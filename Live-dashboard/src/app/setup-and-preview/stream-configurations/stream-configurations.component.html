@@ -24,9 +24,9 @@
       <span class="state">{{_elapsedTime}}</span>
     </div>
   </div>
-  <div class="property">
+  <div class="property" [kTooltip]="_streamStatus !== 'Offline' ? 'transcoding info' : ''">
     <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
-    <div class="configuration-status">
+    <div class="configuration-status" >
       <span class="bullet" [class.bullet-green]="(_transcoding === 'On')">•</span>
       <span class="state">{{_transcoding}}</span>
     </div>

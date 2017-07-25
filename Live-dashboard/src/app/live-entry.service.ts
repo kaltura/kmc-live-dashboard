@@ -19,6 +19,7 @@ import { KalturaAssetParamsOrigin } from "kaltura-typescript-client/types/Kaltur
 import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStatus";
 import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
 import { KalturaEntryServerNodeStatus } from "kaltura-typescript-client/types/KalturaEntryServerNodeStatus";
+import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/KalturaLiveStreamAdminEntry";
 
 
 export interface StreamStatus {
@@ -85,7 +86,7 @@ export class LiveEntryService {
 
   private _getLiveStream(): void {
     this._applicationStatus.next({ status: 'loading' });
-    this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this.id }))
+    this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this.id, acceptedTypes : [KalturaLiveStreamAdminEntry] }))
       .subscribe(response => {
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
         this._liveStream.next(response);

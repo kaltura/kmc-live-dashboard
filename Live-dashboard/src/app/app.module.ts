@@ -27,7 +27,7 @@ import { EntryTypePipe } from '../pipes/entry-type.pipe';
 // Configuration
 import { environment } from '../environments/environment';
 import {TranslateModule} from "ng2-translate";
-
+import { TooltipModule } from '@kaltura-ng/kaltura-ui';
 
 (<any>window).kmc = (<any>window).kmc || {};
 (<any>window).kmc.vars = (<any>window).kmc.vars || {};
@@ -80,7 +80,8 @@ export function clientConfigurationFactory() : KalturaClientConfiguration  {
     DropdownModule,
     CheckboxModule,
     RadioButtonModule,
-    GrowlModule
+    GrowlModule,
+    TooltipModule
   ],
   providers: [
     KalturaClient,

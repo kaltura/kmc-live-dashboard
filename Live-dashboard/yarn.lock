@@ -120,13 +120,17 @@
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-client/-/kaltura-client-0.1.0.tgz#80e7f2dc4b0fce144c747c4854b2981719b8321d"
 
+"@kaltura-ng/kaltura-common@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-common/-/kaltura-common-1.0.0.tgz#ec3bd61702869e75873aced1fd4e7f9a9ab911a1"
+
 "@kaltura-ng/kaltura-primeng-ui@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.2.0.tgz#1790129b0bc3bcff6dbaefeb7269e9629f90f1c3"
 
-"@kaltura-ng/kaltura-ui@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-0.2.0.tgz#4da62069e240d0b9730ec2b58702e85a494dd7e7"
+"@kaltura-ng/kaltura-ui@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-1.0.0.tgz#f5cf943c3971bfb866d2941605299bf6e6ab89b5"
 
 "@kaltura-ng/mc-theme@^0.1.0":
   version "0.1.0"
@@ -3017,6 +3021,10 @@ mkdirp@0.5.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkd
   dependencies:
     minimist "0.0.8"
 
+moment@^2.18.1:
+  version "2.18.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
+
 ms@0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-0.7.1.tgz#9cd13c03adbff25b65effde7ce864ee952017098"
@@ -3046,6 +3054,10 @@ ncname@1.0.x:
 negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
+
+ng2-translate@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/ng2-translate/-/ng2-translate-5.0.0.tgz#0adbb510eb5007a2d6ded5f5d26888c14760aca5"
 
 no-case@^2.2.0:
   version "2.3.1"
