@@ -132,9 +132,9 @@
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-1.0.1.tgz#5d1caf3bc6d9d5948744d26eb67aa47255ebb131"
 
-"@kaltura-ng/mc-theme@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.1.0.tgz#736c804dd0234eb99fcd2c85453503a4be0b4c84"
+"@kaltura-ng/mc-theme@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.2.0.tgz#331eff3795055f3e143395a5f10b9d6d518df71e"
 
 "@ngtools/json-schema@1.0.5":
   version "1.0.5"

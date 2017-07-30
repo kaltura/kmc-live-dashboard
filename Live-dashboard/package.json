@@ -25,7 +25,7 @@
     "@kaltura-ng/kaltura-common": "^1.0.0",
     "@kaltura-ng/kaltura-primeng-ui": "^0.2.0",
     "@kaltura-ng/kaltura-ui": "^1.0.1",
-    "@kaltura-ng/mc-theme": "^0.1.0",
+    "@kaltura-ng/mc-theme": "^0.2.0",
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
     "kaltura-typescript-client": "^2.1.0",
