@@ -128,9 +128,9 @@
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.2.0.tgz#1790129b0bc3bcff6dbaefeb7269e9629f90f1c3"
 
-"@kaltura-ng/kaltura-ui@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-1.0.0.tgz#f5cf943c3971bfb866d2941605299bf6e6ab89b5"
+"@kaltura-ng/kaltura-ui@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-1.0.1.tgz#5d1caf3bc6d9d5948744d26eb67aa47255ebb131"
 
 "@kaltura-ng/mc-theme@^0.1.0":
   version "0.1.0"
