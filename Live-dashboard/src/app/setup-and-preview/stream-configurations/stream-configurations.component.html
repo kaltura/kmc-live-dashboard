@@ -25,7 +25,7 @@
     </div>
   </div>
   <div class="property"
-       [kTooltip]="(_dynamicConfiguration.streamStatus | entryDynamicInformation) !== 'Offline' ? (_dynamicConfiguration.streams | transcoding) : ''"
+       [kTooltip]="(_dynamicConfiguration.streamStatus | entryDynamicInformation) !== 'Offline' ? (_dynamicConfiguration.streams | transcodingInfo) : ''"
        [maxWidth]="182">
     <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
     <div class="configuration-status">

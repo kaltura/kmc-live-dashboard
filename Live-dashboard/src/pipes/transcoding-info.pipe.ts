@@ -2,9 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import * as _ from 'lodash';
 
 @Pipe({
-  name: 'transcoding'
+  name: 'transcodingInfo'
 })
-export class TranscodingPipe implements PipeTransform {
+export class TranscodingInfoPipe implements PipeTransform {
 
   transform(streamsArr: any, args?: any): any {
     let transcoding = '';

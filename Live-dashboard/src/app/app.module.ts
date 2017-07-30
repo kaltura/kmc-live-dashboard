@@ -27,7 +27,7 @@ import { ModerationPipe } from '../pipes/moderation.pipe';
 import { EntryTypePipe } from '../pipes/entry-type.pipe';
 import { EntryBooleanConfigurationPipe } from '../pipes/entry-boolean-configuration.pipe';
 import { EntryDynamicInformationPipe } from '../pipes/entry-dynamic-information.pipe';
-import { TranscodingPipe } from '../pipes/transcoding.pipe';
+import { TranscodingInfoPipe } from '../pipes/transcoding-info.pipe';
 
 // Configuration
 import { TranslateModule } from "ng2-translate";
@@ -47,7 +47,7 @@ import { TooltipModule } from '@kaltura-ng/kaltura-ui';
     EntryTypePipe,
     EntryBooleanConfigurationPipe,
     EntryDynamicInformationPipe,
-    TranscodingPipe
+    TranscodingInfoPipe
   ],
   imports: [
     BrowserModule,
