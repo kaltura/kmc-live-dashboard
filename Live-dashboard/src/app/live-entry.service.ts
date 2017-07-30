@@ -21,6 +21,7 @@ import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStat
 import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
 import { KalturaEntryServerNodeStatus } from "kaltura-typescript-client/types/KalturaEntryServerNodeStatus";
 import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/KalturaLiveStreamAdminEntry";
+import {KalturaLiveEntryServerNode} from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
 
 
 export interface StreamStatus {
@@ -45,6 +46,16 @@ export interface LiveEntryDynamicStreamInfo {
   streamHealth?: boolean, // TODO create StreamHealth type
   streamStatus?: LiveStreamStatusEnum,
   streamStartTime?: number
+  streams?: stream[]
+}
+
+export interface stream{
+  "bitrate": number,
+  "flavorId": string,
+  "width": number,
+  "height": number,
+  "frameRate": number,
+  "keyFrameInterval": number
 }
 
 @Injectable()
@@ -160,9 +171,10 @@ export class LiveEntryService {
     // (1) If one serverNode is Playable -> Live
     // (2) If one serverNode is Broadcasting -> Broadcasting
     // (3) Any other state -> Offline
-    let isPlaying = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
-    if (!isUndefined(isPlaying)) {
+    let playingServerNode = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
+    if (!isUndefined(playingServerNode)) {
       dynamicConfigObj.streamStatus = LiveStreamStatusEnum.Live;
+      dynamicConfigObj.streams = (<KalturaLiveEntryServerNode> playingServerNode).streams;
     }
     else {
       let isBroadcasting = snList.find(sn => { return (sn.status === KalturaEntryServerNodeStatus.broadcasting); });
