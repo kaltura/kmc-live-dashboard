@@ -174,7 +174,10 @@ export class LiveEntryService {
     let playingServerNode = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
     if (!isUndefined(playingServerNode)) {
       dynamicConfigObj.streamStatus = LiveStreamStatusEnum.Live;
-      dynamicConfigObj.streams = (<KalturaLiveEntryServerNode> playingServerNode).streams;
+
+      // Todo: remove hard coded stream flavors to real ones
+      dynamicConfigObj.streams = [ { "bitrate": 662000, "flavorId": "34", "width": 640, "height": 360, "frameRate": 29, "keyFrameInterval": 2002.073242 }, { "bitrate": 962000, "flavorId": "35", "width": 640, "height": 360, "frameRate": 29, "keyFrameInterval": 2002.073242 }, { "bitrate": 2128000, "flavorId": "32", "width": 1280, "height": 720, "frameRate": 29, "keyFrameInterval": 2001.873291, }, { "bitrate": 462000, "flavorId": "33", "width": 480, "height": 270, "frameRate": 29, "keyFrameInterval": 2002.073242, } ];
+      //dynamicConfigObj.streams = (<KalturaLiveEntryServerNode> playingServerNode).streams;
     }
     else {
       let isBroadcasting = snList.find(sn => { return (sn.status === KalturaEntryServerNodeStatus.broadcasting); });
