@@ -20,6 +20,8 @@ import { KalturaAssetParamsOrigin } from "kaltura-typescript-client/types/Kaltur
 import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStatus";
 import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
 import { KalturaEntryServerNodeStatus } from "kaltura-typescript-client/types/KalturaEntryServerNodeStatus";
+import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/KalturaLiveStreamAdminEntry";
+import {KalturaLiveEntryServerNode} from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
 
 
 export interface StreamStatus {
@@ -44,6 +46,16 @@ export interface LiveEntryDynamicStreamInfo {
   streamHealth?: boolean, // TODO create StreamHealth type
   streamStatus?: LiveStreamStatusEnum,
   streamStartTime?: number
+  streams?: stream[]
+}
+
+export interface stream{
+  "bitrate": number,
+  "flavorId": string,
+  "width": number,
+  "height": number,
+  "frameRate": number,
+  "keyFrameInterval": number
 }
 
 @Injectable()
@@ -80,7 +92,7 @@ export class LiveEntryService {
 
   private _getLiveStream(): void {
     this._applicationStatus.next({ status: 'loading' });
-    this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this.id }))
+    this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this.id, acceptedTypes : [KalturaLiveStreamAdminEntry] }))
       .subscribe(response => {
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
         this._liveStream.next(response);
@@ -159,9 +171,13 @@ export class LiveEntryService {
     // (1) If one serverNode is Playable -> Live
     // (2) If one serverNode is Broadcasting -> Broadcasting
     // (3) Any other state -> Offline
-    let isPlaying = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
-    if (!isUndefined(isPlaying)) {
+    let playingServerNode = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
+    if (!isUndefined(playingServerNode)) {
       dynamicConfigObj.streamStatus = LiveStreamStatusEnum.Live;
+
+      // Todo: remove hard coded stream flavors to real ones
+      dynamicConfigObj.streams = [ { "bitrate": 662000, "flavorId": "34", "width": 640, "height": 360, "frameRate": 29, "keyFrameInterval": 2002.073242 }, { "bitrate": 962000, "flavorId": "35", "width": 640, "height": 360, "frameRate": 29, "keyFrameInterval": 2002.073242 }, { "bitrate": 2128000, "flavorId": "32", "width": 1280, "height": 720, "frameRate": 29, "keyFrameInterval": 2001.873291, }, { "bitrate": 462000, "flavorId": "33", "width": 480, "height": 270, "frameRate": 29, "keyFrameInterval": 2002.073242, } ];
+      //dynamicConfigObj.streams = (<KalturaLiveEntryServerNode> playingServerNode).streams;
     }
     else {
       let isBroadcasting = snList.find(sn => { return (sn.status === KalturaEntryServerNodeStatus.broadcasting); });
