@@ -54,7 +54,6 @@
     .content {
       .row {
         display: flex;
-        flex-flow: row nowrap;
         margin-bottom: 20px;
         overflow-x: hidden;
 
@@ -63,13 +62,14 @@
         }
 
         .left {
-          flex: none;
-          width: 120px;
+          flex: 0 0 50%;
+          max-width: 50%;
           color: $kGrayscale3;
           font-weight: 300;
         }
         .right {
           flex: none;
+          max-width: 50%;
           color: $kGrayscale1;
         }
       }

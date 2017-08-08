@@ -11,29 +11,29 @@
   <div class="details">
     <h1>{{ 'STREAM_INFO.details' | translate }}</h1>
     <div class="content">
-      <div class="row">
+      <div class="row" >
         <span class="left">{{ 'STREAM_INFO.creator' | translate }}</span>
-        <span class="right">{{_creator}}</span>
+        <span class="right" [kTooltip]="_creator" [maxWidth]="120">{{_creator}}</span>
       </div>
       <div class="row">
         <span class="left">{{ 'STREAM_INFO.creation_date' | translate }}</span>
-        <span class="right">{{_date | date:'MM/dd/y HH:MM'}}</span>
+        <span class="right" [kTooltip]="_date | date:'MM/dd/y HH:MM'" [maxWidth]="120">{{_date | date:'MM/dd/y HH:MM'}}</span>
       </div>
       <div class="row">
         <span class="left">{{ 'STREAM_INFO.type' | translate }}</span>
-        <span class="right">{{_type | entryType}}</span>
+        <span class="right" [kTooltip]="_type | entryType" [maxWidth]="120">{{_type | entryType}}</span>
       </div>
       <div class="row">
         <span class="left">{{ 'STREAM_INFO.moderation' | translate }}</span>
-        <span class="right">{{_moderation | moderation}}</span>
+        <span class="right" [kTooltip]="_moderation | moderation" [maxWidth]="120">{{_moderation | moderation}}</span>
       </div>
       <div class="row">
         <span class="left">{{ 'STREAM_INFO.plays' | translate }}</span>
-        <span class="right">{{_plays}}</span>
+        <span class="right" [kTooltip]="_plays" [maxWidth]="120">{{_plays}}</span>
       </div>
       <div class="row">
         <span class="left">{{ 'STREAM_INFO.entry_id' | translate }}</span>
-        <span class="right">{{_entryId}}</span>
+        <span class="right" [kTooltip]="_entryId" [maxWidth]="120">{{_entryId}}</span>
       </div>
     </div>
   </div>
