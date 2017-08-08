@@ -92,7 +92,7 @@ export class LiveEntryService {
 
   private _getLiveStream(): void {
     this._applicationStatus.next({ status: 'loading' });
-    this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this.id, acceptedTypes : [KalturaLiveStreamAdminEntry] }))
+    this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this.id, acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode] }))
       .subscribe(response => {
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
         this._liveStream.next(response);

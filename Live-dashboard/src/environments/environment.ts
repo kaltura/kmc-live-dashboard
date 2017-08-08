@@ -5,7 +5,8 @@
 
 export const environment = {
   production: false,
-  "kaltura": {
+  kaltura: {
+      envName: 'default',
       entryId: ""
   }
 };
