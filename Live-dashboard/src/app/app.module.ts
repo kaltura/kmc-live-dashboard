@@ -3,12 +3,13 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, Http } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslateModule } from "ng2-translate";
+import { TooltipModule } from '@kaltura-ng/kaltura-ui';
 // PrimeNG
 import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule } from 'primeng/primeng';
 // Services
 import { KalturaClient } from '@kaltura-ng/kaltura-client/kaltura-client.service';
 import { KalturaClientConfiguration } from '@kaltura-ng/kaltura-client/kaltura-client-configuration.service';
-import { KalturaApiService } from './kaltura-api.service';
 import { LiveEntryService } from './live-entry.service';
 import { ConversionProfileService } from "./conversion-profile.service";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
@@ -30,10 +31,8 @@ import { EntryDynamicInformationPipe } from '../pipes/entry-dynamic-information.
 import { TranscodingInfoPipe } from '../pipes/transcoding-info.pipe';
 import {SafePipe} from "@kaltura-ng/kaltura-ui/safe.pipe";
 
-
-// Configuration
-import { TranslateModule } from "ng2-translate";
-import { TooltipModule } from '@kaltura-ng/kaltura-ui';
+// Configuration Services
+import {LiveDashboardConfiguration} from "./services/live-dashboard-configuration.service";
 
 @NgModule({
   declarations: [
@@ -72,11 +71,11 @@ import { TooltipModule } from '@kaltura-ng/kaltura-ui';
   providers: [
     KalturaClient,
     KalturaClientConfiguration,
-    KalturaApiService,
     LiveEntryService,
     ConversionProfileService,
     LiveEntryTimerTaskService,
-    BootstrapService
+    BootstrapService,
+    LiveDashboardConfiguration
   ],
   bootstrap: [AppComponent]
 })

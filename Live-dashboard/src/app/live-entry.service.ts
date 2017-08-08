@@ -8,7 +8,6 @@ import { isUndefined } from "util";
 import { KalturaClient } from "@kaltura-ng/kaltura-client";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { ConversionProfileService } from "./conversion-profile.service";
-import { environment } from "../environments/environment";
 // Kaltura objects and types
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
@@ -22,6 +21,7 @@ import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaReco
 import { KalturaEntryServerNodeStatus } from "kaltura-typescript-client/types/KalturaEntryServerNodeStatus";
 import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/KalturaLiveStreamAdminEntry";
 import {KalturaLiveEntryServerNode} from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
+import {LiveDashboardConfiguration} from "./services/live-dashboard-configuration.service";
 
 
 export interface StreamStatus {
@@ -60,7 +60,7 @@ export interface stream{
 
 @Injectable()
 export class LiveEntryService {
-  id: string = environment.kaltura.entryId;
+  id: string;
   // BehaviorSubject subscribed by application
   private _applicationStatus = new BehaviorSubject<StreamStatus>({status : 'initial'});
   public applicationStatus$ = this._applicationStatus.asObservable();
@@ -77,7 +77,13 @@ export class LiveEntryService {
   private _pullRequestEntryStatusMonitoring: ISubscription;
   private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
 
-  constructor(private _kalturaClient: KalturaClient, private _entryTimerTask: LiveEntryTimerTaskService, private _conversionProfilesService: ConversionProfileService) { }
+  constructor(private _kalturaClient: KalturaClient,
+              private _entryTimerTask: LiveEntryTimerTaskService,
+              private _conversionProfilesService: ConversionProfileService,
+              private _liveDashboardConfiguration: LiveDashboardConfiguration) {
+
+    this.id = this._liveDashboardConfiguration.entryId;
+  }
 
   ngOnDestroy() {
     this._applicationStatus.unsubscribe();
