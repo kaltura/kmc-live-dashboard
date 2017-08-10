@@ -1,28 +1,26 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8">
 
-  <title>Live Dashboard Testing</title>
-  <meta name="description" content="KMC Simulator - Live Dashboard Testing Page">
-  <meta name="author" content="Gad">
+    <title>Live Dashboard KMC Simulator</title>
+    <meta name="description" content="KMC Simulator - Live Dashboard Testing Page">
 
-  <script>
-    window.lang = "en_EN";
-    window.kmc = {
-      vars: {
-        ks: '',
-        service_url: '',
-        cdn_host: '',
-        entry_id: ''
+    <script>
+      window.lang = "en-US";
+      window.kmc = {
+        vars: {
+          ks: '',
+          service_url: '',
+          entryId: '',
+          host: '',
+          uiConfId: ''
+        }
       }
-    }
-  </script>
-</head>
+    </script>
+  </head>
 
-<body>
-<iframe src="http://localhost:4200"
-        height="100%"
-        width="100%"></iframe>
-</body>
+  <body>
+    <iframe src="http://localhost:4200" style="border: 0; position: absolute; top:0; left:0; right:0; bottom:0; width:100%; height:100%" />
+  </body>
 </html>

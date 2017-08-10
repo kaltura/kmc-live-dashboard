@@ -1,3 +1,4 @@
+/*
 import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -12,41 +13,41 @@ export class KalturaApiService {
   _ks: string = 'ODFkZjUzZDQ5YzZhNDM0MDg4ZTJiODdhY2MwYmIzNzJmMTVkMWZiNnwxMDI7MTAyOzE0OTU3MDQyODY7MjsxNDkzMTEyMjg2LjY0MjI7Ozs7';
 
   constructor(private http: Http) {
-    /*Observable.timer(1000).subscribe( ()=> {
-      isLive()
-    })*/
+    // Observable.timer(1000).subscribe( ()=> {
+    //   isLive()
+    // })
   }
 
-  /*public getEntry(entryId: string): Observable<LiveStreamEntry> {
-
-    return this.apiRequest(
-      {
-        service: 'livestream',
-        action: 'get',
-        entryId: entryId
-      })
-      .map(res => {
-        return res as LiveStreamEntry;
-      });
-  }
-
-  public updateEntry(entry: LiveStreamEntry): Observable<LiveStreamEntry> {
-
-    return this.apiRequest(
-      {
-        service: 'livestream',
-        action: 'update',
-        entryId: entry.id,
-        'liveStreamEntry:objectType': 'KalturaLiveStreamEntry',
-        'liveStreamEntry:name':entry.name,
-        'liveStreamEntry:description':entry.description,
-        'liveStreamEntry:conversionProfileId':entry.conversionProfileId,
-        'liveStreamEntry:recordStatus':entry.recordStatus
-      })
-      .map(res => {
-        return res as LiveStreamEntry;
-      });
-  }*/
+  // public getEntry(entryId: string): Observable<LiveStreamEntry> {
+  //
+  //   return this.apiRequest(
+  //     {
+  //       service: 'livestream',
+  //       action: 'get',
+  //       entryId: entryId
+  //     })
+  //     .map(res => {
+  //       return res as LiveStreamEntry;
+  //     });
+  // }
+  //
+  // public updateEntry(entry: LiveStreamEntry): Observable<LiveStreamEntry> {
+  //
+  //   return this.apiRequest(
+  //     {
+  //       service: 'livestream',
+  //       action: 'update',
+  //       entryId: entry.id,
+  //       'liveStreamEntry:objectType': 'KalturaLiveStreamEntry',
+  //       'liveStreamEntry:name':entry.name,
+  //       'liveStreamEntry:description':entry.description,
+  //       'liveStreamEntry:conversionProfileId':entry.conversionProfileId,
+  //       'liveStreamEntry:recordStatus':entry.recordStatus
+  //     })
+  //     .map(res => {
+  //       return res as LiveStreamEntry;
+  //     });
+  // }
 
   public apiRequest(requests: any): Observable<any> {
     let body: any = {
@@ -88,3 +89,4 @@ export class KalturaApiService {
       })
   }
 }
+*/

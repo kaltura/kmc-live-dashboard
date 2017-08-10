@@ -1,9 +1,14 @@
 <div class="streamInfo">
   <div class="preview-player">
-    <div class="player-div">
+
+    <div *ngIf="(_dynamicConfiguration.streamStatus | entryDynamicInformation) !== 'Live'" class="not-broadcasting-container">
       <p id="firstRow">{{ 'STREAM_INFO.not_broadcasting' | translate }}</p>
       <p id="secondRow">{{ 'STREAM_INFO.video_no_available_explanation' | translate }}</p>
     </div>
+
+    <iframe *ngIf="(_dynamicConfiguration.streamStatus | entryDynamicInformation) === 'Live'"
+            [src]="_playerSrc | safe" width="100%" height="100%" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+
     <!--<div class="goLive-div">
       <button pButton type="button" class="ui-button kButtonBranded goLive-button" label="Go Live"></button>
     </div>-->
