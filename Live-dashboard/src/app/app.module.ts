@@ -30,6 +30,7 @@ import { EntryBooleanConfigurationPipe } from '../pipes/entry-boolean-configurat
 import { EntryDynamicInformationPipe } from '../pipes/entry-dynamic-information.pipe';
 import { TranscodingInfoPipe } from '../pipes/transcoding-info.pipe';
 import {SafePipe} from "@kaltura-ng/kaltura-ui/safe.pipe";
+import {DurationPipe} from "../pipes/duration.pipe";
 
 // Configuration Services
 import {LiveDashboardConfiguration} from "./services/live-dashboard-configuration.service";
@@ -49,7 +50,8 @@ import {LiveDashboardConfiguration} from "./services/live-dashboard-configuratio
     EntryBooleanConfigurationPipe,
     EntryDynamicInformationPipe,
     TranscodingInfoPipe,
-    SafePipe
+    SafePipe,
+    DurationPipe
   ],
   imports: [
     BrowserModule,

@@ -6,7 +6,9 @@
     "transcoding": "Transcoding",
     "recording": "Recording",
     "dvr": "DVR",
-    "redundancy": "Redundancy"
+    "redundancy": "Redundancy",
+    "stream_duration_in_days": "{{days}} Days, {{hours}} Hours",
+    "stream_duration_in_months": "{{month}} Months, {{days}} Days"
   },
   "DASHBOARD": {
     "learn_more": "Learn more",

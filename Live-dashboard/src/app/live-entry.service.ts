@@ -39,6 +39,7 @@ export interface LiveEntryStaticConfiguration {
   dvr?: boolean,
   recording?: boolean,
   transcoding?: boolean,
+  lastBroadcast?: number
 }
 
 export interface LiveEntryDynamicStreamInfo {
@@ -100,6 +101,8 @@ export class LiveEntryService {
     this._applicationStatus.next({ status: 'loading' });
     this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this.id, acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode] }))
       .subscribe(response => {
+
+
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
         this._liveStream.next(response);
         this._parseEntryConfiguration(response);
@@ -122,6 +125,7 @@ export class LiveEntryService {
         // Look through the array and find the first flavor that is transcoded
         let isTranscodedFlavor = result.objects.find(f => { return f.origin ===  KalturaAssetParamsOrigin.convert });
         entryConfig.transcoding = !isUndefined(isTranscodedFlavor);
+        entryConfig.lastBroadcast = liveEntryObj.lastBroadcast;
 
         this._entryStaticConfiguration.next(entryConfig);
       })

@@ -21,7 +21,7 @@
     <label class="configuration-label">{{ 'STREAM_CONFIG.elapsed_time' | translate }}</label>
     <div class="configuration-status elapsed-time">
       <span class="bullet">•</span>
-      <span class="state">{{_elapsedTime | date:'hh:mm:ss' }}</span>
+      <span class="state">{{ _streamDuration  | duration}}</span>
     </div>
   </div>
   <div class="property"
