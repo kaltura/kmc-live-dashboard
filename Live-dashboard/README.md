@@ -8,6 +8,11 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 3. Run `ng serve` for a dev server.
 4. Navigate to `http://localhost:4200/dev`
 
+## ClientLib Setup
+1. Open folder 'kaltura-typescript-client-custom' in terminal.
+2. Run npm link
+3. Open application root folder (where package.json exists).
+4. Run npm link kaltura-typescript-client
 
 ## Build
 Run `ng build` to build the project. 
