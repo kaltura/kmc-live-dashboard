@@ -8,7 +8,9 @@
     "dvr": "DVR",
     "redundancy": "Redundancy",
     "stream_duration_in_days": "{{days}} Days, {{hours}} Hours",
-    "stream_duration_in_months": "{{month}} Months, {{days}} Days"
+    "stream_duration_in_months": "{{months}} Months, {{days}} Days",
+    "primary": "Primary",
+    "secondary": "Secondary"
   },
   "DASHBOARD": {
     "learn_more": "Learn more",

@@ -14,12 +14,11 @@ export class DurationPipe implements PipeTransform{
     let timeString = '00:00:00';
 
     if (duration){
-      if (duration.days() > 0){
-        timeString = `x Days, y Hours`;    //todo !!!!!
-        //timeString = this._translate.get('')
+      if (duration.months() > 0){
+        timeString = this._translate.instant('STREAM_CONFIG.stream_duration_in_months', {months: duration.months(), days: duration.days()})
       }
-      else if (duration.months() > 0){
-        timeString = `x Months, y Days`;
+      else if (duration.days() > 0){
+        timeString = this._translate.instant('STREAM_CONFIG.stream_duration_in_days', {days: duration.days(), hours: duration.hours()})
       }
       else{
         timeString = this.padTo2Digits(duration.hours()) + ':' +  this.padTo2Digits(duration.minutes()) + ':' + this.padTo2Digits(duration.seconds());

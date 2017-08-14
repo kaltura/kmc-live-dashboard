@@ -77,7 +77,8 @@ import {LiveDashboardConfiguration} from "./services/live-dashboard-configuratio
     ConversionProfileService,
     LiveEntryTimerTaskService,
     BootstrapService,
-    LiveDashboardConfiguration
+    LiveDashboardConfiguration,
+    EntryDynamicInformationPipe
   ],
   bootstrap: [AppComponent]
 })
