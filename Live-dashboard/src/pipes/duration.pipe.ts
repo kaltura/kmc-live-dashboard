@@ -29,6 +29,6 @@ export class DurationPipe implements PipeTransform{
   }
 
   private padTo2Digits(number: number) {
-    return (number < 10 ? '0' : '') + number;
+    return ((0 <= number && number < 10) ? '0' : '') + number;
   }
 }
