@@ -21,9 +21,9 @@ import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStat
 import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
 import { KalturaEntryServerNodeStatus } from "kaltura-typescript-client/types/KalturaEntryServerNodeStatus";
 import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/KalturaLiveStreamAdminEntry";
-import {KalturaLiveEntryServerNode} from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
-import {LiveDashboardConfiguration} from "./services/live-dashboard-configuration.service";
-import {KalturaLiveStreamParams} from "kaltura-typescript-client/types/KalturaLiveStreamParams";
+import { KalturaLiveEntryServerNode } from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
+import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
+import { KalturaLiveStreamParams } from "kaltura-typescript-client/types/KalturaLiveStreamParams";
 
 export interface StreamStatus {
   status: 'initial' | 'loading' | 'loaded' | 'error';
