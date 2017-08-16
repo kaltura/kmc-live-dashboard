@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {LiveEntryService, LiveEntryDynamicStreamInfo, LiveStreamStatusEnum} from "../live-entry.service";
+import { LiveEntryService, LiveEntryDynamicStreamInfo } from "../live-entry.service";
 import { KalturaEntryModerationStatus } from "kaltura-typescript-client/types/KalturaEntryModerationStatus";
 import { KalturaMediaType } from "kaltura-typescript-client/types/KalturaMediaType";
-import {LiveDashboardConfiguration} from "../services/live-dashboard-configuration.service";
+import { LiveDashboardConfiguration} from "../services/live-dashboard-configuration.service";
 
 @Component({
   selector: 'stream-info',
@@ -19,7 +19,7 @@ export class StreamInfoComponent implements OnInit {
   public _playerSrc: string = '';
   public _dynamicConfiguration: LiveEntryDynamicStreamInfo = {
     redundancy: false,
-    streamStatus: LiveStreamStatusEnum.Offline
+    streamStatus: 'Offline'
   };
 
 
@@ -40,12 +40,11 @@ export class StreamInfoComponent implements OnInit {
         const entryId =   liveStreamEntry.id;
         const ks =        this._liveDashboardConfiguration.ks;
         const host =      this._liveDashboardConfiguration.host;
-        const uiConfIf =  this._liveDashboardConfiguration.uiConfId;
+        const uiConfId =  this._liveDashboardConfiguration.uiConfId;
 
-        this._playerSrc = `http://${host}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfIf}/partner_id/${partnerID}?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=${entryId}`;
+        this._playerSrc = `http://${host}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=${entryId}`;
       }
     });
-
 
     this._liveEntryService.entryDynamicConfiguration$.subscribe(response => {
       if (response) {

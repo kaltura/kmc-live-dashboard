@@ -14,7 +14,6 @@ export class AppComponent implements OnInit {
   constructor(private _bootstrapService: BootstrapService,
               private _translate: TranslateService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration) {
-
   }
 
   ngOnInit() {

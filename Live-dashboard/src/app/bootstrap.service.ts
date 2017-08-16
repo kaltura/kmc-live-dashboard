@@ -15,7 +15,6 @@ export class BootstrapService {
   }
 
   private _initialize(): void {
-
     if (window && window.top && window.top.kmc && window.top.kmc.vars) {
       this._liveDashboardConfiguration.ks =           window.top.kmc.vars.ks;
       this._liveDashboardConfiguration.service_url =  window.top.kmc.vars.service_url;
