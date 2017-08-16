@@ -21,12 +21,12 @@
     <label class="configuration-label">{{ 'STREAM_CONFIG.elapsed_time' | translate }}</label>
     <div class="configuration-status elapsed-time">
       <span class="bullet">•</span>
-      <span class="state">{{_elapsedTime | date:'hh:mm:ss' }}</span>
+      <span class="state">{{ _streamDuration | duration}}</span>
     </div>
   </div>
   <div class="property"
-       [kTooltip]="(_dynamicConfiguration.streamStatus | entryDynamicInformation) !== 'Offline' ? (_dynamicConfiguration.streams | transcodingInfo) : ''"
-       [maxWidth]="182">
+        [kTooltip]="(_dynamicConfiguration.streamStatus | entryDynamicInformation) !== 'Offline' ? (_dynamicConfiguration.allStreams | transcodingInfo) : ''"
+        [maxWidth]="182" [placement]="'right'">
     <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="(_staticConfiguration.transcoding)">•</span>

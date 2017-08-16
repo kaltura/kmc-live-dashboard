@@ -19,8 +19,7 @@ export class StreamInfoComponent implements OnInit {
   public _playerSrc: string = '';
   public _dynamicConfiguration: LiveEntryDynamicStreamInfo = {
     redundancy: false,
-    streamStatus: LiveStreamStatusEnum.Offline,
-    streamStartTime: 0
+    streamStatus: LiveStreamStatusEnum.Offline
   };
 
 
