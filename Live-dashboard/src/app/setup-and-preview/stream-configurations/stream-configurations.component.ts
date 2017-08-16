@@ -29,8 +29,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
 
     this._dynamicConfiguration = {
       redundancy: false,
-      streamStatus: LiveStreamStatusEnum.Offline,
-      streamStartTime: 0
+      streamStatus: LiveStreamStatusEnum.Offline
     };
   }
 

@@ -1,14 +1,15 @@
 // General
-import { Injectable, Input } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from "rxjs";
 import { ISubscription } from "rxjs/Subscription";
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { isUndefined } from "util";
+
 // Services and Configuration
 import { KalturaClient } from "@kaltura-ng/kaltura-client";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { ConversionProfileService } from "./conversion-profile.service";
+
 // Kaltura objects and types
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
@@ -24,6 +25,7 @@ import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/Kal
 import { KalturaLiveEntryServerNode } from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
 import { KalturaLiveStreamParams } from "kaltura-typescript-client/types/KalturaLiveStreamParams";
+import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
 
 export interface StreamStatus {
   status: 'initial' | 'loading' | 'loaded' | 'error';
@@ -36,11 +38,6 @@ export enum LiveStreamStatusEnum {
   Live
 }
 
-export enum ServerType {
-  Primary = 0,
-  Secondary = 1
-}
-
 export interface LiveEntryStaticConfiguration {
   dvr?: boolean,
   recording?: boolean,
@@ -51,7 +48,6 @@ export interface LiveEntryDynamicStreamInfo {
   redundancy?: boolean,
   streamHealth?: boolean, // TODO create StreamHealth type
   streamStatus?: LiveStreamStatusEnum,
-  streamStartTime?: number
   allStreams?: NodeStreams
   streamCreationTime?: number
 }
@@ -124,7 +120,7 @@ export class LiveEntryService {
         entryConfig.recording = (liveEntryObj.recordStatus !== KalturaRecordStatus.disabled);
         // Look through the array and find the first flavor that is transcoded
         let isTranscodedFlavor = result.objects.find(f => { return f.origin ===  KalturaAssetParamsOrigin.convert });
-        entryConfig.transcoding = !isUndefined(isTranscodedFlavor);
+        entryConfig.transcoding = isTranscodedFlavor ? true : false;
 
         this._entryStaticConfiguration.next(entryConfig);
       })
@@ -173,52 +169,49 @@ export class LiveEntryService {
 
   private _parseEntryServeNodeList(snList: KalturaEntryServerNode[]): LiveEntryDynamicStreamInfo {
     let dynamicConfigObj: LiveEntryDynamicStreamInfo = {};
+    dynamicConfigObj.allStreams = new NodeStreams();
 
-    // Initialize streamStartTime
-    dynamicConfigObj.streamStartTime = 0;
+    // Check redundancy if more than one serverNode was returned
+    dynamicConfigObj.redundancy = (snList.length > 1);
 
     // Check stream status by order:
     // (1) If one serverNode is Playable -> Live
     // (2) If one serverNode is Broadcasting -> Broadcasting
     // (3) Any other state -> Offline
     let playingServerNode = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
-    if (!isUndefined(playingServerNode)) {
+    if (playingServerNode) {
       dynamicConfigObj.streamStatus = LiveStreamStatusEnum.Live;
     }
     else {
       let isBroadcasting = snList.find(sn => { return (sn.status === KalturaEntryServerNodeStatus.broadcasting); });
-      if (!isUndefined(isBroadcasting)) {
+      if (isBroadcasting) {
         dynamicConfigObj.streamStatus = LiveStreamStatusEnum.Broadcasting;
-        dynamicConfigObj.streamStartTime = Date.now();
       }
       else {
         dynamicConfigObj.streamStatus = LiveStreamStatusEnum.Offline;
       }
     }
 
-    // init redundancy default value
-    dynamicConfigObj.redundancy = false;
-
-    if (snList.length > 1){
-      dynamicConfigObj.redundancy = true;   // redundancy on if more than one serverNode was returned
+    if (snList.length > 0) {
       dynamicConfigObj.streamCreationTime = snList[0].createdAt ? snList[0].createdAt.valueOf() : null;
+
+      // find all primary & secondary streams and find earliest createdAt stream time
+      snList.forEach((eServerNode) => {
+
+        // get all stream available (primary, secondary)
+        if (KalturaEntryServerNodeType.livePrimary.equals(eServerNode.serverType)) {
+          dynamicConfigObj.allStreams.primary = (<KalturaLiveEntryServerNode> eServerNode).streams;
+        }
+        else if (KalturaEntryServerNodeType.liveBackup.equals(eServerNode.serverType)) {
+          dynamicConfigObj.allStreams.secondary = (<KalturaLiveEntryServerNode> eServerNode).streams;
+        }
+
+        // get the earliest eServerNode.createdAt time available
+        if (moment(eServerNode.createdAt).isBefore(dynamicConfigObj.streamCreationTime)) {
+          dynamicConfigObj.streamCreationTime = eServerNode.createdAt.valueOf();
+        }
+      });
     }
-
-    dynamicConfigObj.allStreams = new NodeStreams();
-    snList.forEach((eServerNode) =>{
-      // get all stream avaiable (primary, secondary)
-      if(eServerNode.serverType.toString() === ServerType.Primary.toString()){
-        dynamicConfigObj.allStreams.primary = (<KalturaLiveEntryServerNode> eServerNode).streams;
-      }
-      else if(eServerNode.serverType.toString() === ServerType.Secondary.toString()){
-        dynamicConfigObj.allStreams.secondary = (<KalturaLiveEntryServerNode> eServerNode).streams;
-      }
-
-      // get the earlier eServerNode.createdAt time available
-      if (moment(eServerNode.createdAt).isBefore(dynamicConfigObj.streamCreationTime)){
-        dynamicConfigObj.streamCreationTime = eServerNode.createdAt? eServerNode.createdAt.valueOf() : null;
-      }
-    });
 
     return dynamicConfigObj;
   }
