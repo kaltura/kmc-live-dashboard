@@ -1,3 +1,7 @@
 export const environment = {
-  production: true
+  production: true,
+  "liveEntryService": {
+    "streamStatusIntervalTimeInMs": 5000,
+    "streamHealthIntervalTimeInMs": 10000
+  }
 };
