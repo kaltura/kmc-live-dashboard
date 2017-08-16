@@ -1,7 +1,23 @@
 {
   "STREAM_CONFIG": {
-    "stream_status": "Stream Status",
-    "stream_health": "Stream Health",
+    "stream_status": {
+      "tag": "Stream Status",
+      "state": {
+        "Offline": "Offline",
+        "Initializing": "Initializing",
+        "Live": "Live"
+      }
+    },
+    "stream_health": {
+      "tag": "Stream Health",
+      "info": "Stream Health indicates how your live stream is being received by Kaltura.<br>Good - Live stream is healthy.<br>Fair - Viewers may experience minor issues.<br>Poor - Viewers potentially experience serious viewing issues.<br>N/A - Kaltura is not receiving data",
+      "state": {
+        "N/A": "N/A",
+        "Good": "Good",
+        "Fair": "Fair",
+        "Poor": "Poor"
+      }
+    },
     "elapsed_time": "Elapsed Time",
     "transcoding": "Transcoding",
     "recording": "Recording",

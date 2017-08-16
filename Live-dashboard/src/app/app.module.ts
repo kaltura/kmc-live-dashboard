@@ -29,11 +29,13 @@ import { EntryTypePipe } from '../pipes/entry-type.pipe';
 import { EntryBooleanConfigurationPipe } from '../pipes/entry-boolean-configuration.pipe';
 import { EntryDynamicInformationPipe } from '../pipes/entry-dynamic-information.pipe';
 import { TranscodingInfoPipe } from '../pipes/transcoding-info.pipe';
-import {SafePipe} from "@kaltura-ng/kaltura-ui/safe.pipe";
-import {DurationPipe} from "../pipes/duration.pipe";
+import { SafePipe } from "@kaltura-ng/kaltura-ui/safe.pipe";
+import { DurationPipe } from "../pipes/duration.pipe";
 
 // Configuration Services
-import {LiveDashboardConfiguration} from "./services/live-dashboard-configuration.service";
+import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
+// TODO: Remove!
+import { KalturaApiService } from "./kaltura-api.service";
 
 @NgModule({
   declarations: [
@@ -78,7 +80,7 @@ import {LiveDashboardConfiguration} from "./services/live-dashboard-configuratio
     LiveEntryTimerTaskService,
     BootstrapService,
     LiveDashboardConfiguration,
-    EntryDynamicInformationPipe
+    KalturaApiService
   ],
   bootstrap: [AppComponent]
 })

@@ -21,6 +21,7 @@ export class SetupAndPreviewComponent implements OnInit {
     });
     this._liveEntryService.getLiveEntryInformation();
     this._liveEntryService.runEntryStatusMonitoring();
+    this._liveEntryService.runStreamHealthMonitoring();
   }
 
   public onClickSaveBtn(): void {
