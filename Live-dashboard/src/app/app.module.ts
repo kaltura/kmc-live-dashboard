@@ -22,6 +22,7 @@ import { EncoderSettingsComponent } from './setup-and-preview/encoder-settings/e
 import { BasicSettingsComponent } from './setup-and-preview/basic-settings/basic-settings.component';
 import { AdditionalSettingsComponent } from './setup-and-preview/additional-settings/additional-settings.component';
 import { StreamConfigurationsComponent } from './setup-and-preview/stream-configurations/stream-configurations.component';
+import { AreaBlockerComponent } from "@kaltura-ng/kaltura-ui/area-blocker";
 // Pipes
 import { RecordingTypePipe } from '../pipes/recording-type.pipe';
 import { ModerationPipe } from '../pipes/moderation.pipe';
@@ -53,7 +54,8 @@ import { KalturaApiService } from "./kaltura-api.service";
     EntryDynamicInformationPipe,
     TranscodingInfoPipe,
     SafePipe,
-    DurationPipe
+    DurationPipe,
+    AreaBlockerComponent
   ],
   imports: [
     BrowserModule,

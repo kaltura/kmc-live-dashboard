@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService, StreamStatus } from "../live-entry.service";
+import { LiveEntryService, ApplicationStatus } from "../live-entry.service";
 
 import 'rxjs/Rx';
 
@@ -11,7 +11,7 @@ import 'rxjs/Rx';
 
 export class SetupAndPreviewComponent implements OnInit {
 
-  public _applicationStatus: StreamStatus;
+  public _applicationStatus: ApplicationStatus;
 
   constructor(public _liveEntryService : LiveEntryService) { }
 

@@ -27,13 +27,9 @@ import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/Kal
 import { KalturaLiveEntryServerNode } from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
 import { KalturaLiveStreamParams } from "kaltura-typescript-client/types/KalturaLiveStreamParams";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
-import { BeaconGetLastAction } from "../../tools/kaltura-typescript-client-custom/types/BeaconGetLastAction";
 import { KalturaBeaconFilter } from "../../tools/kaltura-typescript-client-custom/types/KalturaBeaconFilter";
-import { KalturaBeacon } from "../../tools/kaltura-typescript-client-custom/types/KalturaBeacon";
-import { KalturaBeaconListResponse } from "../../tools/kaltura-typescript-client-custom/types/KalturaBeaconListResponse";
-import { KalturaRequest } from "../../tools/kaltura-typescript-client-custom/kaltura-request";
 
-export interface StreamStatus {
+export interface ApplicationStatus {
   status: 'initial' | 'loading' | 'loaded' | 'error';
   error?: Error;
 }
@@ -70,7 +66,7 @@ export class NodeStreams{
 export class LiveEntryService {
   private _id: string;
   // BehaviorSubject subscribed by application
-  private _applicationStatus = new BehaviorSubject<StreamStatus>({status : 'initial'});
+  private _applicationStatus = new BehaviorSubject<ApplicationStatus>({status : 'initial'});
   public applicationStatus$ = this._applicationStatus.asObservable();
   // BehaviorSubjects subscribed by settings components for manipulation
   private _liveStream = new BehaviorSubject<KalturaLiveStreamEntry>(null);
@@ -143,7 +139,8 @@ export class LiveEntryService {
         entryConfig.transcoding = isTranscodedFlavor ? true : false;
 
         this._entryStaticConfiguration.next(entryConfig);
-      })
+        this._applicationStatus.next({ status: 'loaded' });
+      });
   }
 
   public runEntryStatusMonitoring(): void {

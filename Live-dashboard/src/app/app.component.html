@@ -1,9 +1,11 @@
-<div class="app-window">
-  <div class="dashboard-window" *ngIf="_bootstrapInitStatus">
-    <setup-and-preview></setup-and-preview>
-    <stream-info></stream-info>
+<k-area-blocker [showLoader]="!_bootstrapInitStatus">
+  <div class="app-window">
+    <div class="dashboard-window" *ngIf="_bootstrapInitStatus">
+      <setup-and-preview></setup-and-preview>
+      <stream-info></stream-info>
+    </div>
+    <div class="parameters-error" *ngIf="!_bootstrapInitStatus">
+      <p>{{ 'BOOTSTRAP.parameters_error' | translate }}</p>
+    </div>
   </div>
-  <div class="parameters-error" *ngIf="!_bootstrapInitStatus">
-    <p>Invalid App Parameters!!!</p>
-  </div>
-</div>
+</k-area-blocker>
