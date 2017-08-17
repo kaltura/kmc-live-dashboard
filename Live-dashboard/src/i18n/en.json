@@ -1,4 +1,7 @@
 {
+  "BOOTSTRAP": {
+    "parameters_error": "Invalid App Parameters!"
+  },
   "STREAM_CONFIG": {
     "stream_status": {
       "tag": "Stream Status",
