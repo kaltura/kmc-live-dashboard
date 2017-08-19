@@ -5,15 +5,17 @@
         <stream-configurations></stream-configurations>
       </div>
       <div class="learn-more">
-        <div>
-          <span class="learn-more-text">{{ 'DASHBOARD.broadcasting_troubleshoot_config_encoder' | translate }}</span>
+        <div *ngIf="_dynamicInformation.streamStatus === 'Offline'">
+          <span class="learn-more-text">{{ 'DASHBOARD.learn_more_not_live_text' | translate }}</span>
           <div class="learn-more-link">
-            <span>{{ 'DASHBOARD.learn_more' | translate }}</span>
+            <a href="https://knowledge.kaltura.com/getting-started-kaltura-live" target="_blank">{{ 'DASHBOARD.learn_more_anchor' | translate }}</a>
           </div>
+        </div>
+        <div *ngIf="_dynamicInformation.streamStatus !== 'Offline'">
+          <span class="learn-more-text">{{ 'DASHBOARD.learn_more_is_live_text' | translate }}</span>
         </div>
       </div>
       <div class="main">
-
       </div>
       <!--<div class="main">
         <div class="main-left">

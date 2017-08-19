@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService, ApplicationStatus } from "../live-entry.service";
+import { LiveEntryService, ApplicationStatus, LiveEntryDynamicStreamInfo } from "../live-entry.service";
 
 import 'rxjs/Rx';
 
@@ -12,12 +12,24 @@ import 'rxjs/Rx';
 export class SetupAndPreviewComponent implements OnInit {
 
   public _applicationStatus: ApplicationStatus;
+  public _dynamicInformation: LiveEntryDynamicStreamInfo;
 
-  constructor(public _liveEntryService : LiveEntryService) { }
+
+  constructor(public _liveEntryService : LiveEntryService) {
+    this._applicationStatus = { status: 'initial' };
+    this._dynamicInformation = { streamStatus: 'Offline' };
+  }
 
   ngOnInit() {
     this._liveEntryService.applicationStatus$.subscribe(response => {
-      this._applicationStatus = response;
+       if(response) {
+         this._applicationStatus = response;
+       }
+    });
+    this._liveEntryService.entryDynamicInformation$.subscribe(response => {
+      if (response) {
+        this._dynamicInformation.streamStatus = response.streamStatus;
+      }
     });
     this._liveEntryService.getLiveEntryInformation();
     this._liveEntryService.runEntryStatusMonitoring();
