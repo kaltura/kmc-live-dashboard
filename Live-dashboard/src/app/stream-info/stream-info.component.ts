@@ -17,7 +17,7 @@ export class StreamInfoComponent implements OnInit {
   public _plays: number;
   public _entryId: string;
   public _playerSrc: string = '';
-  public _dynamicConfiguration: LiveEntryDynamicStreamInfo = {
+  public _dynamicInfo: LiveEntryDynamicStreamInfo = {
     redundancy: false,
     streamStatus: 'Offline'
   };
@@ -46,9 +46,9 @@ export class StreamInfoComponent implements OnInit {
       }
     });
 
-    this._liveEntryService.entryDynamicConfiguration$.subscribe(response => {
+    this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
-        this._dynamicConfiguration = response;
+        this._dynamicInfo = response;
       }
     });
   }

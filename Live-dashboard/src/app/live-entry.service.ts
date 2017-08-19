@@ -75,8 +75,8 @@ export class LiveEntryService {
   // BehaviorSubjects subscribed by configuration display component for status monitoring
   private _entryStaticConfiguration = new BehaviorSubject<LiveEntryStaticConfiguration>(null);
   public entryStaticConfiguration$ = this._entryStaticConfiguration.asObservable();
-  private _entryDynamicConfiguration = new BehaviorSubject<LiveEntryDynamicStreamInfo>(null);
-  public entryDynamicConfiguration$ = this._entryDynamicConfiguration.asObservable();
+  private _entryDynamicInformation = new BehaviorSubject<LiveEntryDynamicStreamInfo>(null);
+  public entryDynamicInformation$ = this._entryDynamicInformation.asObservable();
   // BehaviorSubjects subscribed by configuration display component for diagnostics and health monitoring
   private _entryDiagnosticsInfo: LiveEntryDiagnosticsInfo = {
     staticInfo: { updatedTime: 0 },
@@ -149,7 +149,7 @@ export class LiveEntryService {
         filter: new KalturaEntryServerNodeFilter({entryIdEqual: this._id})
       }))
       .map(response => {
-        this._entryDynamicConfiguration.next(this._parseEntryServeNodeList(response.objects));
+        this._entryDynamicInformation.next(this._parseEntryServeNodeList(response.objects));
         return;
       });
     }, environment.liveEntryService.streamStatusIntervalTimeInMs)

@@ -2,9 +2,9 @@
   <div class="property">
     <label class="configuration-label">{{ 'STREAM_CONFIG.stream_status.tag' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="_dynamicConfiguration.streamStatus === 'Live'"
-                           [class.bullet-yellow]="_dynamicConfiguration.streamStatus === 'Initializing'">•</span>
-      <span class="state">{{ 'STREAM_CONFIG.stream_status.state.' + _dynamicConfiguration.streamStatus | translate }}</span>
+      <span class="bullet" [class.bullet-green]="_dynamicInformation.streamStatus === 'Live'"
+                           [class.bullet-yellow]="_dynamicInformation.streamStatus === 'Initializing'">•</span>
+      <span class="state">{{ 'STREAM_CONFIG.stream_status.state.' + _dynamicInformation.streamStatus | translate }}</span>
     </div>
   </div>
   <div class="property">
@@ -13,11 +13,11 @@
       <i class="kIconhelp" aria-hidden="true" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'right'"></i>
     </div>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_streamHealth === 'Good') && (_dynamicConfiguration.streamStatus !== 'Offline')"
-                           [class.bullet-yellow]="(_streamHealth === 'Fair') && (_dynamicConfiguration.streamStatus !== 'Offline')"
-                           [class.bullet-red]="(_streamHealth === 'Poor') && (_dynamicConfiguration.streamStatus !== 'Offline')">•</span>
-      <span class="state" *ngIf="_dynamicConfiguration.streamStatus === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
-      <span class="state" *ngIf="_dynamicConfiguration.streamStatus !== 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.' + _streamHealth | translate }}</span>
+      <span class="bullet" [class.bullet-green]="(_streamHealth === 'Good') && (_dynamicInformation.streamStatus !== 'Offline')"
+                           [class.bullet-yellow]="(_streamHealth === 'Fair') && (_dynamicInformation.streamStatus !== 'Offline')"
+                           [class.bullet-red]="(_streamHealth === 'Poor') && (_dynamicInformation.streamStatus !== 'Offline')">•</span>
+      <span class="state" *ngIf="_dynamicInformation.streamStatus === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
+      <span class="state" *ngIf="_dynamicInformation.streamStatus !== 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.' + _streamHealth | translate }}</span>
     </div>
   </div>
   <div class="property">
@@ -28,7 +28,7 @@
     </div>
   </div>
   <div class="property"
-        [kTooltip]="_dynamicConfiguration.streamStatus !== 'Offline' ? (_dynamicConfiguration.allStreams | transcodingInfo) : ''"
+        [kTooltip]="_dynamicInformation.streamStatus !== 'Offline' ? (_dynamicInformation.allStreams | transcodingInfo) : ''"
         [maxWidth]="182" [placement]="'right'">
     <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
     <div class="configuration-status">
@@ -53,8 +53,8 @@
   <div class="property">
     <label class="configuration-label">{{ 'STREAM_CONFIG.redundancy' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_dynamicConfiguration.redundancy)">•</span>
-      <span class="state">{{_dynamicConfiguration.redundancy | entryDynamicInformation: _dynamicConfiguration.streamStatus}}</span>
+      <span class="bullet" [class.bullet-green]="(_dynamicInformation.redundancy)">•</span>
+      <span class="state">{{_dynamicInformation.redundancy | entryDynamicInformation: _dynamicInformation.streamStatus}}</span>
     </div>
   </div>
 </div>
