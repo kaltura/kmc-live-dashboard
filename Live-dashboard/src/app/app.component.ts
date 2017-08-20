@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BootstrapService } from "./bootstrap.service";
 import { TranslateService } from "ng2-translate";
-import {LiveDashboardConfiguration} from "./services/live-dashboard-configuration.service";
+import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
+import { LiveEntryService } from "./live-entry.service";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ export class AppComponent implements OnInit {
 
   constructor(private _bootstrapService: BootstrapService,
               private _translate: TranslateService,
-              private _liveDashboardConfiguration: LiveDashboardConfiguration) {
+              private _liveDashboardConfiguration: LiveDashboardConfiguration,
+              private _liveEntryService: LiveEntryService) {
   }
 
   ngOnInit() {
@@ -27,5 +29,6 @@ export class AppComponent implements OnInit {
     this._translate.use(browserLang.match(/de|en|es|fr|ja/) ? browserLang : 'en');
 
     this._bootstrapInitStatus = this._bootstrapService.initStatus;
+    this._liveEntryService.InitiateLiveEntryService();
   }
 }

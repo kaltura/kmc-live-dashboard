@@ -35,8 +35,14 @@ import { DurationPipe } from "../pipes/duration.pipe";
 
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
-// TODO: Remove!
-import { KalturaApiService } from "./kaltura-api.service";
+
+// TODO: Temporary solution! --> remove
+export function clientConfigurationFactory() {
+  const result = new KalturaClientConfiguration();
+  result.endpointUrl = '.';
+  result.clientTag = '.';
+  return result;
+}
 
 @NgModule({
   declarations: [
@@ -76,13 +82,16 @@ import { KalturaApiService } from "./kaltura-api.service";
   ],
   providers: [
     KalturaClient,
-    KalturaClientConfiguration,
+    {
+      provide: KalturaClientConfiguration,
+      useFactory: clientConfigurationFactory
+
+    },
     LiveEntryService,
     ConversionProfileService,
     LiveEntryTimerTaskService,
     BootstrapService,
-    LiveDashboardConfiguration,
-    KalturaApiService
+    LiveDashboardConfiguration
   ],
   bootstrap: [AppComponent]
 })

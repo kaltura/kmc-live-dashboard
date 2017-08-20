@@ -11,5 +11,8 @@ export const environment = {
   "liveEntryService": {
     "streamStatusIntervalTimeInMs": 5000,
     "streamHealthIntervalTimeInMs": 10000
+  },
+  "externalLinks": {
+      "LEARN_MORE": "https://knowledge.kaltura.com/getting-started-kaltura-live"
   }
 };
