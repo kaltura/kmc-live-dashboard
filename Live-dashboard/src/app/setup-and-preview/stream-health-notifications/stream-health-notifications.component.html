@@ -1,0 +1,41 @@
+<div class="stream-info-header grid-spaceBetween">
+  <div class="stream-info-title col no-padding">Stream Info</div>
+
+  <span class="kIconuser"></span>
+
+  <div class="num-of-watchers">235</div>
+  <div class="watching">Watching</div>
+</div>
+
+<!-- gray container -->
+<div class="notification-container">
+
+  <!-- title -->
+  <div class="stream-health-title">
+    <span class="text">{{ 'stream health' | uppercase }}</span>
+  </div>
+
+  <!-- list -->
+  <div class="notification-list">
+
+    <!-- list item -->
+    <div *ngFor="let healthNotification of streamHealthNotifications" class="notification-item grid col-12 no-margin">
+      <div class="bullet" [class.bullet-green]="(healthNotification.health === 'Good')"
+           [class.bullet-yellow]="(healthNotification.health === 'Fair')"
+           [class.bullet-red]="(healthNotification.health === 'Poor')">•</div>
+
+      <div class="item-info col">
+        <div class="row-1">
+          <span class="status-prop">{{ healthNotification.time | localeTime }}</span>
+          <span class="status-prop">{{ healthNotification.health }}</span>
+          <span class="status-prop">{{ healthNotification.shortDescription }}</span>
+        </div>
+
+        <div class="row-2 description">{{ healthNotification.longDescription }}</div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>

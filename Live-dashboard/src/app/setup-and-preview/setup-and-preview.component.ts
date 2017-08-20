@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService, StreamStatus } from "../live-entry.service";
+import {LiveEntryService, StreamStatus, LiveEntryDynamicStreamInfo} from "../live-entry.service";
 
 import 'rxjs/Rx';
 
@@ -12,6 +12,7 @@ import 'rxjs/Rx';
 export class SetupAndPreviewComponent implements OnInit {
 
   public _applicationStatus: StreamStatus;
+  private _dynamicConfiguration: LiveEntryDynamicStreamInfo;
 
   constructor(public _liveEntryService : LiveEntryService) { }
 
@@ -19,12 +20,22 @@ export class SetupAndPreviewComponent implements OnInit {
     this._liveEntryService.applicationStatus$.subscribe(response => {
       this._applicationStatus = response;
     });
-    this._liveEntryService.getLiveEntryInformation();
-    this._liveEntryService.runEntryStatusMonitoring();
-    this._liveEntryService.runStreamHealthMonitoring();
+    this._liveEntryService.getLiveEntryInformation();   // static
+    this._liveEntryService.runEntryStatusMonitoring();  // dynamic
+    this._liveEntryService.runStreamHealthMonitoring(); // diagnostics
+
+    this.listenToDynamicStreamInfo();
   }
 
   public onClickSaveBtn(): void {
     this._liveEntryService.saveLiveStreamEntry();
+  }
+
+  private listenToDynamicStreamInfo() {
+    this._liveEntryService.entryDynamicConfiguration$.subscribe(response => {
+      if (response) {
+        this._dynamicConfiguration = response;
+      }
+    });
   }
 }

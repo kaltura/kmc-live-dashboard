@@ -34,8 +34,11 @@ import { DurationPipe } from "../pipes/duration.pipe";
 
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
+import { StreamHealthNotificationsComponent } from './setup-and-preview/stream-health-notifications/stream-health-notifications.component';
 // TODO: Remove!
 import { KalturaApiService } from "./kaltura-api.service";
+import {LocaleTimePipe} from "../pipes/locale-time.pipe";
+
 
 @NgModule({
   declarations: [
@@ -53,7 +56,9 @@ import { KalturaApiService } from "./kaltura-api.service";
     EntryDynamicInformationPipe,
     TranscodingInfoPipe,
     SafePipe,
-    DurationPipe
+    DurationPipe,
+    StreamHealthNotificationsComponent,
+    LocaleTimePipe
   ],
   imports: [
     BrowserModule,

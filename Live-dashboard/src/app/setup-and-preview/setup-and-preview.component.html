@@ -1,9 +1,11 @@
 <div>
   <!--<div *ngIf="(_liveEntryService.streamStatus$ | async) === loading">LOADING...</div>-->
   <div class="setup-and-preview">
+
     <div class="stream-health">
       <stream-configurations></stream-configurations>
     </div>
+
     <div class="learn-more">
       <div>
         <span class="learn-more-text">{{ 'DASHBOARD.broadcasting_troubleshoot_config_encoder' | translate }}</span>
@@ -12,9 +14,10 @@
         </div>
       </div>
     </div>
-    <div class="main">
 
-    </div>
+    <stream-health-notifications *ngIf="_dynamicConfiguration && _dynamicConfiguration.streamStatus === 'Live'" class="stream-health-notifications">
+    </stream-health-notifications>
+
     <!--<div class="main">
       <div class="main-left">
         <p-tabView class="general-settings">

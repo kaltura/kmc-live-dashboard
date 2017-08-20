@@ -2,11 +2,9 @@
 
 .stream-configurations {
   height: 126px;
-
-  padding: 0 40px;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 
   .property {
@@ -35,18 +33,6 @@
 
       .bullet {
         font-size: 75px;
-      }
-
-      .bullet-green {
-        color: $kSuccess;
-      }
-
-      .bullet-yellow {
-        color: #fdd304;
-      }
-
-      .bullet-red {
-        color: $kDandger;
       }
 
       .state {

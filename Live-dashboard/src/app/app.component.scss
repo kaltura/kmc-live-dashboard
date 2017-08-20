@@ -1,10 +1,10 @@
 @import '../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/variables.scss';
 
 .app-window {
-  max-width: 1500px;
+  max-width: 1280px;
   min-width: 1035px;
-
-  padding: 28px 28px 98px 28px;
+  padding: 28px 28px 62px 31px;
+  box-sizing: border-box;
   background-color: #FFFFFF;
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
 

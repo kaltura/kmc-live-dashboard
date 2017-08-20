@@ -13,3 +13,23 @@ $mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts
   text-align: center !important;
   white-space: pre-wrap !important;
 }
+
+.no-padding{
+  padding: 0 !important;
+}
+
+.no-margin{
+  margin: 0 !important;
+}
+
+.bullet-green {
+  color: $kSuccess;
+}
+
+.bullet-yellow {
+  color: #fdd304;
+}
+
+.bullet-red {
+  color: $kDandger;
+}

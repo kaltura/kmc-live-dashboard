@@ -57,7 +57,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
       .subscribe(() => {
         if (this._dynamicConfiguration.streamStatus !== 'Offline'){
           if (this._dynamicConfiguration.streamCreationTime){
-            this._streamDuration = moment.duration(Math.abs(moment().diff(moment(this._dynamicConfiguration.streamCreationTime))));
+            this._streamDuration = moment.duration(moment().diff(moment(this._dynamicConfiguration.streamCreationTime)));
           }
           else{
             this._streamDuration = moment.duration(0);
