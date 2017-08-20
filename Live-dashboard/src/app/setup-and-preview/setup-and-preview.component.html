@@ -1,40 +1,42 @@
-<div>
-  <!--<div *ngIf="(_liveEntryService.streamStatus$ | async) === loading">LOADING...</div>-->
-  <div class="setup-and-preview">
-
-    <div class="stream-health">
-      <stream-configurations></stream-configurations>
-    </div>
-
-    <div class="learn-more">
-      <div>
-        <span class="learn-more-text">{{ 'DASHBOARD.broadcasting_troubleshoot_config_encoder' | translate }}</span>
-        <div class="learn-more-link">
-          <span>{{ 'DASHBOARD.learn_more' | translate }}</span>
+<k-area-blocker [showLoader]="_applicationStatus.status !== 'loaded'">
+  <div>
+    <div class="setup-and-preview">
+      <div class="stream-health">
+        <stream-configurations></stream-configurations>
+      </div>
+      <div class="learn-more">
+        <div *ngIf="_dynamicInformation.streamStatus === 'Offline'">
+          <span class="learn-more-text">{{ 'DASHBOARD.learn_more_not_live_text' | translate }}</span>
+          <div class="learn-more-link">
+            <a [href]="_learnMoreLink" target="_blank">{{ 'DASHBOARD.learn_more_anchor' | translate }}</a>
+          </div>
+        </div>
+        <div *ngIf="_dynamicInformation.streamStatus !== 'Offline'">
+          <span class="learn-more-text">{{ 'DASHBOARD.learn_more_is_live_text' | translate }}</span>
         </div>
       </div>
-    </div>
 
-    <stream-health-notifications *ngIf="_dynamicConfiguration && _dynamicConfiguration.streamStatus === 'Live'" class="stream-health-notifications">
-    </stream-health-notifications>
+      <stream-health-notifications *ngIf="_dynamicConfiguration && _dynamicConfiguration.streamStatus === 'Live'" class="stream-health-notifications">
+      </stream-health-notifications>
 
-    <!--<div class="main">
-      <div class="main-left">
-        <p-tabView class="general-settings">
-          <p-tabPanel header="BASIC">
-            <basic-settings></basic-settings>
-          </p-tabPanel>
-          <p-tabPanel header="SETTINGS">
-            <additional-settings></additional-settings>
-          </p-tabPanel>
-        </p-tabView>
+      <!--<div class="main">
+        <div class="main-left">
+          <p-tabView class="general-settings">
+            <p-tabPanel header="BASIC">
+              <basic-settings></basic-settings>
+            </p-tabPanel>
+            <p-tabPanel header="SETTINGS">
+              <additional-settings></additional-settings>
+            </p-tabPanel>
+          </p-tabView>
+        </div>
+        <div class="main-right">
+          <encoder-settings></encoder-settings>
+        </div>
       </div>
-      <div class="main-right">
-        <encoder-settings></encoder-settings>
-      </div>
+      <footer>
+        <button pButton type="button" class="ui-button kButtonBranded saveInfo" label="{{ 'DASHBOARD.save' | translate }}" (click)="onClickSaveBtn()"></button>
+      </footer>-->
     </div>
-    <footer>
-      <button pButton type="button" class="ui-button kButtonBranded saveInfo" label="{{ 'DASHBOARD.save' | translate }}" (click)="onClickSaveBtn()"></button>
-    </footer>-->
   </div>
-</div>
+</k-area-blocker>

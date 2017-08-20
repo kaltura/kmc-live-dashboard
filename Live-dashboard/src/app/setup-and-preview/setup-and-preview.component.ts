@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {LiveEntryService, StreamStatus, LiveEntryDynamicStreamInfo} from "../live-entry.service";
+import { LiveEntryService, ApplicationStatus, LiveEntryDynamicStreamInfo } from "../live-entry.service";
+import { environment } from "../../environments/environment";
 
 import 'rxjs/Rx';
 
@@ -11,30 +12,28 @@ import 'rxjs/Rx';
 
 export class SetupAndPreviewComponent implements OnInit {
 
-  public _applicationStatus: StreamStatus;
-  private _dynamicConfiguration: LiveEntryDynamicStreamInfo;
+  public _applicationStatus: ApplicationStatus;
+  private _dynamicInformation: LiveEntryDynamicStreamInfo;
+  public _learnMoreLink = environment.externalLinks.LEARN_MORE;
 
-  constructor(public _liveEntryService : LiveEntryService) { }
+  constructor(public _liveEntryService : LiveEntryService) {
+    this._applicationStatus = { status: 'initial' };
+  }
 
   ngOnInit() {
     this._liveEntryService.applicationStatus$.subscribe(response => {
-      this._applicationStatus = response;
+       if(response) {
+         this._applicationStatus = response;
+       }
     });
-    this._liveEntryService.getLiveEntryInformation();   // static
-    this._liveEntryService.runEntryStatusMonitoring();  // dynamic
-    this._liveEntryService.runStreamHealthMonitoring(); // diagnostics
 
     this.listenToDynamicStreamInfo();
   }
 
-  public onClickSaveBtn(): void {
-    this._liveEntryService.saveLiveStreamEntry();
-  }
-
   private listenToDynamicStreamInfo() {
-    this._liveEntryService.entryDynamicConfiguration$.subscribe(response => {
+    this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
-        this._dynamicConfiguration = response;
+        this._dynamicInformation = response;
       }
     });
   }

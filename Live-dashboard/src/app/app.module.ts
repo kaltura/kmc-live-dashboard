@@ -5,8 +5,10 @@ import { HttpModule, Http } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from "ng2-translate";
 import { TooltipModule } from '@kaltura-ng/kaltura-ui';
+
 // PrimeNG
 import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule } from 'primeng/primeng';
+
 // Services
 import { KalturaClient } from '@kaltura-ng/kaltura-client/kaltura-client.service';
 import { KalturaClientConfiguration } from '@kaltura-ng/kaltura-client/kaltura-client-configuration.service';
@@ -14,6 +16,7 @@ import { LiveEntryService } from './live-entry.service';
 import { ConversionProfileService } from "./conversion-profile.service";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { BootstrapService } from "./bootstrap.service";
+
 // Components
 import { AppComponent } from './app.component';
 import { StreamInfoComponent } from './stream-info/stream-info.component';
@@ -22,6 +25,9 @@ import { EncoderSettingsComponent } from './setup-and-preview/encoder-settings/e
 import { BasicSettingsComponent } from './setup-and-preview/basic-settings/basic-settings.component';
 import { AdditionalSettingsComponent } from './setup-and-preview/additional-settings/additional-settings.component';
 import { StreamConfigurationsComponent } from './setup-and-preview/stream-configurations/stream-configurations.component';
+import { AreaBlockerComponent } from "@kaltura-ng/kaltura-ui/area-blocker";
+import { StreamHealthNotificationsComponent } from './setup-and-preview/stream-health-notifications/stream-health-notifications.component';
+
 // Pipes
 import { RecordingTypePipe } from '../pipes/recording-type.pipe';
 import { ModerationPipe } from '../pipes/moderation.pipe';
@@ -31,14 +37,21 @@ import { EntryDynamicInformationPipe } from '../pipes/entry-dynamic-information.
 import { TranscodingInfoPipe } from '../pipes/transcoding-info.pipe';
 import { SafePipe } from "@kaltura-ng/kaltura-ui/safe.pipe";
 import { DurationPipe } from "../pipes/duration.pipe";
+import { LocaleTimePipe } from "../pipes/locale-time.pipe";
 
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
-import { StreamHealthNotificationsComponent } from './setup-and-preview/stream-health-notifications/stream-health-notifications.component';
 // TODO: Remove!
 import { KalturaApiService } from "./kaltura-api.service";
-import {LocaleTimePipe} from "../pipes/locale-time.pipe";
 
+
+// TODO: Temporary solution! --> remove
+export function clientConfigurationFactory() {
+  const result = new KalturaClientConfiguration();
+  result.endpointUrl = '.';
+  result.clientTag = '.';
+  return result;
+}
 
 @NgModule({
   declarations: [
@@ -58,7 +71,8 @@ import {LocaleTimePipe} from "../pipes/locale-time.pipe";
     SafePipe,
     DurationPipe,
     StreamHealthNotificationsComponent,
-    LocaleTimePipe
+    LocaleTimePipe,
+    AreaBlockerComponent
   ],
   imports: [
     BrowserModule,
@@ -79,13 +93,16 @@ import {LocaleTimePipe} from "../pipes/locale-time.pipe";
   ],
   providers: [
     KalturaClient,
-    KalturaClientConfiguration,
+    {
+      provide: KalturaClientConfiguration,
+      useFactory: clientConfigurationFactory
+
+    },
     LiveEntryService,
     ConversionProfileService,
     LiveEntryTimerTaskService,
     BootstrapService,
-    LiveDashboardConfiguration,
-    KalturaApiService
+    LiveDashboardConfiguration
   ],
   bootstrap: [AppComponent]
 })

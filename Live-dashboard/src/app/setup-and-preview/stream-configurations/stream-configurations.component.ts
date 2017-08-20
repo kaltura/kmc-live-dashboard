@@ -15,7 +15,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
   public _streamDuration: Duration;
   private _streamDurationSubscription: Subscription;
   public _staticConfiguration: LiveEntryStaticConfiguration;
-  public _dynamicConfiguration: LiveEntryDynamicStreamInfo;
+  public _dynamicInformation: LiveEntryDynamicStreamInfo;
   public _streamHealth: 'Good' | 'Fair' | 'Poor';
 
   constructor(private _liveEntryService: LiveEntryService) {
@@ -26,7 +26,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
       transcoding: false
     };
     // Dynamic configuration
-    this._dynamicConfiguration = {
+    this._dynamicInformation = {
       redundancy: false,
       streamStatus: 'Offline'
     };
@@ -40,9 +40,9 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
         this._startCalculatingStreamDurationTime();
       }
     });
-    this._liveEntryService.entryDynamicConfiguration$.subscribe(response => {
+    this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
-        this._dynamicConfiguration = response;
+        this._dynamicInformation = response;
       }
     });
     this._liveEntryService.entryDiagnostics$.subscribe(response => {
@@ -55,9 +55,9 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
   private _startCalculatingStreamDurationTime() {
     this._streamDurationSubscription = Observable.timer(0, 1000)
       .subscribe(() => {
-        if (this._dynamicConfiguration.streamStatus !== 'Offline'){
-          if (this._dynamicConfiguration.streamCreationTime){
-            this._streamDuration = moment.duration(moment().diff(moment(this._dynamicConfiguration.streamCreationTime)));
+        if (this._dynamicInformation.streamStatus !== 'Offline'){
+          if (this._dynamicInformation.streamCreationTime){
+            this._streamDuration = moment.duration(Math.abs(moment().diff(moment(this._dynamicInformation.streamCreationTime))));
           }
           else{
             this._streamDuration = moment.duration(0);

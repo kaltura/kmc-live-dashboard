@@ -1,4 +1,7 @@
 {
+  "BOOTSTRAP": {
+    "parameters_error": "Invalid App Parameters!"
+  },
   "STREAM_CONFIG": {
     "stream_status": {
       "tag": "Stream Status",
@@ -29,8 +32,9 @@
     "secondary": "Secondary"
   },
   "DASHBOARD": {
-    "learn_more": "Learn more",
-    "broadcasting_troubleshoot_config_encoder": "To start broadcasting, configure your encoder and start streaming.",
+    "learn_more_anchor": "Learn more",
+    "learn_more_not_live_text": "To start broadcasting, configure your encoder and start streaming.",
+    "learn_more_is_live_text": "You are now live. To stop broadcasting, stop your encoder.",
     "save": "Save"
   },
   "STREAM_INFO": {
