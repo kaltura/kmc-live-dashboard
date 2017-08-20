@@ -11,15 +11,14 @@
   line-height: 24px;
 }
 
-.kIconuser{
+.kIconUsers{
   padding-left: 20px;
   line-height: 24px;
   color: $kGrayscale3;
-  font-size: 21px;
+  font-size: 31px;
 
   &:before {
-    content: "\e90b";
-    //content: "\e92e";  TODO: change it after @kaltura-ng\mc-theme will update.
+    content: "\e92e";
   }
 }
 

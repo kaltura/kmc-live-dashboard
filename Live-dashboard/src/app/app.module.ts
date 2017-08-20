@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
+import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from "ng2-translate";
 import { TooltipModule } from '@kaltura-ng/kaltura-ui';
@@ -41,9 +41,6 @@ import { LocaleTimePipe } from "../pipes/locale-time.pipe";
 
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
-// TODO: Remove!
-import { KalturaApiService } from "./kaltura-api.service";
-
 
 // TODO: Temporary solution! --> remove
 export function clientConfigurationFactory() {

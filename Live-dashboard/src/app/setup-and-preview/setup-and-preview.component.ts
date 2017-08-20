@@ -18,16 +18,20 @@ export class SetupAndPreviewComponent implements OnInit {
 
   constructor(public _liveEntryService : LiveEntryService) {
     this._applicationStatus = { status: 'initial' };
+    this._dynamicInformation = { streamStatus: 'Offline' };
   }
 
   ngOnInit() {
-    this._liveEntryService.applicationStatus$.subscribe(response => {
-       if(response) {
-         this._applicationStatus = response;
-       }
-    });
-
+    this.listenToApplicationStatus();
     this.listenToDynamicStreamInfo();
+  }
+
+  private listenToApplicationStatus() {
+    this._liveEntryService.applicationStatus$.subscribe(response => {
+      if (response) {
+        this._applicationStatus = response;
+      }
+    });
   }
 
   private listenToDynamicStreamInfo() {
