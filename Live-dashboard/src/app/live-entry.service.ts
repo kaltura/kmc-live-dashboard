@@ -9,7 +9,6 @@ import * as moment from 'moment';
 import { KalturaClient } from "@kaltura-ng/kaltura-client";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { ConversionProfileService } from "./conversion-profile.service";
-import { KalturaApiService } from "./kaltura-api.service";
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
 import { environment } from "../environments/environment";
 // Kaltura objects and types
@@ -27,7 +26,9 @@ import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/Kal
 import { KalturaLiveEntryServerNode } from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
 import { KalturaLiveStreamParams } from "kaltura-typescript-client/types/KalturaLiveStreamParams";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
-import { KalturaBeaconFilter } from "../../tools/kaltura-typescript-client-custom/types/KalturaBeaconFilter";
+import { BeaconGetLastAction } from "kaltura-typescript-client/types/BeaconGetLastAction";
+import { KalturaBeaconFilter } from "kaltura-typescript-client/types/KalturaBeaconFilter";
+import { KalturaBeacon } from "kaltura-typescript-client/types/KalturaBeacon";
 
 export interface ApplicationStatus {
   status: 'initial' | 'loading' | 'loaded' | 'error';
@@ -88,11 +89,14 @@ export class LiveEntryService {
 
   private _pullRequestEntryStatusMonitoring: ISubscription;
   private _pullRequestStreamHealthMonitoring: ISubscription;
+  private _serviceInitStatus = {
+    isReadyLiveStream: false,
+    isReadyStreamStatus: false,
+    isReadyStreamHealth: false
+  };
   private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
 
   constructor(private _kalturaClient: KalturaClient,
-              // TODO: Delete once Eran_Amir generates new ClientLibs that include beacon
-              private _kalturaApiService: KalturaApiService,
               private _entryTimerTask: LiveEntryTimerTaskService,
               private _conversionProfilesService: ConversionProfileService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration) {
@@ -104,15 +108,27 @@ export class LiveEntryService {
     this._applicationStatus.unsubscribe();
     this._liveStream.unsubscribe();
     this._entryStaticConfiguration.unsubscribe();
+    this._entryDynamicInformation.unsubscribe();
     this._pullRequestEntryStatusMonitoring.unsubscribe();
+    this._pullRequestStreamHealthMonitoring.unsubscribe();
   }
 
-  public getLiveEntryInformation(): void {
+  public InitiateLiveEntryService(): void {
+    this._applicationStatus.next({ status: 'loading' });
     this._getLiveStream();
+    this._runEntryStatusMonitoring();
+    this._runStreamHealthMonitoring();
+
+    while (!this._serviceInitStatus.isReadyLiveStream ||
+           !this._serviceInitStatus.isReadyStreamStatus ||
+           !this._serviceInitStatus.isReadyStreamHealth) {
+      break;
+    }
+
+    this._applicationStatus.next({ status: 'loaded' });
   }
 
   private _getLiveStream(): void {
-    this._applicationStatus.next({ status: 'loading' });
     this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this._id, acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode] }))
       .subscribe(response => {
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
@@ -139,17 +155,18 @@ export class LiveEntryService {
         entryConfig.transcoding = isTranscodedFlavor ? true : false;
 
         this._entryStaticConfiguration.next(entryConfig);
-        this._applicationStatus.next({ status: 'loaded' });
+        this._serviceInitStatus.isReadyLiveStream = true;
       });
   }
 
-  public runEntryStatusMonitoring(): void {
+  private _runEntryStatusMonitoring(): void {
     this._pullRequestEntryStatusMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new EntryServerNodeListAction({
         filter: new KalturaEntryServerNodeFilter({entryIdEqual: this._id})
       }))
       .map(response => {
         this._entryDynamicInformation.next(this._parseEntryServeNodeList(response.objects));
+        this._serviceInitStatus.isReadyStreamStatus = true;
         return;
       });
     }, environment.liveEntryService.streamStatusIntervalTimeInMs)
@@ -209,35 +226,15 @@ export class LiveEntryService {
     return dynamicConfigObj;
   }
 
-  public runStreamHealthMonitoring(): void {
-    this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
-      return this._kalturaApiService.apiRequest({
-        "service": "beacon_beacon",
-        "action": "getLast",
-        "filter:objectType": "KalturaBeaconFilter",
-        "filter:objectIdEqual": this._id
-      }).map(response => {
-        if (response && response.objectType === "KalturaAPIException") {
-          throw new Error(response.message);
-        }
-        // Update diagnostics object with recent beacons info
-        this._parseEntryBeacons(response.json().objects);
-        this._entryDiagnostics.next(this._entryDiagnosticsInfo);
-        return;
-      })
-    }, environment.liveEntryService.streamHealthIntervalTimeInMs)
-      .subscribe(response => {
-        // TODO: Create a message notifying of network problems
-      });
-  }
-
-  /*public runStreamHealthMonitoring(): void {
+  private _runStreamHealthMonitoring(): void {
     this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new BeaconGetLastAction({
         filter: new KalturaBeaconFilter({objectIdEqual: this._id})
       })).map(response => {
-        debugger;
-        this._entryDiagnostics.next(this._parseEntryBeacons(response.objects));
+        // Update diagnostics object with recent beacons info
+        this._parseEntryBeacons(response.objects);
+        this._entryDiagnostics.next(this._entryDiagnosticsInfo);
+        this._serviceInitStatus.isReadyStreamHealth = true;
         return;
       })
     }, environment.liveEntryService.streamHealthIntervalTimeInMs)
@@ -246,9 +243,9 @@ export class LiveEntryService {
           // TODO: show network connectivity issue!!!
         }
       });
-  }*/
+  }
 
-  private _parseEntryBeacons(beaconsArray: Object[]): void {
+  private _parseEntryBeacons(beaconsArray: KalturaBeacon[]): void {
     _.each(beaconsArray, b => {
       let metaData = JSON.parse(b.privateData);
       switch (b.eventType) {
@@ -279,7 +276,7 @@ export class LiveEntryService {
     });
   }
 
-  public saveLiveStreamEntry(): void {
+  /*public saveLiveStreamEntry(): void {
     let diffProperties = _.filter(this._propertiesToUpdate, (p) => {
       return (this._liveStream.value[p] !== this._cachedLiveStream[p]);
     });
@@ -295,5 +292,5 @@ export class LiveEntryService {
         this._liveStream.next(response);
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
       });
-  }
+  }*/
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LiveEntryService, ApplicationStatus, LiveEntryDynamicStreamInfo } from "../live-entry.service";
+import { environment } from "../../environments/environment";
 
 import 'rxjs/Rx';
 
@@ -13,7 +14,7 @@ export class SetupAndPreviewComponent implements OnInit {
 
   public _applicationStatus: ApplicationStatus;
   public _dynamicInformation: LiveEntryDynamicStreamInfo;
-
+  public _learnMoreLink = environment.externalLinks.LEARN_MORE;
 
   constructor(public _liveEntryService : LiveEntryService) {
     this._applicationStatus = { status: 'initial' };
@@ -31,12 +32,9 @@ export class SetupAndPreviewComponent implements OnInit {
         this._dynamicInformation.streamStatus = response.streamStatus;
       }
     });
-    this._liveEntryService.getLiveEntryInformation();
-    this._liveEntryService.runEntryStatusMonitoring();
-    this._liveEntryService.runStreamHealthMonitoring();
   }
 
-  public onClickSaveBtn(): void {
+  /*public onClickSaveBtn(): void {
     this._liveEntryService.saveLiveStreamEntry();
-  }
+  }*/
 }
