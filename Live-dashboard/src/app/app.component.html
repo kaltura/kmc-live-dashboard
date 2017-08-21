@@ -1,11 +1,8 @@
-<k-area-blocker [showLoader]="!_bootstrapInitStatus">
+<k-area-blocker [showLoader]="_applicationNotLoaded" [message]="_sectionBlockerMessage">
   <div class="app-window">
-    <div class="dashboard-window" *ngIf="_bootstrapInitStatus">
+    <div class="dashboard-window" *ngIf="!_applicationNotLoaded">
       <setup-and-preview></setup-and-preview>
       <stream-info></stream-info>
-    </div>
-    <div class="parameters-error" *ngIf="!_bootstrapInitStatus">
-      <p>{{ 'BOOTSTRAP.parameters_error' | translate }}</p>
     </div>
   </div>
 </k-area-blocker>
