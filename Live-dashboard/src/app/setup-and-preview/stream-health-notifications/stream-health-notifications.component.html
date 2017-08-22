@@ -1,10 +1,10 @@
 <div class="stream-info-header grid-spaceBetween">
-  <div class="stream-info-title col no-padding">Stream Info</div>
+  <div class="stream-info-title col no-padding">{{ "DIAGNOSTICS.stream_info" | translate }}</div>
 
   <span class="kIconUsers"></span>
 
-  <div class="num-of-watchers">235</div>
-  <div class="watching">Watching</div>
+  <div class="num-of-watchers">{{ _numOfWatchers }}</div>
+  <div class="watching">{{ "DIAGNOSTICS.watching" | translate }}</div>
 </div>
 
 <!-- gray container -->
@@ -12,7 +12,7 @@
 
   <!-- title -->
   <div class="stream-health-title">
-    <span class="text">{{ 'stream health' | uppercase }}</span>
+    <span class="text">{{ "DIAGNOSTICS.stream_health_title" | translate | uppercase }}</span>
   </div>
 
   <!-- list -->

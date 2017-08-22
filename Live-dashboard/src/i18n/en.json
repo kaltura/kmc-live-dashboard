@@ -60,6 +60,11 @@
       "offline": "OFFLINE"
     }
   },
+  "DIAGNOSTICS": {
+    "stream_info": "Stream Info",
+    "watching": "Watching",
+    "stream_health_title": "Stream Health"
+  },
   "BASIC_SETTINGS": {
     "entry_name": "Entry Name",
     "description": "Description"
