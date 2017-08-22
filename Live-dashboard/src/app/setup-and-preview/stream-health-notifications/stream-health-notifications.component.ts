@@ -1,7 +1,6 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {LiveEntryService, LiveEntryDiagnosticsInfo, LiveEntryDynamicStreamInfo} from "../../live-entry.service";
-import {Subscription, Observable} from "rxjs";
-import {LiveEntryTimerTaskService} from "../../entry-timer-task.service";
+import { Component, OnInit } from '@angular/core';
+import { LiveEntryService, LiveEntryDiagnosticsInfo } from "../../live-entry.service";
+import { LiveEntryTimerTaskService } from "../../entry-timer-task.service";
 import * as _ from 'lodash';
 
 @Component({
@@ -61,6 +60,5 @@ export class StreamHealthNotificationsComponent implements OnInit {
       }
     });
   }
-
 
 }
