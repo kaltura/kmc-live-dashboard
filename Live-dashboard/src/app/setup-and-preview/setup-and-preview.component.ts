@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService, ApplicationStatus, LiveEntryDynamicStreamInfo } from "../live-entry.service";
+import { LiveEntryService, ApplicationStatus, LiveEntryDynamicStreamInfo, LoadingStatus } from "../live-entry.service";
+import { TranslateService } from "ng2-translate";
+import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { environment } from "../../environments/environment";
 
 import 'rxjs/Rx';
@@ -14,10 +16,10 @@ export class SetupAndPreviewComponent implements OnInit {
 
   public _applicationStatus: ApplicationStatus;
   private _dynamicInformation: LiveEntryDynamicStreamInfo;
+  public _sectionBlockerMessage: AreaBlockerMessage;
   public _learnMoreLink = environment.externalLinks.LEARN_MORE;
 
-  constructor(public _liveEntryService : LiveEntryService) {
-    this._applicationStatus = { status: 'initial' };
+  constructor(public _liveEntryService : LiveEntryService, private _translate: TranslateService) {
     this._dynamicInformation = { streamStatus: 'Offline' };
   }
 
@@ -40,5 +42,21 @@ export class SetupAndPreviewComponent implements OnInit {
         this._dynamicInformation = response;
       }
     });
+  }
+
+  public _applicationLoaded(): boolean {
+    if (this._applicationStatus.liveEntry === LoadingStatus.succeeded &&
+        this._applicationStatus.streamStatus === LoadingStatus.succeeded &&
+        this._applicationStatus.streamHealth === LoadingStatus.succeeded) {
+      return false;
+    }
+    else if (this._applicationStatus.liveEntry === LoadingStatus.failed) {
+      this._sectionBlockerMessage = new AreaBlockerMessage({
+        message: this._translate.instant(environment.loadingError.liveEntryFailed),
+        buttons: []
+      });
+      return false;
+    }
+    return true;
   }
 }

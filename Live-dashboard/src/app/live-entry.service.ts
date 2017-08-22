@@ -26,7 +26,6 @@ import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/Kal
 import { KalturaLiveEntryServerNode } from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
 import { KalturaLiveStreamParams } from "kaltura-typescript-client/types/KalturaLiveStreamParams";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
-
 import { BeaconGetLastAction } from "kaltura-typescript-client/types/BeaconGetLastAction";
 import { KalturaBeaconFilter } from "kaltura-typescript-client/types/KalturaBeaconFilter";
 import { KalturaBeacon } from "kaltura-typescript-client/types/KalturaBeacon";
@@ -36,8 +35,15 @@ import {KalturaLiveReportInputFilter} from "kaltura-typescript-client/types/Kalt
 import {KalturaNullableBoolean} from "kaltura-typescript-client/types/KalturaNullableBoolean";
 
 export interface ApplicationStatus {
-  status: 'initial' | 'loading' | 'loaded' | 'error';
-  error?: Error;
+  streamStatus: LoadingStatus,
+  streamHealth: LoadingStatus,
+  liveEntry: LoadingStatus
+}
+
+export enum LoadingStatus {
+  initializing,
+  failed,
+  succeeded
 }
 
 export interface LiveEntryDiagnosticsInfo {
@@ -73,7 +79,11 @@ export class LiveEntryService{
 
   private _id: string;
   // BehaviorSubject subscribed by application
-  private _applicationStatus = new BehaviorSubject<ApplicationStatus>({status : 'initial'});
+  private _applicationStatus = new BehaviorSubject<ApplicationStatus>({
+    streamStatus: LoadingStatus.initializing,
+    streamHealth: LoadingStatus.initializing,
+    liveEntry: LoadingStatus.initializing
+  });
   public applicationStatus$ = this._applicationStatus.asObservable();
   // BehaviorSubjects subscribed by settings components for manipulation
   private _liveStream = new BehaviorSubject<KalturaLiveStreamEntry>(null);
@@ -95,11 +105,7 @@ export class LiveEntryService{
 
   private _pullRequestEntryStatusMonitoring: ISubscription;
   private _pullRequestStreamHealthMonitoring: ISubscription;
-  private _serviceInitStatus = {
-    isReadyLiveStream: false,
-    isReadyStreamStatus: false,
-    isReadyStreamHealth: false
-  };
+
   private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
   private _numOfWatchersTimerSubscription: Subscription = null;
 
@@ -142,7 +148,6 @@ export class LiveEntryService{
   }
 
   ngOnDestroy() {
-    this._applicationStatus.unsubscribe();
     this._liveStream.unsubscribe();
     this._entryStaticConfiguration.unsubscribe();
     this._entryDynamicInformation.unsubscribe();
@@ -156,48 +161,58 @@ export class LiveEntryService{
   }
 
   public InitiateLiveEntryService(): void {
-    this._applicationStatus.next({ status: 'loading' });
     this._getLiveStream();
     this._runEntryStatusMonitoring();
     this._runStreamHealthMonitoring();
+  }
 
-    while (!this._serviceInitStatus.isReadyLiveStream ||
-           !this._serviceInitStatus.isReadyStreamStatus ||
-           !this._serviceInitStatus.isReadyStreamHealth) {
-      break;
+  private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
+    const newAppStatus = this._applicationStatus.getValue();
+
+    if (newAppStatus[key] !== LoadingStatus.initializing)
+      return;
+
+    switch (key) {
+      case 'streamStatus':
+        newAppStatus.streamStatus = value;
+        console.log(`Stream status is: ${value}`);
+        break;
+      case 'streamHealth':
+        newAppStatus.streamHealth = value;
+        console.log(`Stream health is: ${value}`);
+        break;
+      case 'liveEntry':
+        newAppStatus.liveEntry = value;
+        console.log(`Live entry is: ${value}`);
+        break;
     }
 
-    this._applicationStatus.next({ status: 'loaded' });
+    this._applicationStatus.next(newAppStatus);
   }
 
   private _getLiveStream(): void {
-    this._kalturaClient.request(new LiveStreamGetAction ({ entryId : this._id, acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode] }))
+    this._kalturaClient.request(new LiveStreamGetAction({
+        entryId : this._id,
+        acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode]
+      }))
       .subscribe(response => {
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
         this._liveStream.next(response);
         this._parseEntryConfiguration(response);
-      },
-      error => {
-        this._applicationStatus.next({
-          status: 'error',
-          error: error
-        });
-        console.log(this._applicationStatus.value);
       });
   }
 
   private _parseEntryConfiguration(liveEntryObj: KalturaLiveStreamEntry): void {
     let entryConfig: LiveEntryStaticConfiguration = {};
     this._conversionProfilesService.getConversionProfileFlavors(liveEntryObj.conversionProfileId)
-      .subscribe(result => {
+      .subscribe(response => {
         entryConfig.dvr = (liveEntryObj.dvrStatus === KalturaDVRStatus.enabled);
         entryConfig.recording = (liveEntryObj.recordStatus !== KalturaRecordStatus.disabled);
         // Look through the array and find the first flavor that is transcoded
-        let isTranscodedFlavor = result.objects.find(f => { return f.origin ===  KalturaAssetParamsOrigin.convert });
+        let isTranscodedFlavor = response.objects.find(f => { return f.origin ===  KalturaAssetParamsOrigin.convert });
         entryConfig.transcoding = isTranscodedFlavor ? true : false;
-
         this._entryStaticConfiguration.next(entryConfig);
-        this._serviceInitStatus.isReadyLiveStream = true;
+        this._updatedApplicationStatus('liveEntry', LoadingStatus.succeeded);
       });
   }
 
@@ -206,16 +221,20 @@ export class LiveEntryService{
       return this._kalturaClient.request(new EntryServerNodeListAction({
         filter: new KalturaEntryServerNodeFilter({entryIdEqual: this._id})
       }))
-      .map(response => {
-        let dynamicInfo = this._parseEntryServeNodeList(response.objects);
-        this._entryDynamicInformation.next(dynamicInfo);
-        this._serviceInitStatus.isReadyStreamStatus = true;
-        return;
-      });
+        .do(response => {
+          let dynamicInfo = this._parseEntryServeNodeList(response.objects);
+          this._entryDynamicInformation.next(dynamicInfo);
+          this._updatedApplicationStatus('streamStatus', LoadingStatus.succeeded);
+          return;
+        })
+        .catch((err,caught) => {
+            this._updatedApplicationStatus('streamStatus', LoadingStatus.failed);
+            return caught;
+          }
+        );
     }, environment.liveEntryService.streamStatusIntervalTimeInMs)
       .subscribe(response => {
-        if (response['status'] === 'timeout') {
-          console.log('Live Entry: Error at EntryServerNodeListAction request.')
+        if (response.errorType === 'timeout') {
           // TODO: show network connectivity issue!!!
         }
       });
@@ -274,17 +293,21 @@ export class LiveEntryService{
     this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new BeaconGetLastAction({
         filter: new KalturaBeaconFilter({objectIdEqual: this._id})
-      })).map(response => {
-        // Update diagnostics object with recent beacons info
-        this._parseEntryBeacons(response.objects);
-        this._entryDiagnostics.next(this._entryDiagnosticsInfo);
-        this._serviceInitStatus.isReadyStreamHealth = true;
-        return;
-      })
+      }))
+        .do(response => {
+          // Update diagnostics object with recent beacons info
+          this._parseEntryBeacons(response.objects);
+          this._entryDiagnostics.next(this._entryDiagnosticsInfo);
+          this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
+          return;
+        })
+        .catch((err, caught) => {
+          this._updatedApplicationStatus('streamHealth', LoadingStatus.failed);
+          return caught;
+        });
     }, environment.liveEntryService.streamHealthIntervalTimeInMs)
       .subscribe(response => {
-        if (response['status'] === 'timeout') {
-            console.log('Live Entry: Error at BeaconGetLastAction request.')
+        if (response.errorType === 'timeout') {
           // TODO: show network connectivity issue!!!
         }
       });

@@ -3,6 +3,7 @@ import { Observable, Subscription } from "rxjs";
 import * as moment from 'moment';
 import Duration = moment.Duration;
 
+import { environment } from "../../../environments/environment"
 import { LiveEntryService, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo } from "../../live-entry.service";
 
 @Component({
@@ -16,7 +17,10 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
   private _streamDurationSubscription: Subscription;
   public _staticConfiguration: LiveEntryStaticConfiguration;
   public _dynamicInformation: LiveEntryDynamicStreamInfo;
-  public _streamHealth: 'Good' | 'Fair' | 'Poor';
+  public _streamHealth: {
+    status: 'Good' | 'Fair' | 'Poor',
+    resolution?: number
+  };
 
   constructor(private _liveEntryService: LiveEntryService) {
     // Static configuration
@@ -30,7 +34,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
       redundancy: false,
       streamStatus: 'Offline'
     };
-
+    this._streamHealth = { status: 'Good' };
   }
 
   ngOnInit() {
@@ -47,7 +51,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
     });
     this._liveEntryService.entryDiagnostics$.subscribe(response => {
       if (response) {
-        this._streamHealth = response.streamHealth.health;
+        this._streamHealth.status = response.streamHealth.health;
       }
     })
   }
@@ -64,6 +68,25 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
           }
         }
       });
+  }
+
+  public _getSourceHeight() {
+    if (this._dynamicInformation.allStreams.primary) {
+      let sourceStream = this._dynamicInformation.allStreams.primary.find(s => {
+        return s.flavorId === environment.flavorsDefinitions.sourceFlavorId
+      });
+
+      return sourceStream.height;
+    }
+    else if (this._dynamicInformation.allStreams.secondary) {
+      let sourceStream = this._dynamicInformation.allStreams.secondary.find(s => {
+        return s.flavorId === environment.flavorsDefinitions.sourceFlavorId
+      });
+
+      return sourceStream.height;
+    }
+    else
+      return "";
   }
 
   ngOnDestroy(): void {

@@ -5,26 +5,47 @@ import { Observable } from "rxjs";
 export class LiveEntryTimerTaskService {
   constructor() { }
 
-  public runTimer(func: ()=> Observable<void> | null, interval: number): Observable<{ status : string }> {
+  public runTimer<T>(func: ()=> Observable<T> | null, interval: number): Observable<{ errorType? : string }> {
 
     return Observable.create(observer => {
       let active = true;
       let timeout;
 
+      const firstRunResult = func();
+      if (firstRunResult instanceof Observable) {
+        firstRunResult.subscribe(response => {
+          observer.next({ result: response });
+        },
+        reject => {
+          observer.next({ errorType: 'error' });
+        })
+      }
+      else {
+        observer.next({ firstRunResult });
+      }
+
       function execute() {
         timeout = setTimeout(() => {
           const result = func();
           if (result instanceof Observable) {
-            result.subscribe(
-              response => {
-                if (active) execute();
+            result.subscribe(response => {
+                if (active) {
+                  observer.next({ result: response });
+                  execute();
+                }
               },
               reject => {
-                if (active) execute();
-              })
+                if (active) {
+                  observer.next({ errorType: 'error'});
+                  execute();
+                }
+              });
           }
           else {
-            if (active) execute();
+            if (active) {
+              observer.next({ result });
+              execute();
+            }
           }
         }, interval);
       }
