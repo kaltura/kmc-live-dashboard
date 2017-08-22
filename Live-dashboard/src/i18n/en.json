@@ -1,6 +1,7 @@
 {
   "BOOTSTRAP": {
-    "parameters_error": "Invalid App Parameters!"
+    "parameters_error": "Invalid Application Parameters!",
+    "error_message": "Invalid Application Parameters!"
   },
   "STREAM_CONFIG": {
     "stream_status": {

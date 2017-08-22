@@ -13,11 +13,13 @@
       <i class="kIconhelp" aria-hidden="true" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'right'"></i>
     </div>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_streamHealth === 'Good') && (_dynamicInformation.streamStatus !== 'Offline')"
-                           [class.bullet-yellow]="(_streamHealth === 'Fair') && (_dynamicInformation.streamStatus !== 'Offline')"
-                           [class.bullet-red]="(_streamHealth === 'Poor') && (_dynamicInformation.streamStatus !== 'Offline')">•</span>
+      <span class="bullet" [class.bullet-green]="(_streamHealth.status === 'Good') && (_dynamicInformation.streamStatus !== 'Offline')"
+                           [class.bullet-yellow]="(_streamHealth.status === 'Fair') && (_dynamicInformation.streamStatus !== 'Offline')"
+                           [class.bullet-red]="(_streamHealth.status === 'Poor') && (_dynamicInformation.streamStatus !== 'Offline')">•</span>
       <span class="state" *ngIf="_dynamicInformation.streamStatus === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
-      <span class="state" *ngIf="_dynamicInformation.streamStatus !== 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.' + _streamHealth | translate }}</span>
+      <span class="state" *ngIf="_dynamicInformation.streamStatus !== 'Offline'">
+        {{ 'STREAM_CONFIG.stream_health.state.' + _streamHealth.status | translate }} ({{_getSourceHeight()}}p)
+      </span>
     </div>
   </div>
   <div class="property">
