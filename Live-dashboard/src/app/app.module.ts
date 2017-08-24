@@ -42,6 +42,8 @@ import { LocaleTimePipe } from "../pipes/locale-time.pipe";
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
 
+import { KalturaApiService } from "./kaltura-api.service";
+
 // TODO: Temporary solution! --> remove
 export function clientConfigurationFactory() {
   const result = new KalturaClientConfiguration();
@@ -99,7 +101,8 @@ export function clientConfigurationFactory() {
     ConversionProfileService,
     LiveEntryTimerTaskService,
     BootstrapService,
-    LiveDashboardConfiguration
+    LiveDashboardConfiguration,
+    KalturaApiService
   ],
   bootstrap: [AppComponent]
 })
