@@ -11,7 +11,6 @@ import * as _ from 'lodash';
 export class StreamHealthNotificationsComponent implements OnInit {
 
   public streamHealthNotifications = [];
-  private lastNotificationItem = null;
   public _numOfWatchers = 0;
 
   constructor(private _liveEntryService: LiveEntryService, private _entryTimerTask: LiveEntryTimerTaskService) {}
@@ -42,21 +41,28 @@ export class StreamHealthNotificationsComponent implements OnInit {
   }
 
   private listenToEntryDiagnosticsNotifications() {
+    let item;
+    let notifications;
+
     this._liveEntryService.entryDiagnostics$.subscribe((diagnostic: LiveEntryDiagnosticsInfo) => {
-      if (diagnostic) {
+      if (diagnostic && diagnostic.streamHealth && diagnostic.streamHealth) {
 
-        // If there is a really new health status notification change -> add it to list
-        if (this.lastNotificationItem == null || this.lastNotificationItem.health !== diagnostic.streamHealth.health) {
-          let item = {
-            time: diagnostic.streamHealth.updatedTime,
-            health: diagnostic.streamHealth.health,
-            shortDescription: 'short Description',
-            longDescription: 'long long long long long Description'
-          };
+        //debugger;
+        notifications = [];
+        // _.each(diagnostic.streamHealth.alerts, (alert: Alert) => {
+        //   item = {
+        //     time: alert.time.valueOf(),
+        //     health: alert.health,
+        //     errorCode: alert.errorCode,
+        //     shortDescription: 'short Description',
+        //     longDescription: 'long long long long long Description'
+        //   };
+        //
+        //   notifications.push(item);
+        // });
 
-          this.lastNotificationItem = item;
-          this.streamHealthNotifications.unshift(item); // push item to the first position of the array.
-        }
+        this.streamHealthNotifications = notifications;
+        // end _.each
       }
     });
   }

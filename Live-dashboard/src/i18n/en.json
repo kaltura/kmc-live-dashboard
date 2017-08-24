@@ -64,7 +64,19 @@
   "DIAGNOSTICS": {
     "stream_info": "Stream Info",
     "watching": "Watching",
-    "stream_health_title": "Stream Health"
+    "stream_health_title": "Stream Health",
+    "alerts": {
+      "PtsMisalignmentAlert":   { "summery": "PtsMisalignmentAlert",  "description": "PtsMisalignmentAlert PtsMisalignmentAlert" },
+      "InvalidKeyFramesAlert":  { "summery": "InvalidKeyFramesAlert", "description": "InvalidKeyFramesAlert InvalidKeyFramesAlert" },
+      "BitrateUnmatched":       { "summery": "BitrateUnmatched",      "description": "BitrateUnmatched BitrateUnmatched" },
+      "PtsDiscontinuityAlert":  { "summery": "PtsDiscontinuityAlert", "description": "PtsDiscontinuityAlert PtsDiscontinuityAlert" },
+      "EntryRestartedAlert":    { "summery": "EntryRestartedAlert",   "description": "EntryRestartedAlert EntryRestartedAlert" },
+      "NoAudioSignal":          { "summery": "NoAudioSignal",         "description": "NoAudioSignal NoAudioSignal" },
+      "NoVideoSignal":          { "summery": "NoVideoSignal",         "description": "NoVideoSignal NoVideoSignal" },
+      "PtsDrift":               { "summery": "PtsDrift",              "description": "PtsDrift PtsDrift" },
+      "EntryStopped":           { "summery": "EntryStopped",          "description": "EntryStopped EntryStopped" },
+      "EntryStarted":           { "summery": "EntryStarted",          "description": "EntryStarted EntryStarted" }
+    }
   },
   "BASIC_SETTINGS": {
     "entry_name": "Entry Name",

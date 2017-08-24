@@ -33,6 +33,7 @@ import {LiveReportsGetEventsAction} from "kaltura-typescript-client/types/LiveRe
 import {KalturaLiveReportType} from "kaltura-typescript-client/types/KalturaLiveReportType";
 import {KalturaLiveReportInputFilter} from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
 import {KalturaNullableBoolean} from "kaltura-typescript-client/types/KalturaNullableBoolean";
+import {Alert} from "./setup-and-preview/setup-and-preview";
 
 export interface ApplicationStatus {
   streamStatus: LoadingStatus,
@@ -49,11 +50,11 @@ export enum LoadingStatus {
 export interface LiveEntryDiagnosticsInfo {
   staticInfo?: { updatedTime?: number, data?: Object },
   dynamicInfo?: { updatedTime?: number, data?: Object },
-  streamHealth: {
+  streamHealth: [{
     updatedTime?: number,
     health?: 'Good' | 'Fair' | 'Poor',
-    alerts?: Object[]
-  }
+    alerts?: Alert[]
+  }]
 }
 
 export interface LiveEntryStaticConfiguration {
@@ -98,9 +99,70 @@ export class LiveEntryService{
   private _entryDiagnosticsInfo: LiveEntryDiagnosticsInfo = {
     staticInfo: { updatedTime: 0 },
     dynamicInfo: { updatedTime: 0 },
-    streamHealth: { updatedTime: 0, health: 'Good' }
+    streamHealth: [{
+      updatedTime: new Date().valueOf(),
+      health: 'Good',
+      alerts: [
+        {
+          Time: new Date(),
+          Health: 'Good',
+          Code: 102,
+          Arguments: {
+            EntryId: "1_0yi1l7d0",
+            Input: "1"
+          }
+        },
+        {
+          Time: new Date(),
+          Health: 'Fair',
+          Code: 103,
+          Arguments: {
+            EntryId: "1_0yi1l7d0",
+            Input: "1"
+          }
+        },
+        {
+          Time: new Date(),
+          Health: 'Good',
+          Code: 104,
+          Arguments: {
+            EntryId: "1_0yi1l7d0",
+            Input: "1",
+            video: {
+              drift: 1.0002784540800662,
+              first: {
+                refClock: 1503479963493,
+                refPts: 838826,
+                lastPts: 21199496,
+                clock: 1503500323121
+              },
+              last: {
+                refClock: 1503479963493,
+                refPts: 838826,
+                lastPts: 21479692,
+                clock: 1503500603239
+              }
+            },
+            audio: {
+              drift: 0,
+              first: {
+                refClock: 0,
+                refPts: 0,
+                lastPts: 0,
+                clock: 1503500323121
+              },
+              last: {
+                refClock: 0,
+                refPts: 0,
+                lastPts: 0,
+                clock: 1503500603239
+              }
+            }
+          }
+        }]
+    }]
   };
-  private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(this._entryDiagnosticsInfo);
+  private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
   public entryDiagnostics$ = this._entryDiagnostics.asObservable();
 
   private _pullRequestEntryStatusMonitoring: ISubscription;
@@ -330,13 +392,31 @@ export class LiveEntryService{
           }
           return;
         case '0_healthData':
-          if (b.createdAt !== this._entryDiagnosticsInfo.streamHealth.updatedTime) {
-            this._entryDiagnosticsInfo.streamHealth.updatedTime = b.createdAt;
-            this._entryDiagnosticsInfo.streamHealth.health = metaData.streamHealth;
-            if (metaData.alerts.length) {
-              this._entryDiagnosticsInfo.streamHealth.alerts = metaData.alerts;
-            }
-          }
+          // if (!this._entryDiagnosticsInfo.streamHealth){
+          //   this._entryDiagnosticsInfo.streamHealth = [];
+          // }
+          // else{
+          //   if (this._entryDiagnosticsInfo.streamHealth.length ==  0){
+          //     let report = {
+          //       updatedTime: b.createdAt,
+          //       health: metaData.streamHealth,
+          //       alerts: _.isArray(metaData.alerts) ? metaData.alerts : []
+          //     };
+          //     this._entryDiagnosticsInfo.streamHealth.push();
+          //   }
+          // }
+
+
+          // OLD CODE
+          // if (b.createdAt !== this._entryDiagnosticsInfo.streamHealth.updatedTime) {
+          //   this._entryDiagnosticsInfo.streamHealth.updatedTime = b.createdAt;
+          //   this._entryDiagnosticsInfo.streamHealth.health = metaData.streamHealth;
+          //   if (metaData.alerts.length) {
+          //     this._entryDiagnosticsInfo.streamHealth.alerts = metaData.alerts;
+          //   }
+          // }
+
+
           return;
         default:
           console.log(`Beacon event Type unknown: ${b.eventType}`);

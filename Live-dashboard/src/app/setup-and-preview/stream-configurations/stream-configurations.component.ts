@@ -2,9 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from "rxjs";
 import * as moment from 'moment';
 import Duration = moment.Duration;
+import * as _ from 'lodash';
 
 import { environment } from "../../../environments/environment"
-import { LiveEntryService, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo } from "../../live-entry.service";
+import { LiveEntryService, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo, LiveEntryDiagnosticsInfo } from "../../live-entry.service";
 
 @Component({
   selector: 'stream-configurations',
@@ -49,9 +50,10 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
         this._dynamicInformation = response;
       }
     });
-    this._liveEntryService.entryDiagnostics$.subscribe(response => {
-      if (response) {
-        this._streamHealth.status = response.streamHealth.health;
+    this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
+      if (response && _.isArray(response.streamHealth) && response.streamHealth.length > 0) {
+        // get the last report status as general status
+        this._streamHealth.status = response.streamHealth[response.streamHealth.length - 1].health;
       }
     })
   }
@@ -76,17 +78,17 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
         return s.flavorId === environment.flavorsDefinitions.sourceFlavorId
       });
 
-      return sourceStream.height;
+      return sourceStream ? sourceStream.height : '';
     }
     else if (this._dynamicInformation.allStreams.secondary) {
       let sourceStream = this._dynamicInformation.allStreams.secondary.find(s => {
         return s.flavorId === environment.flavorsDefinitions.sourceFlavorId
       });
 
-      return sourceStream.height;
+      return sourceStream ? sourceStream.height : '';
     }
     else
-      return "";
+      return '';
   }
 
   ngOnDestroy(): void {
