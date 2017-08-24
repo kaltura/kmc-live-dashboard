@@ -15,8 +15,8 @@ import 'rxjs/Rx';
 export class SetupAndPreviewComponent implements OnInit {
 
   public _applicationStatus: ApplicationStatus;
+  private _dynamicInformation: LiveEntryDynamicStreamInfo;
   public _sectionBlockerMessage: AreaBlockerMessage;
-  public _dynamicInformation: LiveEntryDynamicStreamInfo;
   public _learnMoreLink = environment.externalLinks.LEARN_MORE;
 
   constructor(public _liveEntryService : LiveEntryService, private _translate: TranslateService) {
@@ -24,14 +24,22 @@ export class SetupAndPreviewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.listenToApplicationStatus();
+    this.listenToDynamicStreamInfo();
+  }
+
+  private listenToApplicationStatus() {
     this._liveEntryService.applicationStatus$.subscribe(response => {
-       if (response) {
-         this._applicationStatus = response;
-       }
+      if (response) {
+        this._applicationStatus = response;
+      }
     });
+  }
+
+  private listenToDynamicStreamInfo() {
     this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
-        this._dynamicInformation.streamStatus = response.streamStatus;
+        this._dynamicInformation = response;
       }
     });
   }
@@ -51,8 +59,4 @@ export class SetupAndPreviewComponent implements OnInit {
     }
     return true;
   }
-
-  /*public onClickSaveBtn(): void {
-    this._liveEntryService.saveLiveStreamEntry();
-  }*/
 }

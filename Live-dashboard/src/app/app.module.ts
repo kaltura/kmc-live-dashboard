@@ -1,12 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule, Http } from '@angular/http';
+import { HttpModule } from '@angular/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateModule } from "ng2-translate";
 import { TooltipModule } from '@kaltura-ng/kaltura-ui';
+
 // PrimeNG
 import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule } from 'primeng/primeng';
+
 // Services
 import { KalturaClient } from '@kaltura-ng/kaltura-client/kaltura-client.service';
 import { KalturaClientConfiguration } from '@kaltura-ng/kaltura-client/kaltura-client-configuration.service';
@@ -14,6 +16,7 @@ import { LiveEntryService } from './live-entry.service';
 import { ConversionProfileService } from "./conversion-profile.service";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { BootstrapService } from "./bootstrap.service";
+
 // Components
 import { AppComponent } from './app.component';
 import { StreamInfoComponent } from './stream-info/stream-info.component';
@@ -23,6 +26,8 @@ import { BasicSettingsComponent } from './setup-and-preview/basic-settings/basic
 import { AdditionalSettingsComponent } from './setup-and-preview/additional-settings/additional-settings.component';
 import { StreamConfigurationsComponent } from './setup-and-preview/stream-configurations/stream-configurations.component';
 import { AreaBlockerComponent } from "@kaltura-ng/kaltura-ui/area-blocker";
+import { StreamHealthNotificationsComponent } from './setup-and-preview/stream-health-notifications/stream-health-notifications.component';
+
 // Pipes
 import { RecordingTypePipe } from '../pipes/recording-type.pipe';
 import { ModerationPipe } from '../pipes/moderation.pipe';
@@ -32,6 +37,7 @@ import { EntryDynamicInformationPipe } from '../pipes/entry-dynamic-information.
 import { TranscodingInfoPipe } from '../pipes/transcoding-info.pipe';
 import { SafePipe } from "@kaltura-ng/kaltura-ui/safe.pipe";
 import { DurationPipe } from "../pipes/duration.pipe";
+import { LocaleTimePipe } from "../pipes/locale-time.pipe";
 
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
@@ -63,6 +69,8 @@ export function clientConfigurationFactory() {
     TranscodingInfoPipe,
     SafePipe,
     DurationPipe,
+    StreamHealthNotificationsComponent,
+    LocaleTimePipe,
     AreaBlockerComponent
   ],
   imports: [
