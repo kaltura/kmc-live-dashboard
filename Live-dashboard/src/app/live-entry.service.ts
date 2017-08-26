@@ -34,6 +34,8 @@ import { KalturaLiveReportType } from "kaltura-typescript-client/types/KalturaLi
 import { KalturaLiveReportInputFilter } from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
 import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaNullableBoolean";
 import { Alert } from "./setup-and-preview/setup-and-preview";
+// TODO: Remove!!!!!!!!!!!
+import { KalturaApiService } from "./kaltura-api.service";
 
 export interface ApplicationStatus {
   streamStatus: LoadingStatus,
@@ -130,6 +132,7 @@ export class LiveEntryService{
 
 
   constructor(private _kalturaClient: KalturaClient,
+              private _kalturaApiService: KalturaApiService,
               private _entryTimerTask: LiveEntryTimerTaskService,
               private _conversionProfilesService: ConversionProfileService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration) {
@@ -179,7 +182,7 @@ export class LiveEntryService{
   public InitiateLiveEntryService(): void {
     this._getLiveStream();
     this._runEntryStatusMonitoring();
-    // this._runStreamHealthMonitoring();
+    this._runStreamHealthMonitoring();
   }
 
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
@@ -326,14 +329,41 @@ export class LiveEntryService{
     }
   }
 
+  // private _runStreamHealthMonitoring(): void {
+  //   this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
+  //     return this._kalturaClient.request(new BeaconGetLastAction({
+  //       filter: new KalturaBeaconFilter({objectIdEqual: this._id})
+  //     }))
+  //       .do(response => {
+  //         // Update diagnostics object with recent beacons info
+  //         this._parseEntryBeacons(response.objects);
+  //         this._entryDiagnostics.next(this._entryDiagnosticsInfo);
+  //         this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
+  //         return;
+  //       })
+  //       .catch((err, caught) => {
+  //         this._updatedApplicationStatus('streamHealth', LoadingStatus.failed);
+  //         return caught;
+  //       });
+  //   }, environment.liveEntryService.streamHealthIntervalTimeInMs)
+  //     .subscribe(response => {
+  //       if (response.errorType === 'timeout') {
+  //         // TODO: show network connectivity issue!!!
+  //       }
+  //     });
+  // }
+
   private _runStreamHealthMonitoring(): void {
     this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
-      return this._kalturaClient.request(new BeaconGetLastAction({
-        filter: new KalturaBeaconFilter({objectIdEqual: this._id})
-      }))
+      return this._kalturaApiService.apiRequest({
+        "service": "beacon_beacon",
+        "action": "list",
+        "filter:objectType": "KalturaBeaconFilter",
+        "filter:objectIdIn": this._id
+      })
         .do(response => {
           // Update diagnostics object with recent beacons info
-          this._parseEntryBeacons(response.objects);
+          this._parseEntryBeacons((JSON.parse(response._body)).objects);
           this._entryDiagnostics.next(this._entryDiagnosticsInfo);
           this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
           return;
