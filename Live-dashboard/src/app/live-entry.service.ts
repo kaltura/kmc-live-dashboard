@@ -29,11 +29,11 @@ import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/Kalt
 import { BeaconGetLastAction } from "kaltura-typescript-client/types/BeaconGetLastAction";
 import { KalturaBeaconFilter } from "kaltura-typescript-client/types/KalturaBeaconFilter";
 import { KalturaBeacon } from "kaltura-typescript-client/types/KalturaBeacon";
-import {LiveReportsGetEventsAction} from "kaltura-typescript-client/types/LiveReportsGetEventsAction";
-import {KalturaLiveReportType} from "kaltura-typescript-client/types/KalturaLiveReportType";
-import {KalturaLiveReportInputFilter} from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
-import {KalturaNullableBoolean} from "kaltura-typescript-client/types/KalturaNullableBoolean";
-import {Alert} from "./setup-and-preview/setup-and-preview";
+import { LiveReportsGetEventsAction } from "kaltura-typescript-client/types/LiveReportsGetEventsAction";
+import { KalturaLiveReportType } from "kaltura-typescript-client/types/KalturaLiveReportType";
+import { KalturaLiveReportInputFilter } from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
+import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaNullableBoolean";
+import { Alert } from "./setup-and-preview/setup-and-preview";
 
 export interface ApplicationStatus {
   streamStatus: LoadingStatus,
@@ -63,14 +63,22 @@ export interface LiveEntryStaticConfiguration {
   transcoding?: boolean,
 }
 
+declare type LiveStreamStates = 'Live' | 'Initializing' | 'Offline';
+declare type LiveStreamSession = {
+  isInProgress?: boolean,
+  shouldTimerRun?: boolean,
+  timerStartTime?: number
+}
+
 export interface LiveEntryDynamicStreamInfo {
   redundancy?: boolean,
-  streamStatus?: 'Live' | 'Initializing' | 'Offline',
+  streamStatus?: LiveStreamStates,
+  streamSession?: LiveStreamSession,
   allStreams?: NodeStreams
   streamCreationTime?: number
 }
 
-export class NodeStreams{
+export class NodeStreams {
   primary: KalturaLiveStreamParams[];
   secondary: KalturaLiveStreamParams[];
 }
@@ -93,74 +101,20 @@ export class LiveEntryService{
   // BehaviorSubjects subscribed by configuration display component for status monitoring
   private _entryStaticConfiguration = new BehaviorSubject<LiveEntryStaticConfiguration>(null);
   public entryStaticConfiguration$ = this._entryStaticConfiguration.asObservable();
-  private _entryDynamicInformation = new BehaviorSubject<LiveEntryDynamicStreamInfo>(null);
+  private _entryDynamicInformation = new BehaviorSubject<LiveEntryDynamicStreamInfo>({
+    streamStatus: 'Offline',
+    streamSession: {
+      isInProgress: false,
+      timerStartTime: Date.now(),
+      shouldTimerRun: false
+    }
+  });
   public entryDynamicInformation$ = this._entryDynamicInformation.asObservable();
   // BehaviorSubjects subscribed by configuration display component for diagnostics and health monitoring
   private _entryDiagnosticsInfo: LiveEntryDiagnosticsInfo = {
     staticInfo: { updatedTime: 0 },
     dynamicInfo: { updatedTime: 0 },
-    streamHealth: [{
-      updatedTime: new Date().valueOf(),
-      health: 'Good',
-      alerts: [
-        {
-          Time: new Date(),
-          Health: 'Good',
-          Code: 102,
-          Arguments: {
-            EntryId: "1_0yi1l7d0",
-            Input: "1"
-          }
-        },
-        {
-          Time: new Date(),
-          Health: 'Fair',
-          Code: 103,
-          Arguments: {
-            EntryId: "1_0yi1l7d0",
-            Input: "1"
-          }
-        },
-        {
-          Time: new Date(),
-          Health: 'Good',
-          Code: 104,
-          Arguments: {
-            EntryId: "1_0yi1l7d0",
-            Input: "1",
-            video: {
-              drift: 1.0002784540800662,
-              first: {
-                refClock: 1503479963493,
-                refPts: 838826,
-                lastPts: 21199496,
-                clock: 1503500323121
-              },
-              last: {
-                refClock: 1503479963493,
-                refPts: 838826,
-                lastPts: 21479692,
-                clock: 1503500603239
-              }
-            },
-            audio: {
-              drift: 0,
-              first: {
-                refClock: 0,
-                refPts: 0,
-                lastPts: 0,
-                clock: 1503500323121
-              },
-              last: {
-                refClock: 0,
-                refPts: 0,
-                lastPts: 0,
-                clock: 1503500603239
-              }
-            }
-          }
-        }]
-    }]
+    streamHealth: [{ updatedTime: 0, health: 'Good' }]
   };
   private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
   public entryDiagnostics$ = this._entryDiagnostics.asObservable();
@@ -169,8 +123,8 @@ export class LiveEntryService{
   private _pullRequestStreamHealthMonitoring: ISubscription;
 
   private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
+  // BehaviorSubject to show number of watchers when stream is Live
   private _numOfWatchersTimerSubscription: Subscription = null;
-
   private _numOfWatcherSubject = new BehaviorSubject<any>(null);
   public numOfWatcher$ = this._numOfWatcherSubject.asObservable();
 
@@ -181,10 +135,10 @@ export class LiveEntryService{
               private _liveDashboardConfiguration: LiveDashboardConfiguration) {
 
     this._id = this._liveDashboardConfiguration.entryId;
-    this.listenToNumOfWatcherWhenLive();
+    this._listenToNumOfWatcherWhenLive();
   }
 
-  private listenToNumOfWatcherWhenLive() {
+  private _listenToNumOfWatcherWhenLive(): void {
     // init the timer
     let numOfWatcherTimer$ = this._entryTimerTask.runTimer(() => {
         return this._getNumOfWatchers();
@@ -225,7 +179,7 @@ export class LiveEntryService{
   public InitiateLiveEntryService(): void {
     this._getLiveStream();
     this._runEntryStatusMonitoring();
-    this._runStreamHealthMonitoring();
+    // this._runStreamHealthMonitoring();
   }
 
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
@@ -284,8 +238,7 @@ export class LiveEntryService{
         filter: new KalturaEntryServerNodeFilter({entryIdEqual: this._id})
       }))
         .do(response => {
-          let dynamicInfo = this._parseEntryServeNodeList(response.objects);
-          this._entryDynamicInformation.next(dynamicInfo);
+          this._parseEntryServeNodeList(response.objects);
           this._updatedApplicationStatus('streamStatus', LoadingStatus.succeeded);
           return;
         })
@@ -302,53 +255,75 @@ export class LiveEntryService{
       });
   }
 
-  private _parseEntryServeNodeList(snList: KalturaEntryServerNode[]): LiveEntryDynamicStreamInfo {
-    let dynamicConfigObj: LiveEntryDynamicStreamInfo = {};
-    dynamicConfigObj.allStreams = new NodeStreams();
-
+  private _parseEntryServeNodeList(snList: KalturaEntryServerNode[]): void {
+    let dynamicConfigObj = this._entryDynamicInformation.getValue();
     // Check redundancy if more than one serverNode was returned
     dynamicConfigObj.redundancy = (snList.length > 1);
+    let newStreamState = this._getStreamStatus(snList);
+    this._streamSessionStateUpdate(dynamicConfigObj.streamStatus, newStreamState, dynamicConfigObj.streamSession);
+    dynamicConfigObj.streamStatus = newStreamState;
+    this._updateStreamsInfo(snList, dynamicConfigObj);
 
+    this._entryDynamicInformation.next(dynamicConfigObj);
+  }
+
+  private _getStreamStatus(serverNodeList: KalturaEntryServerNode[]): LiveStreamStates {
     // Check stream status by order:
     // (1) If one serverNode is Playable -> Live
     // (2) If one serverNode is Broadcasting -> Broadcasting
     // (3) Any other state -> Offline
-    let playingServerNode = snList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
+    let playingServerNode = serverNodeList.find(sn => { return sn.status === KalturaEntryServerNodeStatus.playable; });
     if (playingServerNode) {
-      dynamicConfigObj.streamStatus = 'Live';
+      return 'Live';
     }
     else {
-      let isBroadcasting = snList.find(sn => { return (sn.status === KalturaEntryServerNodeStatus.broadcasting); });
+      let isBroadcasting = serverNodeList.find(sn => { return (sn.status === KalturaEntryServerNodeStatus.broadcasting); });
       if (isBroadcasting) {
-        dynamicConfigObj.streamStatus = 'Initializing';
+        return 'Initializing';
       }
       else {
-        dynamicConfigObj.streamStatus = 'Offline';
+        return 'Offline';
       }
     }
+  }
 
-    if (snList.length > 0) {
-      dynamicConfigObj.streamCreationTime = snList[0].createdAt ? snList[0].createdAt.valueOf() : null;
+  private _streamSessionStateUpdate(currentState: LiveStreamStates, nextState: LiveStreamStates, session: LiveStreamSession): void {
+    // Session is in progress on only when in Live state
+    if (currentState !== 'Live' && nextState === 'Live') {
+      session.isInProgress = true;
+      session.shouldTimerRun = false;
+    }
+    // If stream is not longer live, start grace period timer
+    if (currentState === 'Live' && nextState === 'Offline') {
+      session.shouldTimerRun = true;
+      session.timerStartTime = Date.now();
+    }
+    // If timer is running check if session grace period expired
+    if (session.shouldTimerRun && (Date.now() - session.timerStartTime > environment.liveEntryService.streamSessionGracePeriodInMs)) {
+      session.isInProgress = false;
+    }
+  }
 
+  private _updateStreamsInfo(serverNodeList: KalturaEntryServerNode[], dynamicInfoObj: LiveEntryDynamicStreamInfo): void {
+    dynamicInfoObj.allStreams = new NodeStreams();
+    if (serverNodeList.length > 0) {
+      dynamicInfoObj.streamCreationTime = serverNodeList[0].createdAt ? serverNodeList[0].createdAt.valueOf() : null;
       // find all primary & secondary streams and find earliest createdAt stream time
-      snList.forEach((eServerNode) => {
-
+      serverNodeList.forEach((eServerNode) => {
         // get all stream available (primary, secondary)
         if (KalturaEntryServerNodeType.livePrimary.equals(eServerNode.serverType)) {
-          dynamicConfigObj.allStreams.primary = (<KalturaLiveEntryServerNode> eServerNode).streams;
+          dynamicInfoObj.allStreams.primary = (<KalturaLiveEntryServerNode> eServerNode).streams;
         }
         else if (KalturaEntryServerNodeType.liveBackup.equals(eServerNode.serverType)) {
-          dynamicConfigObj.allStreams.secondary = (<KalturaLiveEntryServerNode> eServerNode).streams;
+          dynamicInfoObj.allStreams.secondary = (<KalturaLiveEntryServerNode> eServerNode).streams;
         }
 
         // get the earliest eServerNode.createdAt time available
-        if (moment(eServerNode.createdAt).isBefore(dynamicConfigObj.streamCreationTime)) {
-          dynamicConfigObj.streamCreationTime = eServerNode.createdAt.valueOf();
+        if (moment(eServerNode.createdAt).isBefore(dynamicInfoObj.streamCreationTime)) {
+          dynamicInfoObj.streamCreationTime = eServerNode.createdAt.valueOf();
         }
       });
     }
-
-    return dynamicConfigObj;
   }
 
   private _runStreamHealthMonitoring(): void {

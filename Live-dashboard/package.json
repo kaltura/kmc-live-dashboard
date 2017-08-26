@@ -23,7 +23,7 @@
     "@angular/router": "^4.0.0",
     "@kaltura-ng/kaltura-client": "^0.1.0",
     "@kaltura-ng/kaltura-common": "^1.0.0",
-    "@kaltura-ng/kaltura-primeng-ui": "^0.2.0",
+    "@kaltura-ng/kaltura-primeng-ui": "^0.3.1",
     "@kaltura-ng/kaltura-ui": "^1.1.0",
     "@kaltura-ng/mc-theme": "^0.3.0",
     "core-js": "^2.4.1",
