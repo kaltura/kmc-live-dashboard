@@ -1,12 +1,12 @@
 <div class="streamInfo">
   <div class="preview-player">
 
-    <div *ngIf="_dynamicInfo.streamStatus !== 'Live'" class="not-broadcasting-container">
+    <div *ngIf="_dynamicInfo.streamStatus !== 'Live' && !_dynamicInfo.streamSession.isInProgress" class="not-broadcasting-container">
       <p id="firstRow">{{ 'STREAM_INFO.not_broadcasting' | translate }}</p>
       <p id="secondRow">{{ 'STREAM_INFO.video_no_available_explanation' | translate }}</p>
     </div>
 
-    <iframe *ngIf="_dynamicInfo.streamStatus === 'Live'"
+    <iframe *ngIf="_dynamicInfo.streamStatus === 'Live' || _dynamicInfo.streamSession.isInProgress"
             [src]="_playerSrc | safe" width="100%" height="100%" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
 
     <!--<div class="goLive-div">

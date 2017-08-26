@@ -61,31 +61,31 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
   private _startCalculatingStreamDurationTime() {
     this._streamDurationSubscription = Observable.timer(0, 1000)
       .subscribe(() => {
-        if (this._dynamicInformation.streamStatus !== 'Offline'){
-          if (this._dynamicInformation.streamCreationTime){
+        if (this._dynamicInformation.streamStatus !== 'Offline') {
+          if (this._dynamicInformation.streamCreationTime) {
             this._streamDuration = moment.duration(Math.abs(moment().diff(moment(this._dynamicInformation.streamCreationTime))));
           }
-          else{
+          else {
             this._streamDuration = moment.duration(0);
           }
         }
       });
   }
 
-  public _getSourceHeight() {
+  public _getSourceHeight(): string {
     if (this._dynamicInformation.allStreams.primary) {
       let sourceStream = this._dynamicInformation.allStreams.primary.find(s => {
         return s.flavorId === environment.flavorsDefinitions.sourceFlavorId
       });
 
-      return sourceStream ? sourceStream.height : '';
+      return sourceStream ? `(${sourceStream.height}p)` : '';
     }
     else if (this._dynamicInformation.allStreams.secondary) {
       let sourceStream = this._dynamicInformation.allStreams.secondary.find(s => {
         return s.flavorId === environment.flavorsDefinitions.sourceFlavorId
       });
 
-      return sourceStream ? sourceStream.height : '';
+      return sourceStream ? `(${sourceStream.height}p)` : '';
     }
     else
       return '';
