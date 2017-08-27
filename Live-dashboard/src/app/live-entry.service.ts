@@ -51,8 +51,10 @@ export interface LiveEntryDiagnosticsInfo {
   staticInfo?: { updatedTime?: number, data?: Object },
   dynamicInfo?: { updatedTime?: number, data?: Object },
   streamHealth: [{
+    id: number,
     updatedTime?: number,
     health?: 'Good' | 'Fair' | 'Poor',
+    isPrimary: boolean,
     alerts?: Alert[]
   }]
 }
@@ -100,8 +102,10 @@ export class LiveEntryService{
     staticInfo: { updatedTime: 0 },
     dynamicInfo: { updatedTime: 0 },
     streamHealth: [{
+      id: 123,
       updatedTime: new Date().valueOf(),
       health: 'Good',
+      isPrimary: true,
       alerts: [
         {
           Time: new Date(),
@@ -123,7 +127,7 @@ export class LiveEntryService{
         },
         {
           Time: new Date(),
-          Health: 'Good',
+          Health: 'Poor',
           Code: 104,
           Arguments: {
             EntryId: "1_0yi1l7d0",
@@ -159,10 +163,76 @@ export class LiveEntryService{
               }
             }
           }
-        }]
+        }
+      ]
+    },
+    {
+      id: 456,
+      updatedTime: new Date().valueOf(),
+      health: 'Fair',
+      isPrimary: false,
+      alerts: [
+        {
+          Time: new Date(),
+          Health: 'Fair',
+          Code: 102,
+          Arguments: {
+            EntryId: "1_0yi1l7d0",
+            Input: "1"
+          }
+        },
+        {
+          Time: new Date(),
+          Health: 'Good',
+          Code: 103,
+          Arguments: {
+            EntryId: "1_0yi1l7d0",
+            Input: "1"
+          }
+        },
+        {
+          Time: new Date(),
+          Health: 'Fair',
+          Code: 104,
+          Arguments: {
+            EntryId: "1_0yi1l7d0",
+            Input: "1",
+            video: {
+              drift: 1.0002784540800662,
+              first: {
+                refClock: 1503479963493,
+                refPts: 838826,
+                lastPts: 21199496,
+                clock: 1503500323121
+              },
+              last: {
+                refClock: 1503479963493,
+                refPts: 838826,
+                lastPts: 21479692,
+                clock: 1503500603239
+              }
+            },
+            audio: {
+              drift: 0,
+              first: {
+                refClock: 0,
+                refPts: 0,
+                lastPts: 0,
+                clock: 1503500323121
+              },
+              last: {
+                refClock: 0,
+                refPts: 0,
+                lastPts: 0,
+                clock: 1503500603239
+              }
+            }
+          }
+        }
+      ]
     }]
   };
-  private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
+  private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(this._entryDiagnosticsInfo);
   public entryDiagnostics$ = this._entryDiagnostics.asObservable();
 
   private _pullRequestEntryStatusMonitoring: ISubscription;
@@ -181,7 +251,9 @@ export class LiveEntryService{
               private _liveDashboardConfiguration: LiveDashboardConfiguration) {
 
     this._id = this._liveDashboardConfiguration.entryId;
-    this.listenToNumOfWatcherWhenLive();
+
+    // TODO: enable line!!!!
+    //this.listenToNumOfWatcherWhenLive();
   }
 
   private listenToNumOfWatcherWhenLive() {
@@ -225,7 +297,9 @@ export class LiveEntryService{
   public InitiateLiveEntryService(): void {
     this._getLiveStream();
     this._runEntryStatusMonitoring();
-    this._runStreamHealthMonitoring();
+
+    this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);   // TODO: remove line!
+    // TODO: enable line!!!!  this._runStreamHealthMonitoring();
   }
 
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
@@ -378,20 +452,23 @@ export class LiveEntryService{
   private _parseEntryBeacons(beaconsArray: KalturaBeacon[]): void {
     _.each(beaconsArray, b => {
       let metaData = JSON.parse(b.privateData);
-      switch (b.eventType) {
-        case '0_staticData':
+      let eventType = b.eventType.substring(2);
+      let isPrimary = (b[0] === '0');
+
+      switch (eventType) {
+        case 'staticData':
           if (b.createdAt !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
             this._entryDiagnosticsInfo.staticInfo.updatedTime = b.createdAt;
             this._entryDiagnosticsInfo.staticInfo.data = metaData;
           }
           return;
-        case '0_dynamicData':
+        case 'dynamicData':
           if (b.createdAt !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
             this._entryDiagnosticsInfo.dynamicInfo.updatedTime = b.createdAt;
             this._entryDiagnosticsInfo.dynamicInfo = metaData;
           }
           return;
-        case '0_healthData':
+        case 'healthData':
           // if (!this._entryDiagnosticsInfo.streamHealth){
           //   this._entryDiagnosticsInfo.streamHealth = [];
           // }

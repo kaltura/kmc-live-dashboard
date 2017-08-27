@@ -64,19 +64,7 @@
   "DIAGNOSTICS": {
     "stream_info": "Stream Info",
     "watching": "Watching",
-    "stream_health_title": "Stream Health",
-    "alerts": {
-      "PtsMisalignmentAlert":   { "summery": "PtsMisalignmentAlert",  "description": "PtsMisalignmentAlert PtsMisalignmentAlert" },
-      "InvalidKeyFramesAlert":  { "summery": "InvalidKeyFramesAlert", "description": "InvalidKeyFramesAlert InvalidKeyFramesAlert" },
-      "BitrateUnmatched":       { "summery": "BitrateUnmatched",      "description": "BitrateUnmatched BitrateUnmatched" },
-      "PtsDiscontinuityAlert":  { "summery": "PtsDiscontinuityAlert", "description": "PtsDiscontinuityAlert PtsDiscontinuityAlert" },
-      "EntryRestartedAlert":    { "summery": "EntryRestartedAlert",   "description": "EntryRestartedAlert EntryRestartedAlert" },
-      "NoAudioSignal":          { "summery": "NoAudioSignal",         "description": "NoAudioSignal NoAudioSignal" },
-      "NoVideoSignal":          { "summery": "NoVideoSignal",         "description": "NoVideoSignal NoVideoSignal" },
-      "PtsDrift":               { "summery": "PtsDrift",              "description": "PtsDrift PtsDrift" },
-      "EntryStopped":           { "summery": "EntryStopped",          "description": "EntryStopped EntryStopped" },
-      "EntryStarted":           { "summery": "EntryStarted",          "description": "EntryStarted EntryStarted" }
-    }
+    "stream_health_title": "Stream Health"
   },
   "BASIC_SETTINGS": {
     "entry_name": "Entry Name",
@@ -89,5 +77,35 @@
     "create_entry_for_every_broadcast": "Create new entry for every broadcast session",
     "append_recorded_content_to_single_entry": "Append recorded content to a single entry",
     "preview_mode": "Preview Mode"
+  },
+  "ALERTS": {
+    "100": {
+      "title": "Encoder has restarted",
+      "hint": "aa"
+    },
+    "101": {
+      "title": "Encoder reported bitrate {{bitrate}} doesn’t match actual bitrate {{bitrate}}",
+      "hint": "aa"
+    },
+    "102": {
+      "title": "Encoder stopped sending audio data",
+      "hint": "aa"
+    },
+    "103": {
+      "title": "Encoder stopped sending video data",
+      "hint": ""
+    },
+    "104": {
+      "title": "Encoder streaming rate is slower than expected",
+      "hint": ""
+    },
+    "105": {
+      "title": "Encoder stopped streaming",
+      "hint": ""
+    },
+    "106": {
+      "title": "Encoder started streaming",
+      "hint": ""
+    }
   }
 }

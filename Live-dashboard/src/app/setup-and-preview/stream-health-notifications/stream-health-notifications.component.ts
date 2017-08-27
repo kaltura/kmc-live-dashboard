@@ -41,28 +41,10 @@ export class StreamHealthNotificationsComponent implements OnInit {
   }
 
   private listenToEntryDiagnosticsNotifications() {
-    let item;
-    let notifications;
 
     this._liveEntryService.entryDiagnostics$.subscribe((diagnostic: LiveEntryDiagnosticsInfo) => {
-      if (diagnostic && diagnostic.streamHealth && diagnostic.streamHealth) {
-
-        //debugger;
-        notifications = [];
-        // _.each(diagnostic.streamHealth.alerts, (alert: Alert) => {
-        //   item = {
-        //     time: alert.time.valueOf(),
-        //     health: alert.health,
-        //     errorCode: alert.errorCode,
-        //     shortDescription: 'short Description',
-        //     longDescription: 'long long long long long Description'
-        //   };
-        //
-        //   notifications.push(item);
-        // });
-
-        this.streamHealthNotifications = notifications;
-        // end _.each
+      if (diagnostic && diagnostic.streamHealth) {
+        this.streamHealthNotifications = diagnostic.streamHealth;
       }
     });
   }
