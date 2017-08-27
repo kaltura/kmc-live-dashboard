@@ -7,7 +7,7 @@
 .stream-info-title {
   color: $kGrayscale1;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
   line-height: 24px;
 }
 
@@ -34,6 +34,7 @@
   font-size: 15px;
   line-height: 24px;
   padding-left: 20px;
+  text-decoration: underline;
 }
 
 .notification-container{
@@ -46,18 +47,17 @@
 }
 
 .stream-health-title {
-  margin-bottom: 30px;
   color: $menuBkgColor;
   height: 13px;
   width: 100%;
   margin-bottom: 50px;
 
   .text {
-    padding: 0 3px 15px 0;
+    padding-bottom: 15px;
     font-size: 12px;
     letter-spacing: 1px;
     line-height: 15px;
-    border-bottom: 2px solid $menuBkgColor;
+    border-bottom: 3px solid $menuBkgColor;
   }
 }
 

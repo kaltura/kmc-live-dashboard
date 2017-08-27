@@ -142,9 +142,9 @@
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-common/-/kaltura-common-1.0.0.tgz#ec3bd61702869e75873aced1fd4e7f9a9ab911a1"
 
-"@kaltura-ng/kaltura-primeng-ui@^0.2.0":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.2.1.tgz#82334fffab725caad0d5afe81b0fc3bfa7e3fc0f"
+"@kaltura-ng/kaltura-primeng-ui@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.3.1.tgz#4d39a8b3fb6e24a7cba86f83227b6c9c4489963d"
 
 "@kaltura-ng/kaltura-ui@^1.1.0":
   version "1.1.0"

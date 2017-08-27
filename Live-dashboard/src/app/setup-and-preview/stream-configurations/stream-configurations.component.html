@@ -18,7 +18,7 @@
                            [class.bullet-red]="(_streamHealth.status === 'Poor') && (_dynamicInformation.streamStatus !== 'Offline')">•</span>
       <span class="state" *ngIf="_dynamicInformation.streamStatus === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
       <span class="state" *ngIf="_dynamicInformation.streamStatus !== 'Offline'">
-        {{ 'STREAM_CONFIG.stream_health.state.' + _streamHealth.status | translate }} ({{_getSourceHeight()}}p)
+        {{ 'STREAM_CONFIG.stream_health.state.' + _streamHealth.status | translate }} {{_getSourceHeight()}}
       </span>
     </div>
   </div>
