@@ -359,7 +359,8 @@ export class LiveEntryService{
         "service": "beacon_beacon",
         "action": "list",
         "filter:objectType": "KalturaBeaconFilter",
-        "filter:objectIdIn": this._id
+        "filter:objectIdIn": this._id,
+        "filter:indexTypeEqual": "Log"
       })
         .do(response => {
           // Update diagnostics object with recent beacons info
