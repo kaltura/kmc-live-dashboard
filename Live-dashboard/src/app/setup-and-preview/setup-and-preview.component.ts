@@ -45,18 +45,18 @@ export class SetupAndPreviewComponent implements OnInit {
   }
 
   public _applicationLoaded(): boolean {
-    // if (this._applicationStatus.liveEntry === LoadingStatus.succeeded &&
-    //     this._applicationStatus.streamStatus === LoadingStatus.succeeded &&
-    //     this._applicationStatus.streamHealth === LoadingStatus.succeeded) {
-    //   return false;
-    // }
-    // else if (this._applicationStatus.liveEntry === LoadingStatus.failed) {
-    //   this._sectionBlockerMessage = new AreaBlockerMessage({
-    //     message: this._translate.instant(environment.loadingError.liveEntryFailed),
-    //     buttons: []
-    //   });
-    //   return false;
-    // }
-    return false;
+    if (this._applicationStatus.liveEntry === LoadingStatus.succeeded &&
+      this._applicationStatus.streamStatus === LoadingStatus.succeeded &&
+      this._applicationStatus.streamHealth === LoadingStatus.succeeded) {
+      return false;
+    }
+    else if (this._applicationStatus.liveEntry === LoadingStatus.failed) {
+      this._sectionBlockerMessage = new AreaBlockerMessage({
+        message: this._translate.instant(environment.loadingError.liveEntryFailed),
+        buttons: []
+      });
+      return false;
+    }
+    return true;
   }
 }
