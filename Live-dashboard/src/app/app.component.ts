@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
 
     if (this._bootstrapService.initStatus) {
       this._applicationNotLoaded = false;
-      this._liveEntryService.InitiateLiveEntryService();
+      this._liveEntryService.InitializeLiveEntryService();
     }
     else {
       this._applicationNotLoaded = true;

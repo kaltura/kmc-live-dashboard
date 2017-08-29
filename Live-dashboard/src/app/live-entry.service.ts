@@ -52,7 +52,7 @@ export enum LoadingStatus {
 export interface LiveEntryDiagnosticsInfo {
   staticInfo?: { updatedTime?: number, data?: Object },
   dynamicInfo?: { updatedTime?: number, data?: Object },
-  streamHealth: [{
+  streamHealth?: [{
     updatedTime?: number,
     health?: 'Good' | 'Fair' | 'Poor',
     alerts?: Alert[]
@@ -179,10 +179,10 @@ export class LiveEntryService{
     }
   }
 
-  public InitiateLiveEntryService(): void {
+  public InitializeLiveEntryService(): void {
     this._getLiveStream();
     this._runEntryStatusMonitoring();
-    this._runStreamHealthMonitoring();
+    this._streamHealthInitialization();
   }
 
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
@@ -353,14 +353,35 @@ export class LiveEntryService{
   //     });
   // }
 
+  private _streamHealthInitialization(): void {
+    this._kalturaApiService.apiRequest({
+      "service": "beacon_beacon",
+      "action": "list",
+      "filter:objectType": "KalturaBeaconFilter",
+      "pager:objectType": "KalturaFilterPager",
+      "filter:orderBy": "-createdAt",
+      "filter:eventTypeIn": "0_healthData,1_healthData",
+      "filter:objectIdIn": this._id,
+      "filter:indexTypeEqual": "Log",
+      "pager:pageSize": environment.liveEntryService.maxBeaconHealthReportsToShow
+    })
+      .subscribe(response => {
+        let x = (JSON.parse(response._body)).objects;
+        this._parseEntryBeacons(x);
+        this._entryDiagnostics.next(this._entryDiagnosticsInfo);
+        return this._runStreamHealthMonitoring();
+      })
+  }
+
   private _runStreamHealthMonitoring(): void {
     this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaApiService.apiRequest({
         "service": "beacon_beacon",
         "action": "list",
         "filter:objectType": "KalturaBeaconFilter",
+        "filter:orderBy": "-createdAt",
         "filter:objectIdIn": this._id,
-        "filter:indexTypeEqual": "Log"
+        "filter:indexTypeEqual": "State"
       })
         .do(response => {
           // Update diagnostics object with recent beacons info
@@ -385,32 +406,32 @@ export class LiveEntryService{
     _.each(beaconsArray, b => {
       let metaData = JSON.parse(b.privateData);
       switch (b.eventType) {
-        case '0_staticData':
-          if (b.createdAt !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
-            this._entryDiagnosticsInfo.staticInfo.updatedTime = b.createdAt;
-            this._entryDiagnosticsInfo.staticInfo.data = metaData;
-          }
-          return;
-        case '0_dynamicData':
-          if (b.createdAt !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
-            this._entryDiagnosticsInfo.dynamicInfo.updatedTime = b.createdAt;
-            this._entryDiagnosticsInfo.dynamicInfo = metaData;
-          }
-          return;
-        case '0_healthData':
-          // if (!this._entryDiagnosticsInfo.streamHealth){
-          //   this._entryDiagnosticsInfo.streamHealth = [];
-          // }
-          // else{
-          //   if (this._entryDiagnosticsInfo.streamHealth.length ==  0){
-          //     let report = {
-          //       updatedTime: b.createdAt,
-          //       health: metaData.streamHealth,
-          //       alerts: _.isArray(metaData.alerts) ? metaData.alerts : []
-          //     };
-          //     this._entryDiagnosticsInfo.streamHealth.push();
-          //   }
-          // }
+        // case '0_staticData':
+        // if (b.createdAt !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
+        //   this._entryDiagnosticsInfo.staticInfo.updatedTime = b.createdAt;
+        //   this._entryDiagnosticsInfo.staticInfo.data = metaData;
+        // }
+        // return;
+        // case '0_dynamicData':
+        //   if (b.createdAt !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
+        //     this._entryDiagnosticsInfo.dynamicInfo.updatedTime = b.createdAt;
+        //     this._entryDiagnosticsInfo.dynamicInfo = metaData;
+        //   }
+        //   return;
+        // case '0_healthData':
+        //   if (!this._entryDiagnosticsInfo.streamHealth) {
+        //     // this._entryDiagnosticsInfo.streamHealth = [];
+        //   }
+        //   else {
+        //     if (this._entryDiagnosticsInfo.streamHealth.length ==  0) {
+        //       let report = {
+        //         updatedTime: b.createdAt,
+        //         health: metaData.streamHealth,
+        //         alerts: _.isArray(metaData.alerts) ? metaData.alerts : []
+        //       };
+        //       this._entryDiagnosticsInfo.streamHealth.push();
+        //     }
+        //   }
 
 
           // OLD CODE
@@ -423,7 +444,7 @@ export class LiveEntryService{
           // }
 
 
-          return;
+          // return;
         default:
           console.log(`Beacon event Type unknown: ${b.eventType}`);
       }
