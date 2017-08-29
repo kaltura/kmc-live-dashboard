@@ -8,7 +8,8 @@ export const environment = {
     "streamStatusIntervalTimeInMs": 5000,
     "streamHealthIntervalTimeInMs": 10000,
     "liveAnalyticsIntervalTimeInMs": 30000,
-    "streamSessionGracePeriodInMs": 180000
+    "streamSessionGracePeriodInMs": 180000,
+    "maxBeaconHealthReportsToShow": "30"
   },
   "externalLinks": {
     "LEARN_MORE": "https://knowledge.kaltura.com/getting-started-kaltura-live"
