@@ -14,8 +14,8 @@ export class TranscodingInfoPipe implements PipeTransform {
   transform(allStreams: NodeStreams, args?: any): any {
     let transcoding = '';
 
-    transcoding += this.appendFormattedStream(allStreams.primary,   this._translate.instant('STREAM_CONFIG.primary'));
-    transcoding += this.appendFormattedStream(allStreams.secondary, this._translate.instant('STREAM_CONFIG.secondary'));
+    transcoding += this.appendFormattedStream(allStreams.primary,   this._translate.instant('COMMON.primary'));
+    transcoding += this.appendFormattedStream(allStreams.secondary, this._translate.instant('COMMON.secondary'));
 
     return transcoding;
   }

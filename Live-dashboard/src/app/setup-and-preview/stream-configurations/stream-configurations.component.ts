@@ -5,7 +5,10 @@ import Duration = moment.Duration;
 import * as _ from 'lodash';
 
 import { environment } from "../../../environments/environment"
-import { LiveEntryService, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo, LiveEntryDiagnosticsInfo } from "../../live-entry.service";
+import {
+  LiveEntryService, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo, LiveEntryDiagnosticsInfo,
+  StreamHealthStatus
+} from "../../live-entry.service";
 
 @Component({
   selector: 'stream-configurations',
@@ -19,7 +22,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
   public _staticConfiguration: LiveEntryStaticConfiguration;
   public _dynamicInformation: LiveEntryDynamicStreamInfo;
   public _streamHealth: {
-    status: 'Good' | 'Fair' | 'Poor',
+    status: StreamHealthStatus,
     resolution?: number
   };
 
@@ -35,7 +38,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
       redundancy: false,
       streamStatus: 'Offline'
     };
-    this._streamHealth = { status: 'Good' };
+    this._streamHealth = { status: StreamHealthStatus.Good };
   }
 
   ngOnInit() {

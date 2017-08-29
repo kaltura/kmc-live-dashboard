@@ -1,12 +1,12 @@
 @import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
 
 .setup-and-preview {
-  //border: 1px solid $kGrayscale4;
   border-radius: 3px;
   background-color: $mainLinkHoverColor;
-  //box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
   display: flex;
+  width: 100%;
   flex-flow: row wrap;
+  align-self: flex-start;
 
   .stream-health {
     flex:  1 100%;
@@ -24,6 +24,7 @@
   }
 
   .learn-more {
+    align-self: flex-start;
     flex: 1 100%;
 
     div {
