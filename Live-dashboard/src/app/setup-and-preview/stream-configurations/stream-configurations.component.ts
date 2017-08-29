@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import { environment } from "../../../environments/environment"
 import {
   LiveEntryService, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo, LiveEntryDiagnosticsInfo,
-  StreamHealth
+  StreamHealthStatus
 } from "../../live-entry.service";
 
 @Component({
@@ -22,7 +22,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
   public _staticConfiguration: LiveEntryStaticConfiguration;
   public _dynamicInformation: LiveEntryDynamicStreamInfo;
   public _streamHealth: {
-    status: StreamHealth,
+    status: StreamHealthStatus,
     resolution?: number
   };
 
@@ -38,7 +38,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
       redundancy: false,
       streamStatus: 'Offline'
     };
-    this._streamHealth = { status: StreamHealth.Good };
+    this._streamHealth = { status: StreamHealthStatus.Good };
   }
 
   ngOnInit() {

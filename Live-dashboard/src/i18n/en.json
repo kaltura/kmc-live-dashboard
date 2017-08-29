@@ -3,6 +3,10 @@
     "parameters_error": "Invalid Application Parameters!",
     "error_message": "Invalid Application Parameters!"
   },
+  "COMMON": {
+    "primary": "Primary",
+    "secondary": "Secondary"
+  },
   "STREAM_CONFIG": {
     "stream_status": {
       "tag": "Stream Status",
@@ -28,9 +32,7 @@
     "dvr": "DVR",
     "redundancy": "Redundancy",
     "stream_duration_in_days": "{{days}} Days, {{hours}} Hours",
-    "stream_duration_in_months": "{{months}} Months, {{days}} Days",
-    "primary": "Primary",
-    "secondary": "Secondary"
+    "stream_duration_in_months": "{{months}} Months, {{days}} Days"
   },
   "DASHBOARD": {
     "learn_more_anchor": "Learn more",
@@ -81,15 +83,15 @@
   "ALERTS": {
     "100": {
       "title": "Encoder has restarted",
-      "hint": "aa"
+      "hint": ""
     },
     "101": {
-      "title": "Encoder reported bitrate {{bitrate}} doesn’t match actual bitrate {{bitrate}}",
-      "hint": "aa"
+      "title": "Encoder reported bitrate {{configuredBitrate}} doesn’t match actual bitrate {{incomingBitrate}}",
+      "hint": ""
     },
     "102": {
       "title": "Encoder stopped sending audio data",
-      "hint": "aa"
+      "hint": ""
     },
     "103": {
       "title": "Encoder stopped sending video data",

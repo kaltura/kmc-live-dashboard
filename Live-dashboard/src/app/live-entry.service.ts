@@ -52,13 +52,15 @@ export enum LoadingStatus {
 export interface LiveEntryDiagnosticsInfo {
   staticInfo?: { updatedTime?: number, data?: Object },
   dynamicInfo?: { updatedTime?: number, data?: Object },
-  streamHealth?: [{
-    id?: number,
-    updatedTime?: number,
-    health?: StreamHealth,
-    isPrimary?: boolean,
-    alerts?: Alert[]
-  }]
+  streamHealth?: StreamHealth[]
+}
+
+export interface StreamHealth {
+  id?: number,
+  updatedTime?: number,
+  health?: StreamHealthStatus,
+  isPrimary?: boolean,
+  alerts?: Alert[]
 }
 
 export interface LiveEntryStaticConfiguration {
@@ -95,7 +97,7 @@ export enum AlertSeverity {
   critical = 4
 }
 
-export enum StreamHealth  {
+export enum StreamHealthStatus  {
   Good = <any> 'Good',
   Fair = <any> 'Fair',
   Poor = <any> 'Poor'
@@ -132,7 +134,7 @@ export class LiveEntryService{
   private _entryDiagnosticsInfo: LiveEntryDiagnosticsInfo = {
     staticInfo: { updatedTime: 0 },
     dynamicInfo: { updatedTime: 0 },
-    streamHealth: [{ updatedTime: 0, health: StreamHealth.Good }]
+    streamHealth: []
   };
   private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
   public entryDiagnostics$ = this._entryDiagnostics.asObservable();
@@ -381,11 +383,11 @@ export class LiveEntryService{
       "filter:eventTypeIn": "0_healthData,1_healthData",
       "filter:objectIdIn": this._id,
       "filter:indexTypeEqual": "Log",
-      "pager:pageSize": environment.liveEntryService.maxBeaconHealthReportsToShow
+      "pager:pageSize": environment.liveEntryService.maxBeaconHealthReportsToShow.toString()
     })
       .subscribe(response => {
-        let x = (JSON.parse(response._body)).objects;
-        this._parseEntryBeacons(x);
+        let rawBeacons = (JSON.parse(response._body)).objects;
+        this._parseEntryBeacons(rawBeacons);
         this._entryDiagnostics.next(this._entryDiagnosticsInfo);
         return this._runStreamHealthMonitoring();
       })
@@ -421,11 +423,16 @@ export class LiveEntryService{
   }
 
   private _parseEntryBeacons(beaconsArray: KalturaBeacon[]): void {
+
+    // As this is only the delta portion of the reports (beacon) so
+    // only the delta will be pushed as an event subject.
+    this._entryDiagnosticsInfo.streamHealth = [];
+
     _.each(beaconsArray, b => {
 
       let privateData = JSON.parse(b.privateData);
       let eventType = b.eventType.substring(2);
-      let isPrimary = (b[0] === '0');
+      let isPrimary = (b.eventType[0] === '0');
 
       switch (eventType) {
         case 'staticData':
@@ -443,7 +450,7 @@ export class LiveEntryService{
         case 'healthData':
 
           let report = {
-            updatedTime: b.createdAt,
+            updatedTime: b.createdAt * 1000,
             health: this._parseHealthBySeverity(privateData.streamHealth),
             isPrimary: isPrimary,
             alerts: _.isArray(privateData.alerts) ? privateData.alerts : []
@@ -458,22 +465,22 @@ export class LiveEntryService{
     });
   }
 
-  private _parseHealthBySeverity(severityNumber) : StreamHealth{
+  private _parseHealthBySeverity(severityNumber) : StreamHealthStatus{
 
     let severity = AlertSeverity[severityNumber];
 
     switch (severity) {
       case AlertSeverity.error.toString():
       case AlertSeverity.critical.toString():
-        return StreamHealth.Poor;
+        return StreamHealthStatus.Poor;
 
       case AlertSeverity.warning.toString():
-        return StreamHealth.Fair;
+        return StreamHealthStatus.Fair;
 
       case AlertSeverity.debug.toString():
       case AlertSeverity.info.toString():
       default:
-        return StreamHealth.Good;
+        return StreamHealthStatus.Good;
     }
   }
 

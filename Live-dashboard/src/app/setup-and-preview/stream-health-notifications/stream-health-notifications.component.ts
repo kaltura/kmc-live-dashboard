@@ -41,10 +41,9 @@ export class StreamHealthNotificationsComponent implements OnInit {
   }
 
   private listenToEntryDiagnosticsNotifications() {
-
     this._liveEntryService.entryDiagnostics$.subscribe((diagnostic: LiveEntryDiagnosticsInfo) => {
-      if (diagnostic && diagnostic.streamHealth) {
-        this.streamHealthNotifications = diagnostic.streamHealth;
+      if (diagnostic && _.isArray(diagnostic.streamHealth)) {
+        this.streamHealthNotifications = this.streamHealthNotifications.concat(diagnostic.streamHealth);
       }
     });
   }
