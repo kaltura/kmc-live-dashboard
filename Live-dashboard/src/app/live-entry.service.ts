@@ -11,10 +11,10 @@ import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { ConversionProfileService } from "./conversion-profile.service";
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
 import { environment } from "../environments/environment";
+
 // Kaltura objects and types
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
-import { LiveStreamUpdateAction } from "kaltura-typescript-client/types/LiveStreamUpdateAction";
 import { EntryServerNodeListAction } from "kaltura-typescript-client/types/EntryServerNodeListAction";
 import { KalturaEntryServerNodeFilter } from "kaltura-typescript-client/types/KalturaEntryServerNodeFilter";
 import { KalturaEntryServerNode } from "kaltura-typescript-client/types/KalturaEntryServerNode";
@@ -26,7 +26,6 @@ import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/Kal
 import { KalturaLiveEntryServerNode } from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
 import { KalturaLiveStreamParams } from "kaltura-typescript-client/types/KalturaLiveStreamParams";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
-import { BeaconGetLastAction } from "kaltura-typescript-client/types/BeaconGetLastAction";
 import { KalturaBeaconFilter } from "kaltura-typescript-client/types/KalturaBeaconFilter";
 import { KalturaBeacon } from "kaltura-typescript-client/types/KalturaBeacon";
 import { LiveReportsGetEventsAction } from "kaltura-typescript-client/types/LiveReportsGetEventsAction";
@@ -34,6 +33,7 @@ import { KalturaLiveReportType } from "kaltura-typescript-client/types/KalturaLi
 import { KalturaLiveReportInputFilter } from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
 import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaNullableBoolean";
 import { Alert } from "./setup-and-preview/setup-and-preview";
+
 // TODO: Remove!!!!!!!!!!!
 import { KalturaApiService } from "./kaltura-api.service";
 
@@ -55,7 +55,7 @@ export interface LiveEntryDiagnosticsInfo {
   streamHealth: [{
     id?: number,
     updatedTime?: number,
-    health?: 'Good' | 'Fair' | 'Poor',
+    health?: StreamHealth,
     isPrimary?: boolean,
     alerts?: Alert[]
   }]
@@ -85,6 +85,20 @@ export interface LiveEntryDynamicStreamInfo {
 export class NodeStreams {
   primary: KalturaLiveStreamParams[];
   secondary: KalturaLiveStreamParams[];
+}
+
+export enum AlertSeverity {
+  debug = 0,
+  info = 1,
+  warning = 2,
+  error = 3,
+  critical = 4
+}
+
+export enum StreamHealth  {
+  Good = <any> 'Good',
+  Fair = <any> 'Fair',
+  Poor = <any> 'Poor'
 }
 
 @Injectable()
@@ -118,9 +132,9 @@ export class LiveEntryService{
   private _entryDiagnosticsInfo: LiveEntryDiagnosticsInfo = {
     staticInfo: { updatedTime: 0 },
     dynamicInfo: { updatedTime: 0 },
-    streamHealth: [{ updatedTime: 0, health: 'Good' }]
+    streamHealth: [{ updatedTime: 0, health: StreamHealth.Good }]
   };
-  private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(this._entryDiagnosticsInfo);
+  private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
   public entryDiagnostics$ = this._entryDiagnostics.asObservable();
 
   private _pullRequestEntryStatusMonitoring: ISubscription;
@@ -141,7 +155,8 @@ export class LiveEntryService{
               private _liveDashboardConfiguration: LiveDashboardConfiguration) {
 
     this._id = this._liveDashboardConfiguration.entryId;
-    this._listenToNumOfWatcherWhenLive();
+    // TODO: enable line!!!!
+    //this._listenToNumOfWatcherWhenLive();
   }
 
   private _listenToNumOfWatcherWhenLive(): void {
@@ -358,35 +373,53 @@ export class LiveEntryService{
 
   private _runStreamHealthMonitoring(): void {
     this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
-      return this._kalturaApiService.apiRequest({
-        "service": "beacon_beacon",
-        "action": "list",
-        "filter:objectType": "KalturaBeaconFilter",
-        "filter:objectIdIn": this._id,
-        "filter:indexTypeEqual": "Log"
-      })
+
+      // if no dynamic data then skip beacon request as it depend on the streamCreationTime
+      let dynamicInfo = this._entryDynamicInformation.getValue();
+
+      if (dynamicInfo){
+        return this._kalturaApiService.apiRequest({
+          "service": "beacon_beacon",
+          "action": "list",
+          "filter:objectType": "KalturaBeaconFilter",
+          "filter:createdAtGreaterThanOrEqual": dynamicInfo.streamCreationTime,
+          "filter:orderBy": "-createdAt",
+          "filter:objectIdIn": this._id,
+          "filter:indexTypeEqual": "Log"
+        })
         .do(response => {
-          // Update diagnostics object with recent beacons info
-          this._parseEntryBeacons((JSON.parse(response._body)).objects);
-          this._entryDiagnostics.next(this._entryDiagnosticsInfo);
-          this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
+          if (response){
+            // Update diagnostics object with recent beacons info
+            this._parseEntryBeacons((JSON.parse(response._body)).objects);
+            this._entryDiagnostics.next(this._entryDiagnosticsInfo);
+            this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
+          }
           return;
         })
         .catch((err, caught) => {
           this._updatedApplicationStatus('streamHealth', LoadingStatus.failed);
           return caught;
         });
-    }, environment.liveEntryService.streamHealthIntervalTimeInMs)
-      .subscribe(response => {
-        if (response.errorType === 'timeout') {
-          // TODO: show network connectivity issue!!!
-        }
-      });
+      }
+      else {
+        return Observable.create(observer => {
+          observer.next(null);
+          observer.complete();
+        });
+      }
+    },
+    environment.liveEntryService.streamHealthIntervalTimeInMs)
+    .subscribe(response => {
+      if (response.errorType === 'timeout') {
+        // TODO: show network connectivity issue!!!
+      }
+    });
   }
 
   private _parseEntryBeacons(beaconsArray: KalturaBeacon[]): void {
     _.each(beaconsArray, b => {
-      let metaData = JSON.parse(b.privateData);
+
+      let privateData = JSON.parse(b.privateData);
       let eventType = b.eventType.substring(2);
       let isPrimary = (b[0] === '0');
 
@@ -394,46 +427,50 @@ export class LiveEntryService{
         case 'staticData':
           if (b.createdAt !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
             this._entryDiagnosticsInfo.staticInfo.updatedTime = b.createdAt;
-            this._entryDiagnosticsInfo.staticInfo.data = metaData;
+            this._entryDiagnosticsInfo.staticInfo.data = privateData;
           }
           return;
         case 'dynamicData':
           if (b.createdAt !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
             this._entryDiagnosticsInfo.dynamicInfo.updatedTime = b.createdAt;
-            this._entryDiagnosticsInfo.dynamicInfo = metaData;
+            this._entryDiagnosticsInfo.dynamicInfo = privateData;
           }
           return;
         case 'healthData':
-          // if (!this._entryDiagnosticsInfo.streamHealth){
-          //   this._entryDiagnosticsInfo.streamHealth = [];
-          // }
-          // else{
-          //   if (this._entryDiagnosticsInfo.streamHealth.length ==  0){
-          //     let report = {
-          //       updatedTime: b.createdAt,
-          //       health: metaData.streamHealth,
-          //       alerts: _.isArray(metaData.alerts) ? metaData.alerts : []
-          //     };
-          //     this._entryDiagnosticsInfo.streamHealth.push();
-          //   }
-          // }
 
+          let report = {
+            updatedTime: b.createdAt,
+            health: this._parseHealthBySeverity(privateData.streamHealth),
+            isPrimary: isPrimary,
+            alerts: _.isArray(privateData.alerts) ? privateData.alerts : []
+          };
 
-          // OLD CODE
-          // if (b.createdAt !== this._entryDiagnosticsInfo.streamHealth.updatedTime) {
-          //   this._entryDiagnosticsInfo.streamHealth.updatedTime = b.createdAt;
-          //   this._entryDiagnosticsInfo.streamHealth.health = metaData.streamHealth;
-          //   if (metaData.alerts.length) {
-          //     this._entryDiagnosticsInfo.streamHealth.alerts = metaData.alerts;
-          //   }
-          // }
-
-
+          this._entryDiagnosticsInfo.streamHealth.push(report);
           return;
+
         default:
           console.log(`Beacon event Type unknown: ${b.eventType}`);
       }
     });
+  }
+
+  private _parseHealthBySeverity(severityNumber) : StreamHealth{
+
+    let severity = AlertSeverity[severityNumber];
+
+    switch (severity) {
+      case AlertSeverity.error.toString():
+      case AlertSeverity.critical.toString():
+        return StreamHealth.Poor;
+
+      case AlertSeverity.warning.toString():
+        return StreamHealth.Fair;
+
+      case AlertSeverity.debug.toString():
+      case AlertSeverity.info.toString():
+      default:
+        return StreamHealth.Good;
+    }
   }
 
   private _getNumOfWatchers(): Observable<any> {
@@ -450,28 +487,28 @@ export class LiveEntryService{
 
     return this._kalturaClient.request(liveReportsRequest)
       .map(response => {
-        this._numOfWatcherSubject.next(response);
-      },
-      error => {
-        console.log("Live Entry: Error get number of watchers");
-      });
+          this._numOfWatcherSubject.next(response);
+        },
+        error => {
+          console.log("Live Entry: Error get number of watchers");
+        });
   }
 
   /*public saveLiveStreamEntry(): void {
-    let diffProperties = _.filter(this._propertiesToUpdate, (p) => {
-      return (this._liveStream.value[p] !== this._cachedLiveStream[p]);
-    });
-    let liveStreamArgument = new KalturaLiveStreamEntry();
-    for (let property of diffProperties) {
-      liveStreamArgument[property] = this._liveStream.value[property];
-    }
-    this._kalturaClient.request(new LiveStreamUpdateAction({
-      entryId: this._id,
-      liveStreamEntry: liveStreamArgument
-    }))
-      .subscribe(response => {
-        this._liveStream.next(response);
-        this._cachedLiveStream = JSON.parse(JSON.stringify(response));
-      });
-  }*/
+   let diffProperties = _.filter(this._propertiesToUpdate, (p) => {
+   return (this._liveStream.value[p] !== this._cachedLiveStream[p]);
+   });
+   let liveStreamArgument = new KalturaLiveStreamEntry();
+   for (let property of diffProperties) {
+   liveStreamArgument[property] = this._liveStream.value[property];
+   }
+   this._kalturaClient.request(new LiveStreamUpdateAction({
+   entryId: this._id,
+   liveStreamEntry: liveStreamArgument
+   }))
+   .subscribe(response => {
+   this._liveStream.next(response);
+   this._cachedLiveStream = JSON.parse(JSON.stringify(response));
+   });
+   }*/
 }
