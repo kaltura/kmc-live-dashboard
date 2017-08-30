@@ -11,10 +11,10 @@ import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { ConversionProfileService } from "./conversion-profile.service";
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
 import { environment } from "../environments/environment";
-
 // Kaltura objects and types
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
+import { LiveStreamUpdateAction } from "kaltura-typescript-client/types/LiveStreamUpdateAction";
 import { EntryServerNodeListAction } from "kaltura-typescript-client/types/EntryServerNodeListAction";
 import { KalturaEntryServerNodeFilter } from "kaltura-typescript-client/types/KalturaEntryServerNodeFilter";
 import { KalturaEntryServerNode } from "kaltura-typescript-client/types/KalturaEntryServerNode";
@@ -35,7 +35,8 @@ import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaN
 
 // TODO: Remove!!!!!!!!!!!
 import { KalturaApiService } from "./kaltura-api.service";
-import {Alert} from "./setup-and-preview/setup-and-preview.type";
+import { Alert } from "./setup-and-preview/setup-and-preview.type";
+import { KalturaAPIException } from "kaltura-typescript-client";
 
 export interface ApplicationStatus {
   streamStatus: LoadingStatus,
@@ -172,31 +173,6 @@ export class LiveEntryService{
     this._listenToNumOfWatcherWhenLive();
   }
 
-  private _listenToNumOfWatcherWhenLive(): void {
-    // init the timer
-    let numOfWatcherTimer$ = this._entryTimerTask.runTimer(() => {
-        return this._getNumOfWatchers();
-      },
-      environment.liveEntryService.liveAnalyticsIntervalTimeInMs
-    );
-
-    // On Live  -> Subscribe (get api call of num of watchers)
-    // Else     -> Unsubscribe
-    this._entryDynamicInformation.subscribe((dynamicInfo) => {
-      if (dynamicInfo && dynamicInfo.streamStatus === 'Live' && this._numOfWatchersTimerSubscription === null) {
-        this._numOfWatchersTimerSubscription = numOfWatcherTimer$.subscribe((response) => {
-          if (response['status'] === 'timeout') {
-            console.log('Live Entry: Error at getNumOfWatchers request.')
-          }
-        });
-      }
-      else if (this._numOfWatchersTimerSubscription) {
-        this._numOfWatchersTimerSubscription.unsubscribe();
-        this._numOfWatchersTimerSubscription = null;
-      }
-    });
-  }
-
   ngOnDestroy() {
     this._liveStream.unsubscribe();
     this._entryStaticConfiguration.unsubscribe();
@@ -245,10 +221,27 @@ export class LiveEntryService{
         entryId : this._id,
         acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode]
       }))
+        .retryWhen(errors => errors
+          .do(val => {
+            if (val instanceof KalturaAPIException) {
+              console.log(`[LiveStreamGet] Exception was thrown: ${val.message}`);
+            }
+          })
+          .delay(environment.liveEntryService.apiCallDelayOnException)
+          .take(environment.liveEntryService.apiCallsMaxRetriesAttempts)
+          .concat(Observable.throw(`[LiveStreamGet] Failed for ${environment.liveEntryService.apiCallsMaxRetriesAttempts} consecutive attempts`))
+        )
+        .catch((err, caught) => {
+          console.log(err);
+          this._updatedApplicationStatus('liveEntry', LoadingStatus.failed);
+          return caught;
+        })
       .subscribe(response => {
-        this._cachedLiveStream = JSON.parse(JSON.stringify(response));
-        this._liveStream.next(response);
-        this._parseEntryConfiguration(response);
+        if (response instanceof KalturaLiveStreamEntry) {
+          this._cachedLiveStream = JSON.parse(JSON.stringify(response));
+          this._liveStream.next(response);
+          this._parseEntryConfiguration(response);
+        }
       });
   }
 
@@ -263,6 +256,7 @@ export class LiveEntryService{
         entryConfig.transcoding = isTranscodedFlavor ? true : false;
         this._entryStaticConfiguration.next(entryConfig);
         this._updatedApplicationStatus('liveEntry', LoadingStatus.succeeded);
+        console.log(`[LiveStreamGet] Finished successfully`);
       });
   }
 
@@ -276,13 +270,14 @@ export class LiveEntryService{
           this._updatedApplicationStatus('streamStatus', LoadingStatus.succeeded);
           return;
         })
-        .catch((err,caught) => {
-            this._updatedApplicationStatus('streamStatus', LoadingStatus.failed);
-            return caught;
-          }
-        );
+        .catch((err, caught) => {
+          console.log(`[EntryServeNodeList] Error: ${err.message}`);
+          this._updatedApplicationStatus('streamStatus', LoadingStatus.failed);
+          throw caught;
+        });
     }, environment.liveEntryService.streamStatusIntervalTimeInMs)
       .subscribe(response => {
+        // console.log(`La La Land`);
         if (response.errorType === 'timeout') {
           // TODO: show network connectivity issue!!!
         }
@@ -439,7 +434,6 @@ export class LiveEntryService{
     this._entryDiagnosticsInfo.streamHealth.data = [];
 
     _.each(beaconsArray, b => {
-
       let privateData = JSON.parse(b.privateData);
       let eventType = b.eventType.substring(2);
       let isPrimary = (b.eventType[0] === '0');
@@ -472,7 +466,32 @@ export class LiveEntryService{
 
           return;
         default:
-          console.log(`Beacon event Type unknown: ${b.eventType}`);
+          console.log(`Beacon event Type unknown: ${eventType}`);
+      }
+    });
+  }
+
+  private _listenToNumOfWatcherWhenLive(): void {
+    // init the timer
+    let numOfWatcherTimer$ = this._entryTimerTask.runTimer(() => {
+        return this._getNumOfWatchers();
+      },
+      environment.liveEntryService.liveAnalyticsIntervalTimeInMs
+    );
+
+    // On Live  -> Subscribe (get api call of num of watchers)
+    // Else     -> Unsubscribe
+    this._entryDynamicInformation.subscribe((dynamicInfo) => {
+      if (dynamicInfo && dynamicInfo.streamStatus === 'Live' && this._numOfWatchersTimerSubscription === null) {
+        this._numOfWatchersTimerSubscription = numOfWatcherTimer$.subscribe((response) => {
+          if (response['status'] === 'timeout') {
+            console.log('Live Entry: Error at getNumOfWatchers request.')
+          }
+        });
+      }
+      else if (this._numOfWatchersTimerSubscription) {
+        this._numOfWatchersTimerSubscription.unsubscribe();
+        this._numOfWatchersTimerSubscription = null;
       }
     });
   }
