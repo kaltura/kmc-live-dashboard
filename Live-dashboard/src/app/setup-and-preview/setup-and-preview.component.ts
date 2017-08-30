@@ -45,9 +45,13 @@ export class SetupAndPreviewComponent implements OnInit {
   }
 
   public _applicationLoaded(): boolean {
+
+    // TODO: enable logic!!!!
+
+
     if (this._applicationStatus.liveEntry === LoadingStatus.succeeded &&
-      this._applicationStatus.streamStatus === LoadingStatus.succeeded &&
-      this._applicationStatus.streamHealth === LoadingStatus.succeeded) {
+        this._applicationStatus.streamStatus === LoadingStatus.succeeded &&
+        this._applicationStatus.streamHealth === LoadingStatus.succeeded) {
       return false;
     }
     else if (this._applicationStatus.liveEntry === LoadingStatus.failed) {

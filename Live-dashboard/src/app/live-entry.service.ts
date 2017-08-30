@@ -32,10 +32,10 @@ import { LiveReportsGetEventsAction } from "kaltura-typescript-client/types/Live
 import { KalturaLiveReportType } from "kaltura-typescript-client/types/KalturaLiveReportType";
 import { KalturaLiveReportInputFilter } from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
 import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaNullableBoolean";
-import { Alert } from "./setup-and-preview/setup-and-preview";
 
 // TODO: Remove!!!!!!!!!!!
 import { KalturaApiService } from "./kaltura-api.service";
+import {Alert} from "./setup-and-preview/setup-and-preview.type";
 
 export interface ApplicationStatus {
   streamStatus: LoadingStatus,
@@ -58,7 +58,7 @@ export interface LiveEntryDiagnosticsInfo {
 export interface StreamHealth {
   id?: number,
   updatedTime?: number,
-  health?: StreamHealthStatus,
+  severity?: number,
   isPrimary?: boolean,
   alerts?: Alert[]
 }
@@ -101,6 +101,18 @@ export enum StreamHealthStatus  {
   Good = <any> 'Good',
   Fair = <any> 'Fair',
   Poor = <any> 'Poor'
+}
+
+export enum DiagnosticsErrorCodes  {
+  MissingTrackAlert = 4,
+  InvalidKeyFramesAlert = 6,
+  EntryRestartedAlert = 100,
+  BitrateUnmatched = 101,
+  NoAudioSignal = 102,
+  NoVideoSignal = 103,
+  PtsDrift = 104,
+  EntryStopped = 105,
+  EntryStarted = 106
 }
 
 @Injectable()
@@ -157,7 +169,8 @@ export class LiveEntryService{
               private _liveDashboardConfiguration: LiveDashboardConfiguration) {
 
     this._id = this._liveDashboardConfiguration.entryId;
-    this._listenToNumOfWatcherWhenLive();
+    // TODO: enable line!!!!
+    //this._listenToNumOfWatcherWhenLive();
   }
 
   private _listenToNumOfWatcherWhenLive(): void {
@@ -435,13 +448,13 @@ export class LiveEntryService{
 
       switch (eventType) {
         case 'staticData':
-          if (b.createdAt !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
+          if (b.updatedAt !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
             this._entryDiagnosticsInfo.staticInfo.updatedTime = b.createdAt;
             this._entryDiagnosticsInfo.staticInfo.data = privateData;
           }
           return;
         case 'dynamicData':
-          if (b.createdAt !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
+          if (b.updatedAt !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
             this._entryDiagnosticsInfo.dynamicInfo.updatedTime = b.createdAt;
             this._entryDiagnosticsInfo.dynamicInfo = privateData;
           }
@@ -450,7 +463,7 @@ export class LiveEntryService{
 
           let report = {
             updatedTime: b.createdAt * 1000,
-            health: this._parseHealthBySeverity(privateData.streamHealth),
+            severity: privateData.streamHealth,
             isPrimary: isPrimary,
             alerts: _.isArray(privateData.alerts) ? privateData.alerts : []
           };
@@ -462,25 +475,6 @@ export class LiveEntryService{
           console.log(`Beacon event Type unknown: ${b.eventType}`);
       }
     });
-  }
-
-  private _parseHealthBySeverity(severityNumber) : StreamHealthStatus{
-
-    let severity = AlertSeverity[severityNumber];
-
-    switch (severity) {
-      case AlertSeverity.error.toString():
-      case AlertSeverity.critical.toString():
-        return StreamHealthStatus.Poor;
-
-      case AlertSeverity.warning.toString():
-        return StreamHealthStatus.Fair;
-
-      case AlertSeverity.debug.toString():
-      case AlertSeverity.info.toString():
-      default:
-        return StreamHealthStatus.Good;
-    }
   }
 
   private _getNumOfWatchers(): Observable<any> {

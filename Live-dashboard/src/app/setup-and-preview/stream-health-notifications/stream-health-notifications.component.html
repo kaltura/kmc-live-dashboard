@@ -21,23 +21,23 @@
     <!-- list item -->
     <div *ngFor="let notification of streamHealthNotifications" class="notification-item grid col-12 no-margin">
       <div class="bullet"
-           [class.bullet-green]="(notification.health === 'Good')"
-           [class.bullet-yellow]="(notification.health === 'Fair')"
-           [class.bullet-red]="(notification.health === 'Poor')">•</div>
+           [class.bullet-green]=  "((notification.severity | severityToHealth) === 'Good')"
+           [class.bullet-yellow]= "((notification.severity | severityToHealth) === 'Fair')"
+           [class.bullet-red]=    "((notification.severity | severityToHealth) === 'Poor')">•</div>
 
       <div class="item-info col">
         <div class="row-1">
           <span class="status-prop">{{ notification.updatedTime | localeTime }}</span>
           <span class="status-prop">{{ (notification.isPrimary ? 'COMMON.primary' : 'COMMON.secondary') | translate }}</span>
-          <span class="status-prop">{{ notification.health }}</span>
+          <span class="status-prop">{{ notification.severity | severityToHealth }}</span>
         </div>
 
         <div class="row-2 alerts">
           <div *ngFor="let alert of notification.alerts" class="grid alert">
             <span class="small-bullet"
-                 [class.bullet-green]="(alert.Health === 'Good')"
-                 [class.bullet-yellow]="(alert.Health === 'Fair')"
-                 [class.bullet-red]="(alert.Health === 'Poor')">•</span>
+                 [class.bullet-green]=  "((alert.Code | codeToSeverity | severityToHealth) === 'Good')"
+                 [class.bullet-yellow]= "((alert.Code | codeToSeverity | severityToHealth) === 'Fair')"
+                 [class.bullet-red]=    "((alert.Code | codeToSeverity | severityToHealth) === 'Poor')">•</span>
             <span class="col alert-description">{{ "ALERTS." + alert.Code + ".title" | translate: alert.Arguments}}</span>
           </div>
         </div>
