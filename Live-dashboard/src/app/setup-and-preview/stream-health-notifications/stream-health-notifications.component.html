@@ -40,6 +40,7 @@
                  [class.bullet-red]=    "((alert.Code | codeToSeverity | severityToHealth) === 'Poor')">•</span>
             <span class="col alert-description">{{ "ALERTS." + alert.Code + ".title" | translate: alert.Arguments}}</span>
           </div>
+          <div *ngIf="notification.alerts.length == 0">{{ "ALERTS.no-alerts" | translate }}</div>
         </div>
       </div>
     </div>
