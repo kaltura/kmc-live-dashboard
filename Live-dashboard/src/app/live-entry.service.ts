@@ -32,10 +32,10 @@ import { LiveReportsGetEventsAction } from "kaltura-typescript-client/types/Live
 import { KalturaLiveReportType } from "kaltura-typescript-client/types/KalturaLiveReportType";
 import { KalturaLiveReportInputFilter } from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
 import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaNullableBoolean";
-import { Alert } from "./setup-and-preview/setup-and-preview";
 
 // TODO: Remove!!!!!!!!!!!
 import { KalturaApiService } from "./kaltura-api.service";
+import {Alert} from "./setup-and-preview/setup-and-preview.type";
 
 export interface ApplicationStatus {
   streamStatus: LoadingStatus,
@@ -52,13 +52,13 @@ export enum LoadingStatus {
 export interface LiveEntryDiagnosticsInfo {
   staticInfo?: { updatedTime?: number, data?: Object },
   dynamicInfo?: { updatedTime?: number, data?: Object },
-  streamHealth?: StreamHealth[]
+  streamHealth?: { updatedTime?: number, data?: StreamHealth[] }
 }
 
 export interface StreamHealth {
   id?: number,
   updatedTime?: number,
-  health?: StreamHealthStatus,
+  severity?: number,
   isPrimary?: boolean,
   alerts?: Alert[]
 }
@@ -103,6 +103,18 @@ export enum StreamHealthStatus  {
   Poor = <any> 'Poor'
 }
 
+export enum DiagnosticsErrorCodes  {
+  MissingTrackAlert = 4,
+  InvalidKeyFramesAlert = 6,
+  EntryRestartedAlert = 100,
+  BitrateUnmatched = 101,
+  NoAudioSignal = 102,
+  NoVideoSignal = 103,
+  PtsDrift = 104,
+  EntryStopped = 105,
+  EntryStarted = 106
+}
+
 @Injectable()
 export class LiveEntryService{
 
@@ -134,7 +146,7 @@ export class LiveEntryService{
   private _entryDiagnosticsInfo: LiveEntryDiagnosticsInfo = {
     staticInfo: { updatedTime: 0 },
     dynamicInfo: { updatedTime: 0 },
-    streamHealth: []
+    streamHealth: { updatedTime: 0 }
   };
   private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
   public entryDiagnostics$ = this._entryDiagnostics.asObservable();
@@ -398,7 +410,6 @@ export class LiveEntryService{
         "service": "beacon_beacon",
         "action": "list",
         "filter:objectType": "KalturaBeaconFilter",
-        "filter:orderBy": "-createdAt",
         "filter:objectIdIn": this._id,
         "filter:indexTypeEqual": "State"
       })
@@ -425,7 +436,7 @@ export class LiveEntryService{
 
     // As this is only the delta portion of the reports (beacon) so
     // only the delta will be pushed as an event subject.
-    this._entryDiagnosticsInfo.streamHealth = [];
+    this._entryDiagnosticsInfo.streamHealth.data = [];
 
     _.each(beaconsArray, b => {
 
@@ -435,52 +446,35 @@ export class LiveEntryService{
 
       switch (eventType) {
         case 'staticData':
-          if (b.createdAt !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
+          if (b.updatedAt !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
             this._entryDiagnosticsInfo.staticInfo.updatedTime = b.createdAt;
             this._entryDiagnosticsInfo.staticInfo.data = privateData;
           }
           return;
         case 'dynamicData':
-          if (b.createdAt !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
+          if (b.updatedAt !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
             this._entryDiagnosticsInfo.dynamicInfo.updatedTime = b.createdAt;
             this._entryDiagnosticsInfo.dynamicInfo = privateData;
           }
           return;
         case 'healthData':
+          if (b.updatedAt !== this._entryDiagnosticsInfo.streamHealth.updatedTime) {
+            let report = {
+              updatedTime: b.updatedAt * 1000,
+              severity: privateData.streamHealth,
+              isPrimary: isPrimary,
+              alerts: _.isArray(privateData.alerts) ? privateData.alerts : []
+            };
 
-          let report = {
-            updatedTime: b.createdAt * 1000,
-            health: this._parseHealthBySeverity(privateData.streamHealth),
-            isPrimary: isPrimary,
-            alerts: _.isArray(privateData.alerts) ? privateData.alerts : []
-          };
+            this._entryDiagnosticsInfo.streamHealth.data.push(report);
+            this._entryDiagnosticsInfo.streamHealth.updatedTime = b.updatedAt;
+          }
 
-          this._entryDiagnosticsInfo.streamHealth.push(report);
           return;
-
         default:
           console.log(`Beacon event Type unknown: ${b.eventType}`);
       }
     });
-  }
-
-  private _parseHealthBySeverity(severityNumber) : StreamHealthStatus{
-
-    let severity = AlertSeverity[severityNumber];
-
-    switch (severity) {
-      case AlertSeverity.error.toString():
-      case AlertSeverity.critical.toString():
-        return StreamHealthStatus.Poor;
-
-      case AlertSeverity.warning.toString():
-        return StreamHealthStatus.Fair;
-
-      case AlertSeverity.debug.toString():
-      case AlertSeverity.info.toString():
-      default:
-        return StreamHealthStatus.Good;
-    }
   }
 
   private _getNumOfWatchers(): Observable<any> {

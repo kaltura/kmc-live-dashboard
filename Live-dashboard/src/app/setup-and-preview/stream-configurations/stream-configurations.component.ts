@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import { environment } from "../../../environments/environment"
 import {
   LiveEntryService, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo, LiveEntryDiagnosticsInfo,
-  StreamHealthStatus
+  StreamHealthStatus, AlertSeverity
 } from "../../live-entry.service";
 
 @Component({
@@ -22,7 +22,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
   public _staticConfiguration: LiveEntryStaticConfiguration;
   public _dynamicInformation: LiveEntryDynamicStreamInfo;
   public _streamHealth: {
-    status: StreamHealthStatus,
+    severity: AlertSeverity,
     resolution?: number
   };
 
@@ -38,7 +38,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
       redundancy: false,
       streamStatus: 'Offline'
     };
-    this._streamHealth = { status: StreamHealthStatus.Good };
+    this._streamHealth = { severity: AlertSeverity.info };
   }
 
   ngOnInit() {
@@ -54,9 +54,9 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
       }
     });
     this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
-      if (response && _.isArray(response.streamHealth) && response.streamHealth.length > 0) {
+      if (response && response.streamHealth.data.length) {
         // get the last report status as general status
-        this._streamHealth.status = response.streamHealth[response.streamHealth.length - 1].health;
+        this._streamHealth.severity = response.streamHealth.data[0].severity;
       }
     })
   }
