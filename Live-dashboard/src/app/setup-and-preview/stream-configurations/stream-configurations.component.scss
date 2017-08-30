@@ -8,9 +8,6 @@
   align-items: center;
 
   .property {
-    display: flex;
-    flex-flow: column nowrap;
-    text-align: left;
 
     .configuration-label {
       font-size: 13px;
@@ -29,10 +26,10 @@
 
     .configuration-status {
       margin-top: 14px;
-      margin-left: -1px;
 
       .bullet {
         font-size: 60px;
+        margin-left: -6px;
       }
 
       .state {
@@ -44,11 +41,6 @@
       &.elapsed-time {
         .bullet {
           color: transparent;
-        }
-
-        .state {
-          float: left;
-          margin-left: 5px;
         }
       }
     }
