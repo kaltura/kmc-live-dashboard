@@ -54,9 +54,9 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
       }
     });
     this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
-      if (response && _.isArray(response.streamHealth) && response.streamHealth.length > 0) {
+      if (response && response.streamHealth.data.length) {
         // get the last report status as general status
-        this._streamHealth.severity = response.streamHealth[response.streamHealth.length - 1].severity;
+        this._streamHealth.severity = response.streamHealth.data[0].severity;
       }
     })
   }

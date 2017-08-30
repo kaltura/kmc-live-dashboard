@@ -28,8 +28,8 @@
       <div class="item-info col">
         <div class="row-1">
           <span class="status-prop">{{ notification.updatedTime | localeTime }}</span>
-          <span class="status-prop">{{ (notification.isPrimary ? 'COMMON.primary' : 'COMMON.secondary') | translate }}</span>
-          <span class="status-prop">{{ notification.severity | severityToHealth }}</span>
+          <b><span class="status-prop">{{ (notification.isPrimary ? 'COMMON.primary' : 'COMMON.secondary') | translate }}</span></b>
+          <b><span class="status-prop">{{ notification.severity | severityToHealth }}</span></b>
         </div>
 
         <div class="row-2 alerts">

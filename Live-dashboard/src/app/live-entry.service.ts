@@ -52,7 +52,7 @@ export enum LoadingStatus {
 export interface LiveEntryDiagnosticsInfo {
   staticInfo?: { updatedTime?: number, data?: Object },
   dynamicInfo?: { updatedTime?: number, data?: Object },
-  streamHealth?: StreamHealth[]
+  streamHealth?: { updatedTime?: number, data?: StreamHealth[] }
 }
 
 export interface StreamHealth {
@@ -146,7 +146,7 @@ export class LiveEntryService{
   private _entryDiagnosticsInfo: LiveEntryDiagnosticsInfo = {
     staticInfo: { updatedTime: 0 },
     dynamicInfo: { updatedTime: 0 },
-    streamHealth: []
+    streamHealth: { updatedTime: 0 }
   };
   private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
   public entryDiagnostics$ = this._entryDiagnostics.asObservable();
@@ -411,7 +411,6 @@ export class LiveEntryService{
         "service": "beacon_beacon",
         "action": "list",
         "filter:objectType": "KalturaBeaconFilter",
-        "filter:orderBy": "-createdAt",
         "filter:objectIdIn": this._id,
         "filter:indexTypeEqual": "State"
       })
@@ -438,7 +437,7 @@ export class LiveEntryService{
 
     // As this is only the delta portion of the reports (beacon) so
     // only the delta will be pushed as an event subject.
-    this._entryDiagnosticsInfo.streamHealth = [];
+    this._entryDiagnosticsInfo.streamHealth.data = [];
 
     _.each(beaconsArray, b => {
 
@@ -460,17 +459,19 @@ export class LiveEntryService{
           }
           return;
         case 'healthData':
+          if (b.updatedAt !== this._entryDiagnosticsInfo.streamHealth.updatedTime) {
+            let report = {
+              updatedTime: b.updatedAt * 1000,
+              severity: privateData.streamHealth,
+              isPrimary: isPrimary,
+              alerts: _.isArray(privateData.alerts) ? privateData.alerts : []
+            };
 
-          let report = {
-            updatedTime: b.createdAt * 1000,
-            severity: privateData.streamHealth,
-            isPrimary: isPrimary,
-            alerts: _.isArray(privateData.alerts) ? privateData.alerts : []
-          };
+            this._entryDiagnosticsInfo.streamHealth.data.push(report);
+            this._entryDiagnosticsInfo.streamHealth.updatedTime = b.updatedAt;
+          }
 
-          this._entryDiagnosticsInfo.streamHealth.push(report);
           return;
-
         default:
           console.log(`Beacon event Type unknown: ${b.eventType}`);
       }
