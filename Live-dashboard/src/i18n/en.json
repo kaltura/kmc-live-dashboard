@@ -81,6 +81,7 @@
     "preview_mode": "Preview Mode"
   },
   "ALERTS": {
+    "no-alerts": "No reported issues",
     "100": {
       "title": "Encoder has restarted",
       "hint": ""
