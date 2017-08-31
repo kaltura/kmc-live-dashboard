@@ -12,9 +12,9 @@ import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, But
 // Services
 import { KalturaClient } from '@kaltura-ng/kaltura-client/kaltura-client.service';
 import { KalturaClientConfiguration } from '@kaltura-ng/kaltura-client/kaltura-client-configuration.service';
-import { LiveEntryService } from './live-entry.service';
-import { ConversionProfileService } from "./conversion-profile.service";
-import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
+import { LiveEntryService } from './services/live-entry.service';
+import { ConversionProfileService } from "./services/conversion-profile.service";
+import { LiveEntryTimerTaskService } from "./services/entry-timer-task.service";
 import { BootstrapService } from "./bootstrap.service";
 
 // Components
@@ -29,22 +29,22 @@ import { AreaBlockerComponent } from "@kaltura-ng/kaltura-ui/area-blocker";
 import { StreamHealthNotificationsComponent } from './setup-and-preview/stream-health-notifications/stream-health-notifications.component';
 
 // Pipes
-import { RecordingTypePipe } from '../pipes/recording-type.pipe';
-import { ModerationPipe } from '../pipes/moderation.pipe';
-import { EntryTypePipe } from '../pipes/entry-type.pipe';
-import { EntryBooleanConfigurationPipe } from '../pipes/entry-boolean-configuration.pipe';
-import { EntryDynamicInformationPipe } from '../pipes/entry-dynamic-information.pipe';
-import { TranscodingInfoPipe } from '../pipes/transcoding-info.pipe';
+import { RecordingTypePipe } from './pipes/recording-type.pipe';
+import { ModerationPipe } from './pipes/moderation.pipe';
+import { EntryTypePipe } from './pipes/entry-type.pipe';
+import { EntryBooleanConfigurationPipe } from './pipes/entry-boolean-configuration.pipe';
+import { EntryDynamicInformationPipe } from './pipes/entry-dynamic-information.pipe';
+import { TranscodingInfoPipe } from './pipes/transcoding-info.pipe';
 import { SafePipe } from "@kaltura-ng/kaltura-ui/safe.pipe";
-import { DurationPipe } from "../pipes/duration.pipe";
-import { LocaleTimePipe } from "../pipes/locale-time.pipe";
-import { SeverityToHealthPipe } from '../pipes/severity-to-health.pipe';
+import { DurationPipe } from "./pipes/duration.pipe";
+import { LocaleTimePipe } from "./pipes/locale-time.pipe";
+import { SeverityToHealthPipe } from './pipes/severity-to-health.pipe';
 
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
 // TODO: Remove!!!!!!!!
-import { KalturaApiService } from "./kaltura-api.service";
-import { CodeToSeverityPipe } from '../pipes/code-to-severity.pipe';
+import { KalturaApiService } from "./services/kaltura-api.service";
+import { CodeToSeverityPipe } from './pipes/code-to-severity.pipe';
 
 // TODO: Temporary solution! --> remove
 export function clientConfigurationFactory() {

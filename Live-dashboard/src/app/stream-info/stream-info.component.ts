@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService, LiveEntryDynamicStreamInfo } from "../live-entry.service";
+import { LiveEntryService } from "../services/live-entry.service";
 import { KalturaEntryModerationStatus } from "kaltura-typescript-client/types/KalturaEntryModerationStatus";
 import { KalturaMediaType } from "kaltura-typescript-client/types/KalturaMediaType";
 import { LiveDashboardConfiguration} from "../services/live-dashboard-configuration.service";
+import {LiveEntryDynamicStreamInfo} from "../types/live-dashboard.types";
 
 @Component({
   selector: 'stream-info',
@@ -21,7 +22,6 @@ export class StreamInfoComponent implements OnInit {
     redundancy: false,
     streamStatus: 'Offline'
   };
-
 
   constructor(private _liveEntryService : LiveEntryService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration) { }
@@ -42,7 +42,7 @@ export class StreamInfoComponent implements OnInit {
         const host =      this._liveDashboardConfiguration.host;
         const uiConfId =  this._liveDashboardConfiguration.uiConfId;
 
-        this._playerSrc = `http://${host}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=${entryId}`;
+        this._playerSrc = `${host}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=${entryId}`;
       }
     });
 

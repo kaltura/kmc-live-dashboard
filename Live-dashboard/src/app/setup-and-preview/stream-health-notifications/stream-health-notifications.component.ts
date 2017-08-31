@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService, LiveEntryDiagnosticsInfo } from "../../live-entry.service";
-import { LiveEntryTimerTaskService } from "../../entry-timer-task.service";
+import { LiveEntryService } from "../../services/live-entry.service";
+import { LiveEntryTimerTaskService } from "../../services/entry-timer-task.service";
 import * as _ from 'lodash';
+import {LiveEntryDiagnosticsInfo} from "../../types/live-dashboard.types";
 
 @Component({
   selector: 'stream-health-notifications',

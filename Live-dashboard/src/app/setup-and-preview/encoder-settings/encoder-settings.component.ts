@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService } from '../../live-entry.service';
+import { LiveEntryService } from '../../services/live-entry.service';
 import { Message } from 'primeng/primeng';
 
 

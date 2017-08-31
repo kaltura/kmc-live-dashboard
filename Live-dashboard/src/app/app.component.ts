@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { BootstrapService } from "./bootstrap.service";
 import { TranslateService } from "ng2-translate";
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
-import { LiveEntryService } from "./live-entry.service";
+import { LiveEntryService } from "./services/live-entry.service";
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { environment } from "../environments/environment";
 

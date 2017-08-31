@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService, ApplicationStatus, LiveEntryDynamicStreamInfo, LoadingStatus } from "../live-entry.service";
+import { LiveEntryService } from "../services/live-entry.service";
 import { TranslateService } from "ng2-translate";
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { environment } from "../../environments/environment";
 
 import 'rxjs/Rx';
+import {LiveEntryDynamicStreamInfo, ApplicationStatus, LoadingStatus} from "../types/live-dashboard.types";
 
 @Component({
   selector: 'setup-and-preview',

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/primeng';
-import { LiveEntryService } from "../../live-entry.service";
-import { ConversionProfileService } from "../../conversion-profile.service";
+import { LiveEntryService } from "../../services/live-entry.service";
+import { ConversionProfileService } from "../../services/conversion-profile.service";
 //types
 import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStatus";
 import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
