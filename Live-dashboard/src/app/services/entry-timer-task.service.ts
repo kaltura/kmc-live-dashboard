@@ -11,46 +11,43 @@ export class LiveEntryTimerTaskService {
       let active = true;
       let timeout;
 
-      const firstRunResult = func();
-      if (firstRunResult instanceof Observable) {
-        firstRunResult.subscribe(response => {
-          observer.next({ result: response });
-        },
-        reject => {
-          observer.next({ errorType: 'error' });
-        })
-      }
-      else {
-        observer.next({ firstRunResult });
-      }
+      run();
 
       function execute() {
         timeout = setTimeout(() => {
-          const result = func();
-          if (result instanceof Observable) {
-            result.subscribe(response => {
-                if (active) {
-                  observer.next({ result: response });
-                  execute();
-                }
-              },
-              reject => {
-                if (active) {
-                  observer.next({ errorType: 'error'});
-                  execute();
-                }
-              });
-          }
-          else {
-            if (active) {
-              observer.next({ result });
-              execute();
-            }
-          }
+          run();
         }, interval);
       }
 
-      execute();
+      function run(){
+        let result = func();
+        if (result instanceof Observable) {
+          let subscription = result.subscribe(response => {
+              if (active) {
+                observer.next({ result: response });
+                execute();
+              }
+              else {
+                subscription.unsubscribe();
+              }
+            },
+            reject => {
+              if (active) {
+                observer.next({ errorType: 'error'});
+                execute();
+              }
+              else {
+                subscription.unsubscribe();
+              }
+            });
+        }
+        else {
+          if (active) {
+            observer.next({ result });
+              execute();
+          }
+        }
+      }
 
       return () => {
         active = false;
