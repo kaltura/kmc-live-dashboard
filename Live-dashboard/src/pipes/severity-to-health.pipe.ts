@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {AlertSeverity, StreamHealthStatus} from "../app/live-entry.service";
+import {AlertSeverity, StreamHealthStatus} from "../app/types/live-dashboard.types";
 
 @Pipe({
   name: 'severityToHealth'

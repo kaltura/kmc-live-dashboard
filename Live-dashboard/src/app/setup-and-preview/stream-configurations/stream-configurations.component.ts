@@ -6,9 +6,11 @@ import * as _ from 'lodash';
 
 import { environment } from "../../../environments/environment"
 import {
-  LiveEntryService, LiveEntryStaticConfiguration, LiveEntryDynamicStreamInfo, LiveEntryDiagnosticsInfo,
-  StreamHealthStatus, AlertSeverity
-} from "../../live-entry.service";
+  LiveEntryService } from "../../live-entry.service";
+import {
+  AlertSeverity, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
+  LiveEntryDiagnosticsInfo
+} from "../../types/live-dashboard.types";
 
 @Component({
   selector: 'stream-configurations',

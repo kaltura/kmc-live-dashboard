@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService, LiveEntryDynamicStreamInfo } from "../live-entry.service";
+import { LiveEntryService } from "../live-entry.service";
 import { KalturaEntryModerationStatus } from "kaltura-typescript-client/types/KalturaEntryModerationStatus";
 import { KalturaMediaType } from "kaltura-typescript-client/types/KalturaMediaType";
 import { LiveDashboardConfiguration} from "../services/live-dashboard-configuration.service";
+import {LiveEntryDynamicStreamInfo} from "../types/live-dashboard.types";
 
 @Component({
   selector: 'stream-info',

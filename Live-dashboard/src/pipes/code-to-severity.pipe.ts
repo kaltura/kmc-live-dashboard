@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {DiagnosticsErrorCodes, AlertSeverity} from "../app/live-entry.service";
+import {DiagnosticsErrorCodes, AlertSeverity} from "../app/types/live-dashboard.types";
 
 
 @Pipe({
