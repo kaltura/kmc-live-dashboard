@@ -106,7 +106,8 @@ export function clientConfigurationFactory() {
     LiveEntryTimerTaskService,
     BootstrapService,
     LiveDashboardConfiguration,
-    KalturaApiService
+    KalturaApiService,
+    CodeToSeverityPipe
   ],
   bootstrap: [AppComponent]
 })

@@ -40,6 +40,7 @@ import {
 
 // TODO: Remove!!!!!!!!!!!
 import { KalturaApiService } from "./kaltura-api.service";
+import {CodeToSeverityPipe} from "../pipes/code-to-severity.pipe";
 
 
 @Injectable()
@@ -93,7 +94,8 @@ export class LiveEntryService{
               private _kalturaApiService: KalturaApiService,
               private _entryTimerTask: LiveEntryTimerTaskService,
               private _conversionProfilesService: ConversionProfileService,
-              private _liveDashboardConfiguration: LiveDashboardConfiguration) {
+              private _liveDashboardConfiguration: LiveDashboardConfiguration,
+              private _codeToSeverityPipe: CodeToSeverityPipe) {
 
     this._id = this._liveDashboardConfiguration.entryId;
     this._listenToNumOfWatcherWhenLive();
@@ -390,8 +392,13 @@ export class LiveEntryService{
               updatedTime: b.updatedAt * 1000,
               severity: privateData.streamHealth,
               isPrimary: isPrimary,
-              alerts: _.isArray(privateData.alerts) ? privateData.alerts : []
+              alerts: _.isArray(privateData.alerts) ?  privateData.alerts : []
             };
+
+            // sort alerts by their severity (-desc)
+            report.alerts = (_.sortBy(report.alerts, [(alert)=> {
+              return -this._codeToSeverityPipe.transform(alert.Code).valueOf();
+            }]));
 
             this._entryDiagnosticsInfo.streamHealth.data.push(report);
             this._entryDiagnosticsInfo.streamHealth.updatedTime = b.updatedAt;
