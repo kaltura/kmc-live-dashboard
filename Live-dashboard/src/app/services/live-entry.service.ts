@@ -96,7 +96,7 @@ export class LiveEntryService{
               private _liveDashboardConfiguration: LiveDashboardConfiguration) {
 
     this._id = this._liveDashboardConfiguration.entryId;
-    // todo remove this comment //this._listenToNumOfWatcherWhenLive();
+    this._listenToNumOfWatcherWhenLive();
   }
 
   private _listenToNumOfWatcherWhenLive(): void {
