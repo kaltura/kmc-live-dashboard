@@ -10,8 +10,6 @@
 
   .stream-health {
     flex:  1 100%;
-
-    margin: 23px 0 0 0;
     color: $kGrayscale3;
     font-size: 13px;
     line-height: 16px;
@@ -26,6 +24,10 @@
   .learn-more {
     align-self: flex-start;
     flex: 1 100%;
+    height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     div {
       width: 489px;

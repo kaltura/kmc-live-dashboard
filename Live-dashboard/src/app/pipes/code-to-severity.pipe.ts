@@ -26,7 +26,7 @@ export class CodeToSeverityPipe implements PipeTransform {
         return AlertSeverity.error;
 
       default:
-        return AlertSeverity.warning;
+        return AlertSeverity.info;
     }
   }
 }

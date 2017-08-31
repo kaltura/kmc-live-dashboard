@@ -1,11 +1,12 @@
 @import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
 
 .stream-configurations {
-  height: 126px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  margin-top: 5px;
+  margin-bottom: 22px;
 
   .property {
 
