@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import 'rxjs/Rx';
 import { LiveDashboardConfiguration } from "./live-dashboard-configuration.service";
+import {environment} from "../../environments/environment";
 
 @Injectable()
 export class KalturaApiService {
@@ -14,7 +15,7 @@ export class KalturaApiService {
 
   constructor(private http: Http, private _liveDashboardConfiguration: LiveDashboardConfiguration) {
     this._ks = this._liveDashboardConfiguration.ks;
-    this._serviceUrl = this._liveDashboardConfiguration.service_url;
+    this._serviceUrl = this._liveDashboardConfiguration.host + environment.bootstrap.service_url_extension;
   }
 
   public apiRequest(requests: any): Observable<any> {

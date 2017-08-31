@@ -23,7 +23,6 @@ export class StreamInfoComponent implements OnInit {
     streamStatus: 'Offline'
   };
 
-
   constructor(private _liveEntryService : LiveEntryService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration) { }
 
@@ -43,7 +42,7 @@ export class StreamInfoComponent implements OnInit {
         const host =      this._liveDashboardConfiguration.host;
         const uiConfId =  this._liveDashboardConfiguration.uiConfId;
 
-        this._playerSrc = `http://${host}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=${entryId}`;
+        this._playerSrc = `${host}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[EmbedPlayer.SimulateMobile]=true&&flashvars[ks]=${ks}&flashvars[EmbedPlayer.EnableMobileSkin]=true&entry_id=${entryId}`;
       }
     });
 
