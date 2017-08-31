@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LiveEntryService } from "../live-entry.service";
+import { LiveEntryService } from "../services/live-entry.service";
 import { TranslateService } from "ng2-translate";
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { environment } from "../../environments/environment";

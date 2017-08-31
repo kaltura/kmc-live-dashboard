@@ -3,7 +3,7 @@ import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import 'rxjs/Rx';
-import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
+import { LiveDashboardConfiguration } from "./live-dashboard-configuration.service";
 
 @Injectable()
 export class KalturaApiService {

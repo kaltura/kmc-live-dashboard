@@ -9,8 +9,8 @@ import * as moment from 'moment';
 import { KalturaClient } from "@kaltura-ng/kaltura-client";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { ConversionProfileService } from "./conversion-profile.service";
-import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
-import { environment } from "../environments/environment";
+import { LiveDashboardConfiguration } from "./live-dashboard-configuration.service";
+import { environment } from "../../environments/environment";
 
 // Kaltura objects and types
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
@@ -24,7 +24,6 @@ import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaReco
 import { KalturaEntryServerNodeStatus } from "kaltura-typescript-client/types/KalturaEntryServerNodeStatus";
 import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/KalturaLiveStreamAdminEntry";
 import { KalturaLiveEntryServerNode } from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
-import { KalturaLiveStreamParams } from "kaltura-typescript-client/types/KalturaLiveStreamParams";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
 import { KalturaBeaconFilter } from "kaltura-typescript-client/types/KalturaBeaconFilter";
 import { KalturaBeacon } from "kaltura-typescript-client/types/KalturaBeacon";
@@ -37,7 +36,7 @@ import {
   NodeStreams, LiveStreamStates, LiveStreamSession,
   LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
   ApplicationStatus, LoadingStatus, LiveEntryDiagnosticsInfo
-} from "./types/live-dashboard.types";
+} from "../types/live-dashboard.types";
 
 // TODO: Remove!!!!!!!!!!!
 import { KalturaApiService } from "./kaltura-api.service";
@@ -97,7 +96,7 @@ export class LiveEntryService{
               private _liveDashboardConfiguration: LiveDashboardConfiguration) {
 
     this._id = this._liveDashboardConfiguration.entryId;
-    this._listenToNumOfWatcherWhenLive();
+    // todo remove this comment //this._listenToNumOfWatcherWhenLive();
   }
 
   private _listenToNumOfWatcherWhenLive(): void {

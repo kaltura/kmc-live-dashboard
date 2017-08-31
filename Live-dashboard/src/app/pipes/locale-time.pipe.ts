@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
-import {LiveDashboardConfiguration} from "../app/services/live-dashboard-configuration.service";
+import {LiveDashboardConfiguration} from "../services/live-dashboard-configuration.service";
 
 @Pipe({
   name: 'localeTime'

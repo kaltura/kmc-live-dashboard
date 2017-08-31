@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 
 import { environment } from "../../../environments/environment"
 import {
-  LiveEntryService } from "../../live-entry.service";
+  LiveEntryService } from "../../services/live-entry.service";
 import {
   AlertSeverity, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
   LiveEntryDiagnosticsInfo

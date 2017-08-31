@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as _ from 'lodash';
 import {TranslateService} from "ng2-translate";
-import {NodeStreams} from "../app/types/live-dashboard.types";
+import {NodeStreams} from "../types/live-dashboard.types";
 
 @Pipe({
   name: 'transcodingInfo'
