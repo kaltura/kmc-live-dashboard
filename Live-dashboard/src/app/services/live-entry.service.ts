@@ -26,21 +26,22 @@ import { KalturaEntryServerNodeStatus } from "kaltura-typescript-client/types/Ka
 import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/KalturaLiveStreamAdminEntry";
 import { KalturaLiveEntryServerNode } from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
+import { BeaconListAction } from "kaltura-typescript-client/types/BeaconListAction";
 import { KalturaBeaconFilter } from "kaltura-typescript-client/types/KalturaBeaconFilter";
+import { KalturaFilterPager } from "kaltura-typescript-client/types/KalturaFilterPager";
+import { KalturaBeaconIndexType } from "kaltura-typescript-client/types/KalturaBeaconIndexType";
 import { KalturaBeacon } from "kaltura-typescript-client/types/KalturaBeacon";
 import { LiveReportsGetEventsAction } from "kaltura-typescript-client/types/LiveReportsGetEventsAction";
 import { KalturaLiveReportType } from "kaltura-typescript-client/types/KalturaLiveReportType";
 import { KalturaLiveReportInputFilter } from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
 import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaNullableBoolean";
-
+// Types
 import {
   NodeStreams, LiveStreamStates, LiveStreamSession, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
   ApplicationStatus, LoadingStatus, LiveEntryDiagnosticsInfo
 } from "../types/live-dashboard.types";
-
-// TODO: Remove!!!!!!!!!!!
-import { KalturaApiService } from "./kaltura-api.service";
-import {CodeToSeverityPipe} from "../pipes/code-to-severity.pipe";
+// Piepes
+import { CodeToSeverityPipe } from "../pipes/code-to-severity.pipe";
 
 @Injectable()
 export class LiveEntryService{
@@ -90,7 +91,6 @@ export class LiveEntryService{
 
 
   constructor(private _kalturaClient: KalturaClient,
-              private _kalturaApiService: KalturaApiService,
               private _entryTimerTask: LiveEntryTimerTaskService,
               private _conversionProfilesService: ConversionProfileService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration,
@@ -115,8 +115,8 @@ export class LiveEntryService{
 
   public InitializeLiveEntryService(): void {
     this._getLiveStream();
-    // this._runEntryStatusMonitoring();
-    // this._streamHealthInitialization();
+    this._runEntryStatusMonitoring();
+    this._streamHealthInitialization();
   }
 
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
@@ -281,62 +281,36 @@ export class LiveEntryService{
     }
   }
 
-  // private _runStreamHealthMonitoring(): void {
-  //   this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
-  //     return this._kalturaClient.request(new BeaconGetLastAction({
-  //       filter: new KalturaBeaconFilter({objectIdEqual: this._id})
-  //     }))
-  //       .do(response => {
-  //         // Update diagnostics object with recent beacons info
-  //         this._parseEntryBeacons(response.objects);
-  //         this._entryDiagnostics.next(this._entryDiagnosticsInfo);
-  //         this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
-  //         return;
-  //       })
-  //       .catch((err, caught) => {
-  //         this._updatedApplicationStatus('streamHealth', LoadingStatus.failed);
-  //         return caught;
-  //       });
-  //   }, environment.liveEntryService.streamHealthIntervalTimeInMs)
-  //     .subscribe(response => {
-  //       if (response.errorType === 'timeout') {
-  //         // TODO: show network connectivity issue!!!
-  //       }
-  //     });
-  // }
-
   private _streamHealthInitialization(): void {
-    this._kalturaApiService.apiRequest({
-      "service": "beacon_beacon",
-      "action": "list",
-      "filter:objectType": "KalturaBeaconFilter",
-      "pager:objectType": "KalturaFilterPager",
-      "filter:orderBy": "-createdAt",
-      "filter:eventTypeIn": "0_healthData,1_healthData",
-      "filter:objectIdIn": this._id,
-      "filter:indexTypeEqual": "Log",
-      "pager:pageSize": environment.liveEntryService.maxBeaconHealthReportsToShow.toString()
-    })
-      .subscribe(response => {
-        let rawBeacons = (JSON.parse(response._body)).objects;
-        this._parseEntryBeacons(rawBeacons);
-        this._entryDiagnostics.next(this._entryDiagnosticsInfo);
-        return this._runStreamHealthMonitoring();
+    this._kalturaClient.request(new BeaconListAction({
+      filter: new KalturaBeaconFilter({
+        orderBy: '-createdAt',
+        eventTypeIn: '0_healthData,1_healthData',
+        objectIdIn: this._id,
+        indexTypeEqual: KalturaBeaconIndexType.log
+      }),
+      pager: new KalturaFilterPager({
+        pageSize: environment.liveEntryService.maxBeaconHealthReportsToShow
       })
+    }))
+    .subscribe(response => {
+      this._parseEntryBeacons(response.objects  );
+      this._entryDiagnostics.next(this._entryDiagnosticsInfo);
+      return this._runStreamHealthMonitoring();
+    })
   }
 
   private _runStreamHealthMonitoring(): void {
     this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
-      return this._kalturaApiService.apiRequest({
-        "service": "beacon_beacon",
-        "action": "list",
-        "filter:objectType": "KalturaBeaconFilter",
-        "filter:objectIdIn": this._id,
-        "filter:indexTypeEqual": "State"
-      })
+      return this._kalturaClient.request(new BeaconListAction({
+        filter: new KalturaBeaconFilter({
+          objectIdIn: this._id,
+          indexTypeEqual: KalturaBeaconIndexType.state
+        })
+      }))
         .do(response => {
           // Update diagnostics object with recent beacons info
-          this._parseEntryBeacons((JSON.parse(response._body)).objects);
+          this._parseEntryBeacons(response.objects);
           this._entryDiagnostics.next(this._entryDiagnosticsInfo);
           this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
           return;
