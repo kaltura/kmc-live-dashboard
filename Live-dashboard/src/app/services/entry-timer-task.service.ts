@@ -10,11 +10,13 @@ export class LiveEntryTimerTaskService {
     return Observable.create(observer => {
       let active = true;
       let timeout;
+      let subscription;
 
       run();
 
       function execute() {
         timeout = setTimeout(() => {
+          timeout = null;
           run();
         }, interval);
       }
@@ -22,22 +24,19 @@ export class LiveEntryTimerTaskService {
       function run(){
         let result = func();
         if (result instanceof Observable) {
-          let subscription = result.subscribe(response => {
+          subscription = result.subscribe(
+            response => {
+              subscription = null;
               if (active) {
                 observer.next({ result: response });
                 execute();
               }
-              else {
-                subscription.unsubscribe();
-              }
             },
             reject => {
+              subscription = null;
               if (active) {
                 observer.next({ errorType: 'error'});
                 execute();
-              }
-              else {
-                subscription.unsubscribe();
               }
             });
         }
@@ -53,6 +52,9 @@ export class LiveEntryTimerTaskService {
         active = false;
         if (timeout) {
           clearTimeout(timeout);
+        }
+        if (subscription){
+          subscription.unsubscribe();
         }
       }
     });
