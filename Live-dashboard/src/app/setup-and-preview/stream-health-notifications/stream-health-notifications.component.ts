@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LiveEntryService } from "../../services/live-entry.service";
 import { LiveEntryTimerTaskService } from "../../services/entry-timer-task.service";
 import * as _ from 'lodash';
-import {LiveEntryDiagnosticsInfo} from "../../types/live-dashboard.types";
+import { LiveEntryDiagnosticsInfo } from "../../types/live-dashboard.types";
 
 @Component({
   selector: 'stream-health-notifications',
@@ -42,9 +42,9 @@ export class StreamHealthNotificationsComponent implements OnInit {
   }
 
   private listenToEntryDiagnosticsNotifications() {
-    this._liveEntryService.entryDiagnostics$.subscribe((diagnostic: LiveEntryDiagnosticsInfo) => {
-      if (diagnostic && diagnostic.streamHealth.data.length) {
-        this.streamHealthNotifications = diagnostic.streamHealth.data.concat(this.streamHealthNotifications);
+    this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
+      if (response && response.streamHealth.data.length) {
+        this.streamHealthNotifications = response.streamHealth.data.concat(this.streamHealthNotifications);
       }
     });
   }

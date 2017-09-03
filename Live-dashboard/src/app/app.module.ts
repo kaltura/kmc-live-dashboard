@@ -43,6 +43,7 @@ import { CodeToSeverityPipe } from './pipes/code-to-severity.pipe';
 
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
+import { AppLocalization, AppStorage } from "@kaltura-ng/kaltura-common";
 
 // TODO: Temporary solution! --> remove
 export function clientConfigurationFactory() {
@@ -104,7 +105,9 @@ export function clientConfigurationFactory() {
     LiveEntryTimerTaskService,
     BootstrapService,
     LiveDashboardConfiguration,
-    CodeToSeverityPipe
+    CodeToSeverityPipe,
+    AppLocalization,
+    AppStorage
   ],
   bootstrap: [AppComponent]
 })

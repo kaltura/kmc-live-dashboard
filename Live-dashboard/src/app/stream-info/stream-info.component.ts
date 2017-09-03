@@ -39,10 +39,10 @@ export class StreamInfoComponent implements OnInit {
         const partnerID = liveStreamEntry.partnerId;
         const entryId =   liveStreamEntry.id;
         const ks =        this._liveDashboardConfiguration.ks;
-        const host =      this._liveDashboardConfiguration.host;
         const uiConfId =  this._liveDashboardConfiguration.uiConfId;
+        const serviceUrl = this._liveDashboardConfiguration.service_url;
 
-        this._playerSrc = `${host}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[closedCaptions.plugin]=true&flashvars[ks]=${ks}&entry_id=${entryId}`;
+        this._playerSrc = `${serviceUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[ks]=${ks}&entry_id=${entryId}`;
       }
     });
 

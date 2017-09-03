@@ -1,8 +1,4 @@
 {
-  "BOOTSTRAP": {
-    "parameters_error": "Invalid Application Parameters!",
-    "error_message": "Invalid Application Parameters!"
-  },
   "COMMON": {
     "primary": "Primary",
     "secondary": "Secondary"
@@ -110,5 +106,9 @@
       "title": "Encoder started streaming",
       "hint": ""
     }
+  },
+  "ERRORS": {
+    "parameters_error": "Invalid Application Parameters! Please restart application",
+    "liveStream_get_failure": "Failed to load Live Entry"
   }
 }

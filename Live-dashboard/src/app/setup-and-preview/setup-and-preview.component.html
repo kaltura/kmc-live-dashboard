@@ -1,4 +1,4 @@
-<k-area-blocker [showLoader]="_applicationLoaded()" [message]="_sectionBlockerMessage">
+<k-area-blocker [showLoader]="!_applicationLoaded" [message]="_sectionBlockerMessage">
     <div class="setup-and-preview">
       <div class="stream-health">
         <stream-configurations></stream-configurations>
@@ -18,24 +18,5 @@
       <stream-health-notifications *ngIf="_dynamicInformation.streamStatus === 'Live' || _dynamicInformation.streamSession.isInProgress"
                                    class="stream-health-notifications">
       </stream-health-notifications>
-
-      <!--<div class="main">
-        <div class="main-left">
-          <p-tabView class="general-settings">
-            <p-tabPanel header="BASIC">
-              <basic-settings></basic-settings>
-            </p-tabPanel>
-            <p-tabPanel header="SETTINGS">
-              <additional-settings></additional-settings>
-            </p-tabPanel>
-          </p-tabView>
-        </div>
-        <div class="main-right">
-          <encoder-settings></encoder-settings>
-        </div>
-      </div>
-      <footer>
-        <button pButton type="button" class="ui-button kButtonBranded saveInfo" label="{{ 'DASHBOARD.save' | translate }}" (click)="onClickSaveBtn()"></button>
-      </footer>-->
     </div>
 </k-area-blocker>

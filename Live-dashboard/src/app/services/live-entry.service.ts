@@ -115,14 +115,12 @@ export class LiveEntryService{
 
   public InitializeLiveEntryService(): void {
     this._getLiveStream();
-    this._runEntryStatusMonitoring();
-    this._streamHealthInitialization();
   }
 
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
     const newAppStatus = this._applicationStatus.getValue();
 
-    if (newAppStatus[key] !== LoadingStatus.initializing)
+    if (newAppStatus[key] === LoadingStatus.succeeded)
       return;
 
     switch (key) {
@@ -148,28 +146,35 @@ export class LiveEntryService{
         entryId : this._id,
         acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode]
       }))
-        .retryWhen(errors => errors
-          .do(val => {
-            if (val instanceof KalturaAPIException) {
-              console.log(`[LiveStreamGet] Exception was thrown: ${val.message}`);
-            }
-          })
-          .delay(environment.liveEntryService.apiCallDelayOnException)
-          .take(environment.liveEntryService.apiCallsMaxRetriesAttempts)
-          .concat(Observable.throw(`[LiveStreamGet] Failed for ${environment.liveEntryService.apiCallsMaxRetriesAttempts} consecutive attempts`))
-        )
-        .catch((err, caught) => {
-          console.log(err);
-          this._updatedApplicationStatus('liveEntry', LoadingStatus.failed);
-          return caught;
-        })
+        // .retryWhen(errors => errors
+        //   .do(val => {
+        //     if (val instanceof KalturaAPIException) {
+        //       console.log(`[LiveStreamGet] Exception was thrown: ${val.message}`);
+        //     }
+        //   })
+        //   .delay(environment.liveEntryService.apiCallDelayOnException)
+        //   .take(environment.liveEntryService.apiCallsMaxRetriesAttempts)
+        //   .concat(Observable.throw(`[LiveStreamGet] Failed for ${environment.liveEntryService.apiCallsMaxRetriesAttempts} consecutive attempts`))
+        // )
+        // .catch((err, caught) => {
+        //   console.log(err);
+        //   this._updatedApplicationStatus('liveEntry', LoadingStatus.failed);
+        //   return caught;
+        // })
       .subscribe(response => {
-        if (response instanceof KalturaLiveStreamEntry) {
-          this._cachedLiveStream = JSON.parse(JSON.stringify(response));
-          this._liveStream.next(response);
-          this._parseEntryConfiguration(response);
-        }
-      });
+        this._cachedLiveStream = JSON.parse(JSON.stringify(response));
+        this._liveStream.next(response);
+        this._parseEntryConfiguration(response);
+        // Run data monitoring only if successfully retrieved liveStream object
+        this._runEntryStatusMonitoring();
+        this._streamHealthInitialization();
+      },
+        error => {
+          if (error instanceof KalturaAPIException) {
+            console.log(`[LiveStreamGet] Error: ${error.message}`);
+            this._updatedApplicationStatus('liveEntry', LoadingStatus.failed);
+          }
+        });
   }
 
   private _parseEntryConfiguration(liveEntryObj: KalturaLiveStreamEntry): void {
@@ -204,9 +209,11 @@ export class LiveEntryService{
         });
     }, environment.liveEntryService.streamStatusIntervalTimeInMs)
       .subscribe(response => {
+        // console.log(`!!! La La Land !!!`);
         if (response.errorType === 'timeout') {
           // TODO: show network connectivity issue!!!
         }
+        this._updatedApplicationStatus('streamStatus', LoadingStatus.failed);
       });
   }
 
@@ -421,22 +428,4 @@ export class LiveEntryService{
           console.log("Live Entry: Error get number of watchers");
         });
   }
-
-  /*public saveLiveStreamEntry(): void {
-    let diffProperties = _.filter(this._propertiesToUpdate, (p) => {
-      return (this._liveStream.value[p] !== this._cachedLiveStream[p]);
-    });
-    let liveStreamArgument = new KalturaLiveStreamEntry();
-    for (let property of diffProperties) {
-      liveStreamArgument[property] = this._liveStream.value[property];
-    }
-    this._kalturaClient.request(new LiveStreamUpdateAction({
-      entryId: this._id,
-      liveStreamEntry: liveStreamArgument
-    }))
-      .subscribe(response => {
-        this._liveStream.next(response);
-        this._cachedLiveStream = JSON.parse(JSON.stringify(response));
-      });
-  }*/
 }

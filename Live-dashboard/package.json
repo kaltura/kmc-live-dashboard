@@ -36,6 +36,7 @@
     "ng2-translate": "^5.0.0",
     "normalize.css": "^7.0.0",
     "primeng": "^4.1.0-rc.3",
+    "ramda": "^0.24.1",
     "rxjs": "^5.1.0",
     "web-animations-js": "^2.3.1",
     "zone.js": "^0.8.4"

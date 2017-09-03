@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { LiveEntryService } from "../services/live-entry.service";
-import { TranslateService } from "ng2-translate";
+import { LiveEntryDynamicStreamInfo, LoadingStatus } from "../types/live-dashboard.types";
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
+import { AppLocalization } from "@kaltura-ng/kaltura-common";
 import { environment } from "../../environments/environment";
 
 import 'rxjs/Rx';
-import {LiveEntryDynamicStreamInfo, ApplicationStatus, LoadingStatus} from "../types/live-dashboard.types";
 
 @Component({
   selector: 'setup-and-preview',
@@ -15,12 +15,13 @@ import {LiveEntryDynamicStreamInfo, ApplicationStatus, LoadingStatus} from "../t
 
 export class SetupAndPreviewComponent implements OnInit {
 
-  public _applicationStatus: ApplicationStatus;
-  private _dynamicInformation: LiveEntryDynamicStreamInfo;
+  public _applicationLoaded: boolean;
   public _sectionBlockerMessage: AreaBlockerMessage;
   public _learnMoreLink = environment.externalLinks.LEARN_MORE;
+  private _dynamicInformation: LiveEntryDynamicStreamInfo;
 
-  constructor(public _liveEntryService : LiveEntryService, private _translate: TranslateService) {
+  constructor(private _liveEntryService: LiveEntryService,
+              private _appLocalization: AppLocalization) {
     this._dynamicInformation = { streamStatus: 'Offline' };
   }
 
@@ -32,7 +33,21 @@ export class SetupAndPreviewComponent implements OnInit {
   private listenToApplicationStatus() {
     this._liveEntryService.applicationStatus$.subscribe(response => {
       if (response) {
-        this._applicationStatus = response;
+        if (response.liveEntry === LoadingStatus.succeeded) {
+          this._applicationLoaded = true;
+          this._sectionBlockerMessage = null;
+        }
+        else if (response.liveEntry === LoadingStatus.failed) {
+          this._sectionBlockerMessage = new AreaBlockerMessage({
+            message: this._appLocalization.get('ERRORS.liveStream_get_failure'),
+            buttons: [
+              {
+                label: 'retry',
+                action: () => { this._liveEntryService.InitializeLiveEntryService(); }
+              }
+            ]
+          });
+        }
       }
     });
   }
@@ -43,21 +58,5 @@ export class SetupAndPreviewComponent implements OnInit {
         this._dynamicInformation = response;
       }
     });
-  }
-
-  public _applicationLoaded(): boolean {
-    if (this._applicationStatus.liveEntry === LoadingStatus.succeeded &&
-        this._applicationStatus.streamStatus === LoadingStatus.succeeded &&
-        this._applicationStatus.streamHealth === LoadingStatus.succeeded) {
-      return false;
-    }
-    else if (this._applicationStatus.liveEntry === LoadingStatus.failed) {
-      this._sectionBlockerMessage = new AreaBlockerMessage({
-        message: this._translate.instant(environment.loadingError.liveEntryFailed),
-        buttons: []
-      });
-      return false;
-    }
-    return true;
   }
 }

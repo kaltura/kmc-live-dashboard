@@ -12,7 +12,7 @@ import { environment } from "../environments/environment";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  public _applicationNotLoaded: boolean = true;
+  public _applicationLoaded: boolean;
   public _sectionBlockerMessage: AreaBlockerMessage;
 
   constructor(private _bootstrapService: BootstrapService,
@@ -32,13 +32,13 @@ export class AppComponent implements OnInit {
     this._translate.use(browserLang.match(/de|en|es|fr|ja/) ? browserLang : 'en');
 
     if (this._bootstrapService.initStatus) {
-      this._applicationNotLoaded = false;
+      this._applicationLoaded = true;
       this._liveEntryService.InitializeLiveEntryService();
     }
     else {
-      this._applicationNotLoaded = true;
+      this._applicationLoaded = false;
       this._sectionBlockerMessage = new AreaBlockerMessage({
-        message: this._translate.instant(environment.bootstrap.error_message),
+        message: environment.bootstrap.parameters_error,
         buttons: []
       });
     }
