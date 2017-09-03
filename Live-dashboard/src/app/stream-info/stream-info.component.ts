@@ -1,24 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../services/live-entry.service";
 import { KalturaEntryModerationStatus } from "kaltura-typescript-client/types/KalturaEntryModerationStatus";
 import { KalturaMediaType } from "kaltura-typescript-client/types/KalturaMediaType";
-import { LiveDashboardConfiguration} from "../services/live-dashboard-configuration.service";
-import {LiveEntryDynamicStreamInfo} from "../types/live-dashboard.types";
+import { LiveDashboardConfiguration } from "../services/live-dashboard-configuration.service";
+import { LiveEntryDynamicStreamInfo } from "../types/live-dashboard.types";
+import { ISubscription } from "rxjs/Subscription";
 
 @Component({
   selector: 'stream-info',
   templateUrl: './stream-info.component.html',
   styleUrls: ['./stream-info.component.scss']
 })
-export class StreamInfoComponent implements OnInit {
-  public _creator: string;
-  public _date: Date;
-  public _type: KalturaMediaType;
-  public _moderation: KalturaEntryModerationStatus;
-  public _plays: number;
-  public _entryId: string;
-  public _playerSrc: string = '';
-  public _dynamicInfo: LiveEntryDynamicStreamInfo = {
+export class StreamInfoComponent implements OnInit, OnDestroy {
+  private _liveStreamSubscription: ISubscription;
+  private _dynamicInformationSubscription: ISubscription;
+  public  _creator: string;
+  public  _date: Date;
+  public  _type: KalturaMediaType;
+  public  _moderation: KalturaEntryModerationStatus;
+  public  _plays: number;
+  public  _entryId: string;
+  public  _playerSrc: string = '';
+  public  _dynamicInfo: LiveEntryDynamicStreamInfo = {
     redundancy: false,
     streamStatus: 'Offline'
   };
@@ -27,7 +30,7 @@ export class StreamInfoComponent implements OnInit {
               private _liveDashboardConfiguration: LiveDashboardConfiguration) { }
 
   ngOnInit() {
-    this._liveEntryService.liveStream$.subscribe(liveStreamEntry => {
+    this._liveStreamSubscription = this._liveEntryService.liveStream$.subscribe(liveStreamEntry => {
       if (liveStreamEntry) {
         this._creator = liveStreamEntry.creatorId;
         this._date =    liveStreamEntry.createdAt;
@@ -46,11 +49,15 @@ export class StreamInfoComponent implements OnInit {
       }
     });
 
-    this._liveEntryService.entryDynamicInformation$.subscribe(response => {
+    this._dynamicInformationSubscription = this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
         this._dynamicInfo = response;
       }
     });
   }
 
+  ngOnDestroy() {
+    this._liveStreamSubscription.unsubscribe();
+    this._dynamicInformationSubscription.unsubscribe();
+  }
 }

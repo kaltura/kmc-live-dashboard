@@ -1,29 +1,25 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
+import { ISubscription } from "rxjs/Subscription";
 import * as moment from 'moment';
 import Duration = moment.Duration;
-import * as _ from 'lodash';
 
 import { environment } from "../../../environments/environment"
-import {
-  LiveEntryService } from "../../services/live-entry.service";
-import {
-  AlertSeverity, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
-  LiveEntryDiagnosticsInfo
-} from "../../types/live-dashboard.types";
+import { LiveEntryService } from "../../services/live-entry.service";
+import { AlertSeverity, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration, LiveEntryDiagnosticsInfo } from "../../types/live-dashboard.types";
+
 
 @Component({
   selector: 'stream-configurations',
   templateUrl: 'stream-configurations.component.html',
   styleUrls: ['stream-configurations.component.scss']
 })
-export class StreamConfigurationsComponent implements OnInit, OnDestroy{
-
-  public _streamDuration: Duration;
-  private _streamDurationSubscription: Subscription;
-  public _staticConfiguration: LiveEntryStaticConfiguration;
-  public _dynamicInformation: LiveEntryDynamicStreamInfo;
-  public _streamHealth: {
+export class StreamConfigurationsComponent implements OnInit, OnDestroy {
+  private _subscriptionsArray: ISubscription[] = [];
+  public  _streamDuration: Duration;
+  public  _staticConfiguration: LiveEntryStaticConfiguration;
+  public  _dynamicInformation: LiveEntryDynamicStreamInfo;
+  public  _streamHealth: {
     severity: AlertSeverity,
     resolution?: number
   };
@@ -44,27 +40,27 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
-    this._liveEntryService.entryStaticConfiguration$.subscribe(response => {
+    this._subscriptionsArray.push(this._liveEntryService.entryStaticConfiguration$.subscribe(response => {
       if (response) {
         this._staticConfiguration = response;
         this._startCalculatingStreamDurationTime();
       }
-    });
-    this._liveEntryService.entryDynamicInformation$.subscribe(response => {
+    }));
+    this._subscriptionsArray.push(this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
         this._dynamicInformation = response;
       }
-    });
-    this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
+    }));
+    this._subscriptionsArray.push(this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
       if (response && response.streamHealth.data.length) {
         // get the last report status as general status
         this._streamHealth.severity = response.streamHealth.data[0].severity;
       }
-    })
+    }));
   }
 
   private _startCalculatingStreamDurationTime() {
-    this._streamDurationSubscription = Observable.timer(0, 1000)
+    this._subscriptionsArray.push(Observable.timer(0, 1000)
       .subscribe(() => {
         if (this._dynamicInformation.streamStatus !== 'Offline') {
           if (this._dynamicInformation.streamCreationTime) {
@@ -74,7 +70,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
             this._streamDuration = moment.duration(0);
           }
         }
-      });
+      }));
   }
 
   public _getSourceHeight(): string {
@@ -96,7 +92,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy{
       return '';
   }
 
-  ngOnDestroy(): void {
-    this._streamDurationSubscription.unsubscribe();
+  ngOnDestroy() {
+    this._subscriptionsArray.forEach(s => s.unsubscribe() );
   }
 }

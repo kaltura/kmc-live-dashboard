@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../services/live-entry.service";
 import { LiveEntryDynamicStreamInfo, LoadingStatus } from "../types/live-dashboard.types";
-import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
-import { AppLocalization } from "@kaltura-ng/kaltura-common";
+import { ISubscription } from "rxjs/Subscription";
 import { environment } from "../../environments/environment";
 
 import 'rxjs/Rx';
@@ -13,15 +12,14 @@ import 'rxjs/Rx';
   styleUrls: ['./setup-and-preview.component.scss']
 })
 
-export class SetupAndPreviewComponent implements OnInit {
+export class SetupAndPreviewComponent implements OnInit, OnDestroy {
+  public  _applicationLoaded: boolean;
+  private _applicationStatusSubscription: ISubscription;
+  public  _learnMoreLink = environment.externalLinks.LEARN_MORE;
+  public  _dynamicInformation: LiveEntryDynamicStreamInfo;
+  private _dynamicInformationSubscription: ISubscription;
 
-  public _applicationLoaded: boolean;
-  public _sectionBlockerMessage: AreaBlockerMessage;
-  public _learnMoreLink = environment.externalLinks.LEARN_MORE;
-  private _dynamicInformation: LiveEntryDynamicStreamInfo;
-
-  constructor(private _liveEntryService: LiveEntryService,
-              private _appLocalization: AppLocalization) {
+  constructor(private _liveEntryService: LiveEntryService) {
     this._dynamicInformation = { streamStatus: 'Offline' };
   }
 
@@ -30,30 +28,24 @@ export class SetupAndPreviewComponent implements OnInit {
     this.listenToDynamicStreamInfo();
   }
 
+  ngOnDestroy() {
+    this._applicationStatusSubscription.unsubscribe();
+    this._dynamicInformationSubscription.unsubscribe();
+  }
+
   private listenToApplicationStatus() {
-    this._liveEntryService.applicationStatus$.subscribe(response => {
-      if (response) {
-        if (response.liveEntry === LoadingStatus.succeeded) {
-          this._applicationLoaded = true;
-          this._sectionBlockerMessage = null;
+    this._applicationStatusSubscription = this._liveEntryService.applicationStatus$
+      .subscribe(response => {
+        if (response) {
+          this._applicationLoaded = (response.liveEntry === LoadingStatus.succeeded) &&
+                                    (response.streamStatus === LoadingStatus.succeeded) &&
+                                    (response.streamHealth === LoadingStatus.succeeded)
         }
-        else if (response.liveEntry === LoadingStatus.failed) {
-          this._sectionBlockerMessage = new AreaBlockerMessage({
-            message: this._appLocalization.get('ERRORS.liveStream_get_failure'),
-            buttons: [
-              {
-                label: 'retry',
-                action: () => { this._liveEntryService.InitializeLiveEntryService(); }
-              }
-            ]
-          });
-        }
-      }
     });
   }
 
   private listenToDynamicStreamInfo() {
-    this._liveEntryService.entryDynamicInformation$.subscribe(response => {
+    this._dynamicInformationSubscription = this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
         this._dynamicInformation = response;
       }

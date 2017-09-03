@@ -1,18 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../../services/live-entry.service";
 import { LiveEntryTimerTaskService } from "../../services/entry-timer-task.service";
 import * as _ from 'lodash';
 import { LiveEntryDiagnosticsInfo } from "../../types/live-dashboard.types";
+import { ISubscription } from "rxjs/Subscription";
 
 @Component({
   selector: 'stream-health-notifications',
   templateUrl: './stream-health-notifications.component.html',
   styleUrls: ['./stream-health-notifications.component.scss']
 })
-export class StreamHealthNotificationsComponent implements OnInit {
-
-  public streamHealthNotifications = [];
-  public _numOfWatchers = 0;
+export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
+  private _entryDiagnosticsSubscription: ISubscription;
+  private _numOfWatchersSubscription: ISubscription;
+  public  _numOfWatchers = 0;
+  public  streamHealthNotifications = [];
 
   constructor(private _liveEntryService: LiveEntryService, private _entryTimerTask: LiveEntryTimerTaskService) {}
 
@@ -20,7 +22,7 @@ export class StreamHealthNotificationsComponent implements OnInit {
     this._numOfWatchers = 0;
     this.listenToEntryDiagnosticsNotifications();
 
-    this._liveEntryService.numOfWatcher$
+    this._numOfWatchersSubscription = this._liveEntryService.numOfWatcher$
       .subscribe((res) => {
 
         if (res && _.isArray(res) && res.length > 0 && res[0].data){
@@ -41,8 +43,13 @@ export class StreamHealthNotificationsComponent implements OnInit {
       });
   }
 
+  ngOnDestroy() {
+    this._numOfWatchersSubscription.unsubscribe();
+    this._entryDiagnosticsSubscription.unsubscribe();
+  }
+
   private listenToEntryDiagnosticsNotifications() {
-    this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
+    this._entryDiagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
       if (response && response.streamHealth.data.length) {
         this.streamHealthNotifications = response.streamHealth.data.concat(this.streamHealthNotifications);
       }

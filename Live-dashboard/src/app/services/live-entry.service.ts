@@ -1,5 +1,5 @@
 // General
-import { Injectable } from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { ISubscription } from "rxjs/Subscription";
 import * as _ from 'lodash';
@@ -44,7 +44,7 @@ import {
 import { CodeToSeverityPipe } from "../pipes/code-to-severity.pipe";
 
 @Injectable()
-export class LiveEntryService{
+export class LiveEntryService implements OnDestroy {
 
   private _id: string;
   // BehaviorSubject subscribed by application
@@ -53,14 +53,15 @@ export class LiveEntryService{
     streamHealth: LoadingStatus.initializing,
     liveEntry: LoadingStatus.initializing
   });
-  public applicationStatus$ = this._applicationStatus.asObservable();
+  public  applicationStatus$ = this._applicationStatus.asObservable();
+  private _liveStreamGetSubscription: ISubscription;
   // BehaviorSubjects subscribed by settings components for manipulation
   private _liveStream = new BehaviorSubject<KalturaLiveStreamEntry>(null);
-  public liveStream$ = this._liveStream.asObservable();
+  public  liveStream$ = this._liveStream.asObservable();
   private _cachedLiveStream: KalturaLiveStreamEntry;
   // BehaviorSubjects subscribed by configuration display component for status monitoring
   private _entryStaticConfiguration = new BehaviorSubject<LiveEntryStaticConfiguration>(null);
-  public entryStaticConfiguration$ = this._entryStaticConfiguration.asObservable();
+  public  entryStaticConfiguration$ = this._entryStaticConfiguration.asObservable();
   private _entryDynamicInformation = new BehaviorSubject<LiveEntryDynamicStreamInfo>({
     streamStatus: 'Offline',
     streamSession: {
@@ -69,7 +70,7 @@ export class LiveEntryService{
       shouldTimerRun: false
     }
   });
-  public entryDynamicInformation$ = this._entryDynamicInformation.asObservable();
+  public  entryDynamicInformation$ = this._entryDynamicInformation.asObservable();
   // BehaviorSubjects subscribed by configuration display component for diagnostics and health monitoring
   private _entryDiagnosticsInfo: LiveEntryDiagnosticsInfo = {
     staticInfo: { updatedTime: 0 },
@@ -77,7 +78,7 @@ export class LiveEntryService{
     streamHealth: { updatedTime: 0 }
   };
   private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
-  public entryDiagnostics$ = this._entryDiagnostics.asObservable();
+  public  entryDiagnostics$ = this._entryDiagnostics.asObservable();
 
   private _pullRequestEntryStatusMonitoring: ISubscription;
   private _pullRequestStreamHealthMonitoring: ISubscription;
@@ -89,7 +90,6 @@ export class LiveEntryService{
   public numOfWatcher$ = this._numOfWatcherSubject.asObservable();
   private _numOfWatchersTimerSubscription: Subscription = null;
 
-
   constructor(private _kalturaClient: KalturaClient,
               private _entryTimerTask: LiveEntryTimerTaskService,
               private _conversionProfilesService: ConversionProfileService,
@@ -97,15 +97,16 @@ export class LiveEntryService{
               private _codeToSeverityPipe: CodeToSeverityPipe) {
 
     this._id = this._liveDashboardConfiguration.entryId;
-    this._listenToNumOfWatcherWhenLive();
+    // this._listenToNumOfWatcherWhenLive();
   }
 
   ngOnDestroy() {
     this._liveStream.unsubscribe();
-    this._entryStaticConfiguration.unsubscribe();
-    this._entryDynamicInformation.unsubscribe();
     this._pullRequestEntryStatusMonitoring.unsubscribe();
     this._pullRequestStreamHealthMonitoring.unsubscribe();
+    if (this._liveStreamGetSubscription) {
+      this._liveStreamGetSubscription.unsubscribe();
+    }
 
     if (this._numOfWatchersTimerSubscription) {
       this._numOfWatchersTimerSubscription.unsubscribe();
@@ -115,6 +116,8 @@ export class LiveEntryService{
 
   public InitializeLiveEntryService(): void {
     this._getLiveStream();
+    this._runEntryStatusMonitoring();
+    this._streamHealthInitialization();
   }
 
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
@@ -142,34 +145,19 @@ export class LiveEntryService{
   }
 
   private _getLiveStream(): void {
-    this._kalturaClient.request(new LiveStreamGetAction({
+    this._liveStreamGetSubscription = this._kalturaClient.request(new LiveStreamGetAction({
         entryId : this._id,
         acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode]
       }))
-        // .retryWhen(errors => errors
-        //   .do(val => {
-        //     if (val instanceof KalturaAPIException) {
-        //       console.log(`[LiveStreamGet] Exception was thrown: ${val.message}`);
-        //     }
-        //   })
-        //   .delay(environment.liveEntryService.apiCallDelayOnException)
-        //   .take(environment.liveEntryService.apiCallsMaxRetriesAttempts)
-        //   .concat(Observable.throw(`[LiveStreamGet] Failed for ${environment.liveEntryService.apiCallsMaxRetriesAttempts} consecutive attempts`))
-        // )
-        // .catch((err, caught) => {
-        //   console.log(err);
-        //   this._updatedApplicationStatus('liveEntry', LoadingStatus.failed);
-        //   return caught;
-        // })
       .subscribe(response => {
+        this._liveStreamGetSubscription = null;
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
         this._liveStream.next(response);
         this._parseEntryConfiguration(response);
         // Run data monitoring only if successfully retrieved liveStream object
-        this._runEntryStatusMonitoring();
-        this._streamHealthInitialization();
       },
         error => {
+          this._liveStreamGetSubscription = null;
           if (error instanceof KalturaAPIException) {
             console.log(`[LiveStreamGet] Error: ${error.message}`);
             this._updatedApplicationStatus('liveEntry', LoadingStatus.failed);
