@@ -9,6 +9,9 @@
   margin-bottom: 22px;
 
   .property {
+    display: flex;
+    flex-flow: column nowrap;
+    text-align: left;
 
     .configuration-label {
       font-size: 13px;
@@ -31,10 +34,11 @@
 
     .configuration-status {
       margin-top: 14px;
+      margin-left: -1px;
 
       .bullet {
         font-size: 60px;
-        margin-left: -6px;
+        margin-left: -4px;
       }
 
       .state {
