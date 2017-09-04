@@ -10,52 +10,51 @@ export class LiveEntryTimerTaskService {
     return Observable.create(observer => {
       let active = true;
       let timeout;
+      let subscription;
 
-      const firstRunResult = func();
-      if (firstRunResult instanceof Observable) {
-        firstRunResult.subscribe(response => {
-          observer.next({ result: response });
-        },
-        reject => {
-          observer.next({ errorType: 'error' });
-        })
-      }
-      else {
-        observer.next({ firstRunResult });
-      }
+      run();
 
       function execute() {
         timeout = setTimeout(() => {
-          const result = func();
-          if (result instanceof Observable) {
-            result.subscribe(response => {
-                if (active) {
-                  observer.next({ result: response });
-                  execute();
-                }
-              },
-              reject => {
-                if (active) {
-                  observer.next({ errorType: 'error'});
-                  execute();
-                }
-              });
-          }
-          else {
-            if (active) {
-              observer.next({ result });
-              execute();
-            }
-          }
+          timeout = null;
+          run();
         }, interval);
       }
 
-      execute();
+      function run(){
+        let result = func();
+        if (result instanceof Observable) {
+          subscription = result.subscribe(
+            response => {
+              subscription = null;
+              if (active) {
+                observer.next({ result: response });
+                execute();
+              }
+            },
+            reject => {
+              subscription = null;
+              if (active) {
+                observer.next({ errorType: 'error'});
+                execute();
+              }
+            });
+        }
+        else {
+          if (active) {
+            observer.next({ result });
+              execute();
+          }
+        }
+      }
 
       return () => {
         active = false;
         if (timeout) {
           clearTimeout(timeout);
+        }
+        if (subscription){
+          subscription.unsubscribe();
         }
       }
     });
