@@ -1,0 +1,77 @@
+@import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.streamInfo {
+  min-height: 480px;
+  width: 279px;
+  background-color: $mainLinkHoverColor;
+  border-radius: 3px;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
+
+  .preview-player {
+    height: 157px;
+    display: flex;
+    flex-flow: column nowrap;
+
+    .not-broadcasting-container {
+      height: 100%;
+      background-color: $kGrayscale6;
+      display: flex;
+      flex-flow: column nowrap;
+      align-items: center;
+      justify-content: center;
+      p {
+        opacity: 0.5;
+        margin: 0;
+      }
+      #firstRow {
+        color: $kGrayscale1;
+        margin-bottom: 4px;
+      }
+      #secondRow {
+        color: $kGrayscale3;
+      }
+    }
+    .goLive-div {
+      text-align: center;
+    }
+  }
+
+  .details {
+    border-top: 1px solid $kGrayscale4;
+    //height: 70%;
+    padding: 24px 16px;
+
+    box-sizing: border-box;
+
+    h1 {
+      margin: 0 0 21px 0;
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 500;
+      color: $kGrayscale1;
+    }
+    .content {
+      .row {
+        display: flex;
+        margin-bottom: 20px;
+        overflow-x: hidden;
+
+        span {
+          line-height: 18px;
+        }
+
+        .left {
+          flex: 0 0 50%;
+          max-width: 50%;
+          color: $kGrayscale3;
+          font-weight: 400;
+        }
+        .right {
+          flex: none;
+          max-width: 50%;
+          color: $kGrayscale1;
+        }
+      }
+    }
+  }
+}

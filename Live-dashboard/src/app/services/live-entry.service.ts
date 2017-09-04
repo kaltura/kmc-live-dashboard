@@ -97,7 +97,7 @@ export class LiveEntryService implements OnDestroy {
               private _codeToSeverityPipe: CodeToSeverityPipe) {
 
     this._id = this._liveDashboardConfiguration.entryId;
-    // this._listenToNumOfWatcherWhenLive();
+    this._listenToNumOfWatcherWhenLive();
   }
 
   ngOnDestroy() {

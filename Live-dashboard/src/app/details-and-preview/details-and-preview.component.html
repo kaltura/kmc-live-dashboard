@@ -1,0 +1,45 @@
+<div class="streamInfo">
+  <div class="preview-player">
+
+    <div *ngIf="_dynamicInfo.streamStatus !== 'Live' && !_dynamicInfo.streamSession.isInProgress" class="not-broadcasting-container">
+      <p id="firstRow">{{ 'STREAM_INFO.not_broadcasting' | translate }}</p>
+      <p id="secondRow">{{ 'STREAM_INFO.video_no_available_explanation' | translate }}</p>
+    </div>
+
+    <iframe *ngIf="_dynamicInfo.streamStatus === 'Live' || _dynamicInfo.streamSession.isInProgress"
+            [src]="_playerSrc | safe" width="100%" height="100%" allowfullscreen webkitallowfullscreen mozAllowFullScreen frameborder="0"></iframe>
+
+    <!--<div class="goLive-div">
+      <button pButton type="button" class="ui-button kButtonBranded goLive-button" label="Go Live"></button>
+    </div>-->
+  </div>
+  <div class="details">
+    <h1>{{ 'STREAM_INFO.details' | translate }}</h1>
+    <div class="content">
+      <div class="row" >
+        <span class="left">{{ 'STREAM_INFO.creator' | translate }}</span>
+        <span class="right" [kTooltip]="_creator" [maxWidth]="120">{{_creator}}</span>
+      </div>
+      <div class="row">
+        <span class="left">{{ 'STREAM_INFO.creation_date' | translate }}</span>
+        <span class="right" [kTooltip]="_date | date:'MM/dd/y HH:MM'" [maxWidth]="120">{{_date | date:'MM/dd/y HH:MM'}}</span>
+      </div>
+      <div class="row">
+        <span class="left">{{ 'STREAM_INFO.type' | translate }}</span>
+        <span class="right">{{_type | entryType}}</span>
+      </div>
+      <div class="row">
+        <span class="left">{{ 'STREAM_INFO.moderation' | translate }}</span>
+        <span class="right">{{_moderation | moderation}}</span>
+      </div>
+      <div class="row">
+        <span class="left">{{ 'STREAM_INFO.plays' | translate }}</span>
+        <span class="right">{{_plays}}</span>
+      </div>
+      <div class="row">
+        <span class="left">{{ 'STREAM_INFO.entry_id' | translate }}</span>
+        <span class="right">{{_entryId}}</span>
+      </div>
+    </div>
+  </div>
+</div>
