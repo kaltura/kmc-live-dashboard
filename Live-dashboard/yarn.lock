@@ -159,13 +159,13 @@
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-primeng-ui/-/kaltura-primeng-ui-0.3.1.tgz#4d39a8b3fb6e24a7cba86f83227b6c9c4489963d"
 
-"@kaltura-ng/kaltura-ui@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-1.1.0.tgz#a95ad8f6980a369b5c741991142b196105fc30d6"
+"@kaltura-ng/kaltura-ui@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/kaltura-ui/-/kaltura-ui-1.2.0.tgz#623e34e8648a8beb136bcea3b7201db79fcb39af"
 
-"@kaltura-ng/mc-theme@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.3.0.tgz#18d32526c58485810fe2d9bfc38f7a530e0ca1fb"
+"@kaltura-ng/mc-theme@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@kaltura-ng/mc-theme/-/mc-theme-0.4.0.tgz#bc1b97100823c4ddc3e2cb01239e8534e556bc90"
 
 "@ngtools/json-schema@1.1.0":
   version "1.1.0"

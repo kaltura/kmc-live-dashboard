@@ -11,8 +11,7 @@ export class LocaleTimePipe implements PipeTransform {
 
   transform(seconds: number): string
   {
-    let time = moment(seconds).locale(this._liveDashboardConfiguration.lang).format('ddd,  ll LT');
-    time = time.replace(' ', ''); // remove space from: "9:00 AM"
+    let time = moment(seconds).locale(this._liveDashboardConfiguration.lang).format('ddd, ll LT');
 
     return time;
   }

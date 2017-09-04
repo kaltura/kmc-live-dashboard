@@ -16,13 +16,17 @@
       color: $kGrayscale3;
     }
 
-    .stream-health {
+    .label-icon-duo {
       display: flex;
       flex-flow: row nowrap;
 
       label {
         margin-right: 5px;
       }
+    }
+
+    .infoIcon {
+      font-size: medium;
     }
 
     .configuration-status {

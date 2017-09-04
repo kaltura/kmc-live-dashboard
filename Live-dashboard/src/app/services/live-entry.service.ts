@@ -332,36 +332,38 @@ export class LiveEntryService implements OnDestroy {
       let privateData = JSON.parse(b.privateData);
       let eventType = b.eventType.substring(2);
       let isPrimary = (b.eventType[0] === '0');
+      let reportUpdateTime = b.updatedAt.valueOf();
 
       switch (eventType) {
         case 'staticData':
-          if (b.updatedAt !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
+          if (reportUpdateTime !== this._entryDiagnosticsInfo.staticInfo.updatedTime) {
             this._entryDiagnosticsInfo.staticInfo.updatedTime = b.createdAt;
             this._entryDiagnosticsInfo.staticInfo.data = privateData;
           }
           return;
         case 'dynamicData':
-          if (b.updatedAt !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
+          if (reportUpdateTime !== this._entryDiagnosticsInfo.dynamicInfo.updatedTime) {
             this._entryDiagnosticsInfo.dynamicInfo.updatedTime = b.createdAt;
             this._entryDiagnosticsInfo.dynamicInfo = privateData;
           }
           return;
         case 'healthData':
-          if (b.updatedAt !== this._entryDiagnosticsInfo.streamHealth.updatedTime) {
+          if (reportUpdateTime !== this._entryDiagnosticsInfo.streamHealth.updatedTime) {
             let report = {
-              updatedTime: b.updatedAt * 1000,
+              updatedTime: reportUpdateTime,
               severity: privateData.maxSeverity,
               isPrimary: isPrimary,
               alerts: _.isArray(privateData.alerts) ?  privateData.alerts : []
             };
-
+            let x: boolean = reportUpdateTime !== this._entryDiagnosticsInfo.streamHealth.updatedTime;
+            console.log(`Beacon updated: ${reportUpdateTime} ; Dashboard updated: ${this._entryDiagnosticsInfo.streamHealth.updatedTime} ; Are different: ${x}`);
             // sort alerts by their severity (-desc)
             report.alerts = (_.sortBy(report.alerts, [(alert)=> {
               return -this._codeToSeverityPipe.transform(alert.Code).valueOf();
             }]));
 
             this._entryDiagnosticsInfo.streamHealth.data.push(report);
-            this._entryDiagnosticsInfo.streamHealth.updatedTime = b.updatedAt;
+            this._entryDiagnosticsInfo.streamHealth.updatedTime = reportUpdateTime;
           }
 
           return;

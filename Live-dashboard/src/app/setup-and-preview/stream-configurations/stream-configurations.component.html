@@ -8,7 +8,7 @@
     </div>
   </div>
   <div class="property">
-    <div class="stream-health">
+    <div class="label-icon-duo">
       <label class="configuration-label">{{ 'STREAM_CONFIG.stream_health.tag' | translate }}</label>
       <i class="kIconhelp_full" aria-hidden="true" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'right'"></i>
     </div>
@@ -29,10 +29,13 @@
       <span class="state">{{ _streamDuration | duration}}</span>
     </div>
   </div>
-  <div class="property"
-        [kTooltip]="_dynamicInformation.streamStatus !== 'Offline' ? (_dynamicInformation.allStreams | transcodingInfo) : ''"
-        [maxWidth]="182" [placement]="'right'">
-    <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
+  <div class="property">
+    <div class="label-icon-duo">
+      <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
+      <i class="kIconinfo infoIcon" aria-hidden="true"
+         [kTooltip]="_dynamicInformation.streamStatus !== 'Offline' ? (_dynamicInformation.allStreams | transcodingInfo) : ''"
+         [maxWidth]="182" [placement]="'right'"></i>
+    </div>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="_staticConfiguration.transcoding">•</span>
       <span class="state">{{_staticConfiguration.transcoding | entryBooleanConfiguration}}</span>
