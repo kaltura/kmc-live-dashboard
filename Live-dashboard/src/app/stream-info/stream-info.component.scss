@@ -1,77 +1,108 @@
 @import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
 
-.streamInfo {
-  min-height: 480px;
-  width: 279px;
-  background-color: $mainLinkHoverColor;
+.stream-info {
   border-radius: 3px;
-  box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
+  background-color: $mainLinkHoverColor;
+  display: flex;
+  width: 100%;
+  flex-flow: row wrap;
+  align-self: flex-start;
 
-  .preview-player {
-    height: 157px;
-    display: flex;
-    flex-flow: column nowrap;
+  .stream-health {
+    flex:  1 100%;
+    color: $kGrayscale3;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
 
-    .not-broadcasting-container {
-      height: 100%;
-      background-color: $kGrayscale6;
-      display: flex;
-      flex-flow: column nowrap;
-      align-items: center;
-      justify-content: center;
-      p {
-        opacity: 0.5;
-        margin: 0;
-      }
-      #firstRow {
-        color: $kGrayscale1;
-        margin-bottom: 4px;
-      }
-      #secondRow {
-        color: $kGrayscale3;
-      }
-    }
-    .goLive-div {
-      text-align: center;
+    div {
+      margin: 12px;
+      line-height: 18px;
     }
   }
 
-  .details {
-    border-top: 1px solid $kGrayscale4;
-    //height: 70%;
-    padding: 24px 16px;
+  .learn-more {
+    align-self: flex-start;
+    flex: 1 100%;
+    height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    box-sizing: border-box;
-
-    h1 {
-      margin: 0 0 21px 0;
-      font-size: 20px;
-      line-height: 24px;
-      font-weight: 500;
-      color: $kGrayscale1;
+    div {
+      width: 489px;
+      margin: auto;
     }
-    .content {
-      .row {
-        display: flex;
-        margin-bottom: 20px;
-        overflow-x: hidden;
+    border-top: 1px solid $kGrayscale6;
+    border-bottom: 1px solid $kGrayscale6;
+    text-align: center;
+    .learn-more-not-live {
+      padding: 32px 0 22px 0;
+    }
+    .learn-more-text {
+      color: $kGrayscale2;
+    }
 
-        span {
-          line-height: 18px;
-        }
+    .learn-more-link {
+      margin-top: 5px;
+      text-decoration: underline;
+      color: $kTertiary;
 
-        .left {
-          flex: 0 0 50%;
-          max-width: 50%;
-          color: $kGrayscale3;
-          font-weight: 400;
+      &:hover {
+        color: darken($kTertiary, 20%);
+      }
+    }
+
+    .learn-more-is-live {
+      padding: 32px 0 32px 0;
+    }
+  }
+
+  .main {
+    flex: 1 100%;
+
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 12px;
+    margin: 0 28px 0 28px;
+
+    .main-left {
+      flex: 3;
+      border-right: 1px solid $kGrayscale6;
+      padding-right: 10px;
+
+      .general-settings {
+        margin: 28px;
+
+        // TODO: Move to theme.scss
+        /deep/ .ui-tabview .ui-tabview-nav > li.ui-state-default {
+          background: none;
         }
-        .right {
-          flex: none;
-          max-width: 50%;
-          color: $kGrayscale1;
+        /deep/ .ui-tabview-title {
+          font-size: 14px;
         }
       }
+
+    }
+
+    .main-right {
+      flex: 4;
+    }
+  }
+
+  .stream-health-notifications{
+    flex: 1 1 100%;
+    padding-top: 32px;
+  }
+
+  footer {
+    flex: 1 100%;
+    padding: 23px 0 17px 0;
+    border-top: 1px solid $kGrayscale6;
+    text-align: center;
+
+    .saveInfo {
+      width: 100px;
     }
   }
 }

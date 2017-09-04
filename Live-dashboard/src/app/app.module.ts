@@ -19,14 +19,14 @@ import { BootstrapService } from "./bootstrap.service";
 
 // Components
 import { AppComponent } from './app.component';
+import { DetailAndPreviewComponent } from './details-and-preview/details-and-preview.component';
 import { StreamInfoComponent } from './stream-info/stream-info.component';
-import { SetupAndPreviewComponent } from './setup-and-preview/setup-and-preview.component';
-import { EncoderSettingsComponent } from './setup-and-preview/encoder-settings/encoder-settings.component';
-import { BasicSettingsComponent } from './setup-and-preview/basic-settings/basic-settings.component';
-import { AdditionalSettingsComponent } from './setup-and-preview/additional-settings/additional-settings.component';
-import { StreamConfigurationsComponent } from './setup-and-preview/stream-configurations/stream-configurations.component';
+import { EncoderSettingsComponent } from './stream-info/encoder-settings/encoder-settings.component';
+import { BasicSettingsComponent } from './stream-info/basic-settings/basic-settings.component';
+import { AdditionalSettingsComponent } from './stream-info/additional-settings/additional-settings.component';
+import { StreamConfigurationsComponent } from './stream-info/stream-configurations/stream-configurations.component';
 import { AreaBlockerComponent } from "@kaltura-ng/kaltura-ui/area-blocker";
-import { StreamHealthNotificationsComponent } from './setup-and-preview/stream-health-notifications/stream-health-notifications.component';
+import { StreamHealthNotificationsComponent } from './stream-info/stream-health-notifications/stream-health-notifications.component';
 
 // Pipes
 import { RecordingTypePipe } from './pipes/recording-type.pipe';
@@ -56,11 +56,11 @@ export function clientConfigurationFactory() {
 @NgModule({
   declarations: [
     AppComponent,
-    SetupAndPreviewComponent,
+    StreamInfoComponent,
     EncoderSettingsComponent,
     BasicSettingsComponent,
     AdditionalSettingsComponent,
-    StreamInfoComponent,
+    DetailAndPreviewComponent,
     StreamConfigurationsComponent,
     RecordingTypePipe,
     ModerationPipe,
