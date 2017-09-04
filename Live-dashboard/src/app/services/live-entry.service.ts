@@ -123,21 +123,15 @@ export class LiveEntryService implements OnDestroy {
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
     const newAppStatus = this._applicationStatus.getValue();
 
-    if (newAppStatus[key] === LoadingStatus.succeeded)
-      return;
-
     switch (key) {
       case 'streamStatus':
         newAppStatus.streamStatus = value;
-        console.log(`Stream status is: ${value}`);
         break;
       case 'streamHealth':
         newAppStatus.streamHealth = value;
-        console.log(`Stream health is: ${value}`);
         break;
       case 'liveEntry':
         newAppStatus.liveEntry = value;
-        console.log(`Live entry is: ${value}`);
         break;
     }
 
@@ -190,18 +184,12 @@ export class LiveEntryService implements OnDestroy {
           this._updatedApplicationStatus('streamStatus', LoadingStatus.succeeded);
           return;
         })
-        .catch((err, caught) => {
-          console.log(`[EntryServeNodeList] Error: ${err.message}`);
-          this._updatedApplicationStatus('streamStatus', LoadingStatus.failed);
-          throw caught;
-        });
     }, environment.liveEntryService.streamStatusIntervalTimeInMs)
       .subscribe(response => {
-        // console.log(`!!! La La Land !!!`);
-        if (response.errorType === 'timeout') {
-          // TODO: show network connectivity issue!!!
+        if (response.error instanceof KalturaAPIException) {
+          console.log(`[EntryServeNodeList] Error: ${response.error.message}`);
+          this._updatedApplicationStatus('streamStatus', LoadingStatus.failed);
         }
-        this._updatedApplicationStatus('streamStatus', LoadingStatus.failed);
       });
   }
 
@@ -310,14 +298,11 @@ export class LiveEntryService implements OnDestroy {
           this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
           return;
         })
-        .catch((err, caught) => {
-          this._updatedApplicationStatus('streamHealth', LoadingStatus.failed);
-          return caught;
-        });
     }, environment.liveEntryService.streamHealthIntervalTimeInMs)
       .subscribe(response => {
-        if (response.errorType === 'timeout') {
-          // TODO: show network connectivity issue!!!
+        if (response.error instanceof KalturaAPIException) {
+          console.log(`[BeaconList] Error: ${response.error.message}`);
+          this._updatedApplicationStatus('streamStatus', LoadingStatus.failed);
         }
       });
   }
@@ -355,8 +340,6 @@ export class LiveEntryService implements OnDestroy {
               isPrimary: isPrimary,
               alerts: _.isArray(privateData.alerts) ?  privateData.alerts : []
             };
-            let x: boolean = reportUpdateTime !== this._entryDiagnosticsInfo.streamHealth.updatedTime;
-            console.log(`Beacon updated: ${reportUpdateTime} ; Dashboard updated: ${this._entryDiagnosticsInfo.streamHealth.updatedTime} ; Are different: ${x}`);
             // sort alerts by their severity (-desc)
             report.alerts = (_.sortBy(report.alerts, [(alert)=> {
               return -this._codeToSeverityPipe.transform(alert.Code).valueOf();
