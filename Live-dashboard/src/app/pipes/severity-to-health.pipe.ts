@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {StreamHealthStatus, AlertSeverity} from "../types/live-dashboard.types";
+import { StreamHealthStatus, AlertSeverity } from "../types/live-dashboard.types";
 
 @Pipe({
   name: 'severityToHealth'
@@ -7,7 +7,6 @@ import {StreamHealthStatus, AlertSeverity} from "../types/live-dashboard.types";
 export class SeverityToHealthPipe implements PipeTransform {
 
   transform(severityNumber: number | string): StreamHealthStatus {
-
     switch (severityNumber.toString()) {
       case AlertSeverity.error.toString():
       case AlertSeverity.critical.toString():

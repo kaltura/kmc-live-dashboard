@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../services/live-entry.service";
-import { TranslateService } from "ng2-translate";
-import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
+import { LiveEntryDynamicStreamInfo, LoadingStatus } from "../types/live-dashboard.types";
+import { ISubscription } from "rxjs/Subscription";
 import { environment } from "../../environments/environment";
 
 import 'rxjs/Rx';
-import {LiveEntryDynamicStreamInfo, ApplicationStatus, LoadingStatus} from "../types/live-dashboard.types";
 
 @Component({
   selector: 'setup-and-preview',
@@ -13,14 +12,14 @@ import {LiveEntryDynamicStreamInfo, ApplicationStatus, LoadingStatus} from "../t
   styleUrls: ['./setup-and-preview.component.scss']
 })
 
-export class SetupAndPreviewComponent implements OnInit {
+export class SetupAndPreviewComponent implements OnInit, OnDestroy {
+  public  _applicationLoaded: boolean;
+  private _applicationStatusSubscription: ISubscription;
+  public  _learnMoreLink = environment.externalLinks.LEARN_MORE;
+  public  _dynamicInformation: LiveEntryDynamicStreamInfo;
+  private _dynamicInformationSubscription: ISubscription;
 
-  public _applicationStatus: ApplicationStatus;
-  private _dynamicInformation: LiveEntryDynamicStreamInfo;
-  public _sectionBlockerMessage: AreaBlockerMessage;
-  public _learnMoreLink = environment.externalLinks.LEARN_MORE;
-
-  constructor(public _liveEntryService : LiveEntryService, private _translate: TranslateService) {
+  constructor(private _liveEntryService: LiveEntryService) {
     this._dynamicInformation = { streamStatus: 'Offline' };
   }
 
@@ -29,35 +28,27 @@ export class SetupAndPreviewComponent implements OnInit {
     this.listenToDynamicStreamInfo();
   }
 
+  ngOnDestroy() {
+    this._applicationStatusSubscription.unsubscribe();
+    this._dynamicInformationSubscription.unsubscribe();
+  }
+
   private listenToApplicationStatus() {
-    this._liveEntryService.applicationStatus$.subscribe(response => {
-      if (response) {
-        this._applicationStatus = response;
-      }
+    this._applicationStatusSubscription = this._liveEntryService.applicationStatus$
+      .subscribe(response => {
+        if (response) {
+          this._applicationLoaded = (response.liveEntry === LoadingStatus.succeeded) &&
+                                    (response.streamStatus === LoadingStatus.succeeded) &&
+                                    (response.streamHealth === LoadingStatus.succeeded)
+        }
     });
   }
 
   private listenToDynamicStreamInfo() {
-    this._liveEntryService.entryDynamicInformation$.subscribe(response => {
+    this._dynamicInformationSubscription = this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
         this._dynamicInformation = response;
       }
     });
-  }
-
-  public _applicationLoaded(): boolean {
-    if (this._applicationStatus.liveEntry === LoadingStatus.succeeded &&
-        this._applicationStatus.streamStatus === LoadingStatus.succeeded &&
-        this._applicationStatus.streamHealth === LoadingStatus.succeeded) {
-      return false;
-    }
-    else if (this._applicationStatus.liveEntry === LoadingStatus.failed) {
-      this._sectionBlockerMessage = new AreaBlockerMessage({
-        message: this._translate.instant(environment.loadingError.liveEntryFailed),
-        buttons: []
-      });
-      return false;
-    }
-    return true;
   }
 }

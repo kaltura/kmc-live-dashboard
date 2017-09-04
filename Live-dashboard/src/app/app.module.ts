@@ -39,12 +39,11 @@ import { SafePipe } from "@kaltura-ng/kaltura-ui/safe.pipe";
 import { DurationPipe } from "./pipes/duration.pipe";
 import { LocaleTimePipe } from "./pipes/locale-time.pipe";
 import { SeverityToHealthPipe } from './pipes/severity-to-health.pipe';
+import { CodeToSeverityPipe } from './pipes/code-to-severity.pipe';
 
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
-// TODO: Remove!!!!!!!!
-import { KalturaApiService } from "./services/kaltura-api.service";
-import { CodeToSeverityPipe } from './pipes/code-to-severity.pipe';
+import { AppLocalization, AppStorage } from "@kaltura-ng/kaltura-common";
 
 // TODO: Temporary solution! --> remove
 export function clientConfigurationFactory() {
@@ -106,8 +105,9 @@ export function clientConfigurationFactory() {
     LiveEntryTimerTaskService,
     BootstrapService,
     LiveDashboardConfiguration,
-    KalturaApiService,
-    CodeToSeverityPipe
+    CodeToSeverityPipe,
+    AppLocalization,
+    AppStorage
   ],
   bootstrap: [AppComponent]
 })

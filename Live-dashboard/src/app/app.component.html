@@ -1,6 +1,6 @@
-<k-area-blocker [showLoader]="_applicationNotLoaded" [message]="_sectionBlockerMessage">
+<k-area-blocker [showLoader]="!_applicationLoaded" [message]="_sectionBlockerMessage">
   <div class="app-window">
-    <div class="dashboard-window" *ngIf="!_applicationNotLoaded">
+    <div class="dashboard-window" *ngIf="_applicationLoaded">
       <setup-and-preview class="flexIt"></setup-and-preview>
       <stream-info></stream-info>
     </div>
