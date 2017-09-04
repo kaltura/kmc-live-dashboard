@@ -1,0 +1,53 @@
+@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.stream-configurations {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 5px;
+  margin-bottom: 22px;
+
+  .property {
+
+    .configuration-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: $kGrayscale3;
+    }
+
+    .label-icon-duo {
+      display: flex;
+      flex-flow: row nowrap;
+
+      label {
+        margin-right: 5px;
+      }
+    }
+
+    .infoIcon {
+      font-size: medium;
+    }
+
+    .configuration-status {
+      margin-top: 14px;
+
+      .bullet {
+        font-size: 60px;
+        margin-left: -6px;
+      }
+
+      .state {
+        margin-left: 4px;
+        vertical-align: top;
+        font-weight: 400;
+      }
+
+      &.elapsed-time {
+        .bullet {
+          color: transparent;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.basic-settings {
+  margin-top: 28px;
+
+  /deep/ .ui-widget-header .ui-state-default, .ui-widget-content .ui-state-default, .ui-state-default {
+    border: none;
+  }
+
+  /deep/ .ui-widget-header {
+    border: none;
+  }
+
+  label {
+    height: 18px;
+    width: 84px;
+    color: #333333;
+    font-size: 15px;
+    line-height: 18px;
+  }
+
+  input, textarea {
+    border-radius: 3px;
+    background-color: $kGrayscale6;
+    margin: 12px 0 0 0;
+
+    font-size: 15px;
+    line-height: 18px;
+    padding: 8px 10px 8px 16px;
+  }
+
+  .entry-name {
+    display: flex;
+    flex-flow: column nowrap;
+
+    margin-bottom: 20px;
+  }
+
+  .description {
+    display: flex;
+    flex-flow: column nowrap;
+
+   /deep/ textarea {
+      height: 124px;
+      padding-top: 8px;
+
+      resize: none;
+    }
+  }
+
+  /deep/ .ui-inputtext {
+    &:focus {
+      background: #FFFFFF;
+      box-shadow: none;
+      border: solid 1px $kGrayscale4;
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "COMMON": {
+    "primary": "Primary",
+    "secondary": "Secondary"
+  },
+  "STREAM_CONFIG": {
+    "stream_status": {
+      "tag": "Stream Status",
+      "state": {
+        "Offline": "Offline",
+        "Initializing": "Initializing",
+        "Live": "Live"
+      }
+    },
+    "stream_health": {
+      "tag": "Stream Health",
+      "info": "Stream Health indicates how your live stream is being received by Kaltura.\nGood - Live stream is healthy.\nFair - Viewers may experience minor issues.\nPoor - Viewers potentially experience serious viewing issues.\nN/A - Kaltura is not receiving data",
+      "state": {
+        "N/A": "N/A",
+        "Good": "Good",
+        "Fair": "Fair",
+        "Poor": "Poor"
+      }
+    },
+    "elapsed_time": "Elapsed Time",
+    "transcoding": "Transcoding",
+    "recording": "Recording",
+    "dvr": "DVR",
+    "redundancy": "Redundancy",
+    "stream_duration_in_days": "{{days}} Days, {{hours}} Hours",
+    "stream_duration_in_months": "{{months}} Months, {{days}} Days"
+  },
+  "DASHBOARD": {
+    "learn_more_anchor": "Learn more",
+    "learn_more_not_live_text": "To start broadcasting, configure your encoder and start streaming.",
+    "learn_more_is_live_text": "You are now live. To stop broadcasting, stop your encoder.",
+    "save": "Save"
+  },
+  "STREAM_INFO": {
+    "not_broadcasting": "Currently not broadcasting",
+    "video_no_available_explanation": "video will play once broadcasting start",
+    "details": "Details",
+    "creator": "Creator",
+    "creation_date": "Creation Date",
+    "type": "Type",
+    "moderation": "Moderation",
+    "plays": "Plays",
+    "entry_id": "Entry ID"
+  },
+  "ENCODER_SETTINGS": {
+    "encoder_settings": "Encoder Settings",
+    "primary_url": "Primary URL",
+    "copy": "Copy",
+    "backup_url": "Backup URL",
+    "stream_name": "Stream Name",
+    "export_xml": "Export XML",
+    "re_generate_token": "Re - Generate Token",
+    "status": {
+      "offline": "OFFLINE"
+    }
+  },
+  "DIAGNOSTICS": {
+    "stream_info": "Stream Info",
+    "watching": "Watching",
+    "stream_health_title": "Stream Health"
+  },
+  "BASIC_SETTINGS": {
+    "entry_name": "Entry Name",
+    "description": "Description"
+  },
+  "ADDITIONAL_SETTINGS": {
+    "conversion_profile": "Conversion Profile",
+    "enable_live_dvr": "Enable Live DVR",
+    "enable_live_to_dvr_recording": "Enable Live to VOD Recording",
+    "create_entry_for_every_broadcast": "Create new entry for every broadcast session",
+    "append_recorded_content_to_single_entry": "Append recorded content to a single entry",
+    "preview_mode": "Preview Mode"
+  },
+  "ALERTS": {
+    "no-alerts": "No reported issues",
+    "100": {
+      "title": "Encoder has restarted",
+      "hint": ""
+    },
+    "101": {
+      "title": "Encoder reported bitrate {{configuredBitrate}} doesn’t match actual bitrate {{incomingBitrate}}",
+      "hint": ""
+    },
+    "102": {
+      "title": "Encoder stopped sending audio data",
+      "hint": ""
+    },
+    "103": {
+      "title": "Encoder stopped sending video data",
+      "hint": ""
+    },
+    "104": {
+      "title": "Encoder streaming rate is slower than expected",
+      "hint": ""
+    },
+    "105": {
+      "title": "Encoder stopped streaming",
+      "hint": ""
+    },
+    "106": {
+      "title": "Encoder started streaming",
+      "hint": ""
+    }
+  },
+  "ERRORS": {
+    "parameters_error": "Invalid Application Parameters! Please restart application",
+    "liveStream_get_failure": "Failed to load Live Entry"
+  }
+}

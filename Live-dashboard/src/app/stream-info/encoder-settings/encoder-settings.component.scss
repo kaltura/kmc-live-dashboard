@@ -1,0 +1,76 @@
+@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.encoder-settings {
+  margin: 0 0 53px 34px;
+}
+
+header {
+  font-size: 12px;
+  margin: 26px 0 44px 0;
+  color: $kGrayscale3;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  .title {
+    font-size: 14px;
+  }
+
+  .rtmp-rtsp {
+    float: right;
+    border: 2px solid $kGrayscale3;
+    border-radius: 4px;
+    padding: 2px 6px 1px 7px;
+    font-size: 14px;
+    line-height: 17px;
+  }
+}
+
+.encoder-urls {
+  display: flex;
+  flex-flow: column nowrap;
+  height: 272px;
+
+  .url-box {
+    display: flex;
+    flex-flow: row wrap;
+    flex: auto;
+    margin-bottom: 20px;
+
+    label {
+      margin-right: 7px;
+    }
+
+    .copyBtn {
+      background-color: #FFFFFF;
+      border: none;
+      height: 20px;
+      width: auto;
+      margin-left: auto;
+      color: $kTertiary;
+      /deep/ .ui-button-text {
+        text-decoration: underline;
+      }
+      &:hover {
+        color: darken($kPrimary, 20%);
+      }
+    }
+
+    input {
+      flex: 1 100%;
+      padding: 0 12px 0 16px;
+
+      border: none;
+      height: 34px;
+      background-color: $kGrayscale6;
+      border-radius: 3px;
+      color: $kGrayscale2;
+    }
+  }
+}
+
+footer {
+  margin-top: 10px;
+
+  .generateToken {
+    float: right;
+  }
+}
