@@ -33,7 +33,7 @@ export class StreamInfoComponent implements OnInit, OnDestroy {
     this._dynamicInformationSubscription.unsubscribe();
   }
 
-  private listenToApplicationStatus() {
+  private listenToApplicationStatus(): void {
     this._applicationStatusSubscription = this._liveEntryService.applicationStatus$
       .subscribe(response => {
         if (response) {
@@ -44,7 +44,7 @@ export class StreamInfoComponent implements OnInit, OnDestroy {
     });
   }
 
-  private listenToDynamicStreamInfo() {
+  private listenToDynamicStreamInfo(): void {
     this._dynamicInformationSubscription = this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
         this._dynamicInformation = response;

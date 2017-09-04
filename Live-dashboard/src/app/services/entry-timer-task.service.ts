@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
+import { KalturaAPIException } from "kaltura-typescript-client";
 
 @Injectable()
 export class LiveEntryTimerTaskService {
   constructor() { }
 
-  public runTimer<T>(func: ()=> Observable<T> | null, interval: number): Observable<{ errorType? : string }> {
+  public runTimer<T>(func: ()=> Observable<T> | null, interval: number): Observable<{ error?: string | KalturaAPIException }> {
 
     return Observable.create(observer => {
       let active = true;
@@ -35,7 +36,7 @@ export class LiveEntryTimerTaskService {
             reject => {
               subscription = null;
               if (active) {
-                observer.next({ errorType: 'error'});
+                observer.next({ error: reject });
                 execute();
               }
             });
