@@ -10,7 +10,7 @@
   <div class="property">
     <div class="label-icon-duo">
       <label class="configuration-label">{{ 'STREAM_CONFIG.stream_health.tag' | translate }}</label>
-      <i class="kIconhelp_full" aria-hidden="true" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'right'"></i>
+      <i class="kIconhelp_full" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'bottom'"></i>
     </div>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="((_streamHealth.severity | severityToHealth) === 'Good') && (_dynamicInformation.streamStatus !== 'Offline')"
@@ -32,9 +32,9 @@
   <div class="property">
     <div class="label-icon-duo">
       <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
-      <i class="kIconinfo infoIcon" aria-hidden="true"
+      <i class="kIconinfo infoIcon"
          [kTooltip]="_dynamicInformation.streamStatus !== 'Offline' ? (_dynamicInformation.allStreams | transcodingInfo) : ''"
-         [maxWidth]="182" [placement]="'right'"></i>
+         [maxWidth]="182" [placement]="'bottom'"></i>
     </div>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="_staticConfiguration.transcoding">•</span>
