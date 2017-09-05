@@ -2,7 +2,7 @@ export const environment = {
   production: true,
   "bootstrap": {
     "service_url_extension": "/api_v3/index.php",
-    "error_message": "Invalid Application Parameters!"
+    "parameters_error": "Invalid Application Parameters!"
   },
   "liveEntryService": {
     "streamStatusIntervalTimeInMs": 5000,
