@@ -1,0 +1,66 @@
+<div class="stream-configurations kOverrideFAIcons">
+  <div class="property">
+    <label class="configuration-label">{{ 'STREAM_CONFIG.stream_status.tag' | translate }}</label>
+    <div class="configuration-status">
+      <span class="bullet" [class.bullet-green]="_dynamicInformation.streamStatus === 'Live'"
+                           [class.bullet-yellow]="_dynamicInformation.streamStatus === 'Initializing'">•</span>
+      <span class="state">{{ 'STREAM_CONFIG.stream_status.state.' + _dynamicInformation.streamStatus | translate }}</span>
+    </div>
+  </div>
+  <div class="property">
+    <div class="label-icon-duo">
+      <label class="configuration-label">{{ 'STREAM_CONFIG.stream_health.tag' | translate }}</label>
+      <i class="kIconhelp_full" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'bottom'"></i>
+    </div>
+    <div class="configuration-status">
+      <span class="bullet" [class.bullet-green]="((_streamHealth.severity | severityToHealth) === 'Good') && (_dynamicInformation.streamStatus !== 'Offline')"
+                           [class.bullet-yellow]="((_streamHealth.severity | severityToHealth) === 'Fair') && (_dynamicInformation.streamStatus !== 'Offline')"
+                           [class.bullet-red]="((_streamHealth.severity  | severityToHealth)=== 'Poor') && (_dynamicInformation.streamStatus !== 'Offline')">•</span>
+      <span class="state" *ngIf="_dynamicInformation.streamStatus === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
+      <span class="state" *ngIf="_dynamicInformation.streamStatus !== 'Offline'">
+        {{ 'STREAM_CONFIG.stream_health.state.' + (_streamHealth.severity | severityToHealth) | translate }} {{_getSourceHeight()}}
+      </span>
+    </div>
+  </div>
+  <div class="property">
+    <label class="configuration-label">{{ 'STREAM_CONFIG.elapsed_time' | translate }}</label>
+    <div class="configuration-status elapsed-time">
+      <span class="bullet"></span>
+      <span class="state">{{ _streamDuration | duration}}</span>
+    </div>
+  </div>
+  <div class="property">
+    <div class="label-icon-duo">
+      <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
+      <i class="kIconinfo infoIcon"
+         [kTooltip]="_dynamicInformation.streamStatus !== 'Offline' ? (_dynamicInformation.allStreams | transcodingInfo) : ''"
+         [maxWidth]="182" [placement]="'bottom'"></i>
+    </div>
+    <div class="configuration-status">
+      <span class="bullet" [class.bullet-green]="_staticConfiguration.transcoding">•</span>
+      <span class="state">{{_staticConfiguration.transcoding | entryBooleanConfiguration}}</span>
+    </div>
+  </div>
+  <div class="property">
+    <label class="configuration-label">{{ 'STREAM_CONFIG.recording' | translate }}</label>
+    <div class="configuration-status">
+      <span class="bullet" [class.bullet-green]="(_staticConfiguration.recording)">•</span>
+      <span class="state">{{_staticConfiguration.recording | entryBooleanConfiguration}}</span>
+    </div>
+  </div>
+  <div class="property">
+    <label class="configuration-label">{{ 'STREAM_CONFIG.dvr' | translate }}</label>
+    <div class="configuration-status">
+      <span class="bullet" [class.bullet-green]="(_staticConfiguration.dvr)">•</span>
+      <span class="state">{{_staticConfiguration.dvr | entryBooleanConfiguration}}</span>
+    </div>
+  </div>
+  <div class="property">
+    <label class="configuration-label">{{ 'STREAM_CONFIG.redundancy' | translate }}</label>
+    <div class="configuration-status">
+      <span class="bullet" [class.bullet-green]="(_dynamicInformation.redundancy)">•</span>
+      <span class="state">{{_dynamicInformation.redundancy | entryDynamicInformation: _dynamicInformation.streamStatus}}</span>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,73 @@
+@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.additional-settings {
+  margin-top: 28px;
+
+  .conversion-profile {
+    display: flex;
+    flex-flow: column nowrap;
+    margin-bottom: 40px;
+
+    /deep/ .ui-dropdown {
+      span {
+        margin: 7px auto;
+        padding-right: 10px;
+      }
+    }
+
+    label {
+      margin-bottom: 12px;
+    }
+  }
+
+  .entry-options {
+    .dvr {
+      margin-bottom: 40px;
+    }
+
+    .recording {
+      margin-bottom: 40px;
+
+      div {
+        margin: 12px 0 12px 40px;
+        display: flex;
+        flex-flow: row nowrap;
+      }
+    }
+  }
+}
+
+:host /deep/ p-radiobutton
+{
+  &:after {
+    clear:both;
+    content:" ";
+    display:block;
+  }
+
+  .ui-radiobutton
+  {
+    float:left;
+  }
+
+  .ui-radiobutton-label {
+    margin-left: 34px;
+    margin-top: -30px;
+    color: $kGrayscale1;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+  }
+
+  .ui-radiobutton-box.ui-state-active {
+    background-color: $kPrimary;
+    background: $kPrimary;
+    border: 1px solid $kPrimary;
+    color: #ffffff;
+
+    .ui-radiobutton-icon {
+      margin-top: -7px;
+    }
+  }
+}

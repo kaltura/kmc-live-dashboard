@@ -1,0 +1,48 @@
+<div class="stream-info-header grid-spaceBetween">
+  <div class="stream-info-title col no-padding">{{ "DIAGNOSTICS.stream_info" | translate }}</div>
+
+  <span class="kIconUsers"></span>
+
+  <div class="num-of-watchers">{{ _numOfWatchers }}</div>
+  <div class="watching">{{ "DIAGNOSTICS.watching" | translate }}</div>
+</div>
+
+<!-- gray container -->
+<div class="notification-container">
+
+  <!-- title -->
+  <div class="stream-health-title">
+    <span class="text">{{ "DIAGNOSTICS.stream_health_title" | translate | uppercase }}</span>
+  </div>
+
+  <!-- list -->
+  <div class="notification-list">
+
+    <!-- list item -->
+    <div *ngFor="let notification of streamHealthNotifications" class="notification-item grid col-12 no-margin">
+      <div class="bullet">•</div>
+
+      <div class="item-info col">
+        <div class="row-1">
+          <span class="status-prop">{{ notification.updatedTime | localeTime }}</span>
+          <b><span class="status-prop">{{ (notification.isPrimary ? 'COMMON.primary' : 'COMMON.secondary') | translate }}</span></b>
+          <b><span class="status-prop">{{ notification.severity | severityToHealth }}</span></b>
+        </div>
+
+        <div class="row-2 alerts">
+          <div *ngFor="let alert of notification.alerts" class="grid alert">
+            <span class="small-bullet"
+                 [class.bullet-green]=  "((alert.Code | codeToSeverity | severityToHealth) === 'Good')"
+                 [class.bullet-yellow]= "((alert.Code | codeToSeverity | severityToHealth) === 'Fair')"
+                 [class.bullet-red]=    "((alert.Code | codeToSeverity | severityToHealth) === 'Poor')">•</span>
+            <span class="col alert-description">{{ "ALERTS." + alert.Code + ".title" | translate: alert.Arguments}}</span>
+          </div>
+          <div *ngIf="notification.alerts.length == 0">{{ "ALERTS.no-alerts" | translate }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>

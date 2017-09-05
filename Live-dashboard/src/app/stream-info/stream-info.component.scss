@@ -1,0 +1,108 @@
+@import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.stream-info {
+  border-radius: 3px;
+  background-color: $mainLinkHoverColor;
+  display: flex;
+  width: 100%;
+  flex-flow: row wrap;
+  align-self: flex-start;
+
+  .stream-health {
+    flex:  1 100%;
+    color: $kGrayscale3;
+    font-size: 13px;
+    line-height: 16px;
+    text-align: center;
+
+    div {
+      margin: 12px;
+      line-height: 18px;
+    }
+  }
+
+  .learn-more {
+    align-self: flex-start;
+    flex: 1 100%;
+    height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    div {
+      width: 489px;
+      margin: auto;
+    }
+    border-top: 1px solid $kGrayscale6;
+    border-bottom: 1px solid $kGrayscale6;
+    text-align: center;
+    .learn-more-not-live {
+      padding: 32px 0 22px 0;
+    }
+    .learn-more-text {
+      color: $kGrayscale2;
+    }
+
+    .learn-more-link {
+      margin-top: 5px;
+      text-decoration: underline;
+      color: $kTertiary;
+
+      &:hover {
+        color: darken($kTertiary, 20%);
+      }
+    }
+
+    .learn-more-is-live {
+      padding: 32px 0 32px 0;
+    }
+  }
+
+  .main {
+    flex: 1 100%;
+
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 12px;
+    margin: 0 28px 0 28px;
+
+    .main-left {
+      flex: 3;
+      border-right: 1px solid $kGrayscale6;
+      padding-right: 10px;
+
+      .general-settings {
+        margin: 28px;
+
+        // TODO: Move to theme.scss
+        /deep/ .ui-tabview .ui-tabview-nav > li.ui-state-default {
+          background: none;
+        }
+        /deep/ .ui-tabview-title {
+          font-size: 14px;
+        }
+      }
+
+    }
+
+    .main-right {
+      flex: 4;
+    }
+  }
+
+  .stream-health-notifications{
+    flex: 1 1 100%;
+    padding-top: 32px;
+  }
+
+  footer {
+    flex: 1 100%;
+    padding: 23px 0 17px 0;
+    border-top: 1px solid $kGrayscale6;
+    text-align: center;
+
+    .saveInfo {
+      width: 100px;
+    }
+  }
+}

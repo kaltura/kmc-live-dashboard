@@ -1,0 +1,38 @@
+/* You can add global styles to this file, and also import other style files */
+
+$mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts';
+
+@import '../node_modules/@kaltura-ng/mc-theme/themes/default/scss/variables.scss';
+@import '../node_modules/@kaltura-ng/mc-theme/themes/default/scss/index.scss';
+
+* {
+  font-size: 15px;
+}
+
+.ng-tooltip{
+  text-align: center !important;
+}
+
+.no-padding{
+  padding: 0 !important;
+}
+
+.no-margin{
+  margin: 0 !important;
+}
+
+.bullet-green {
+  color: $kSuccess;
+}
+
+.bullet-yellow {
+  color: #fdd304;
+}
+
+.bullet-red {
+  color: $kDandger;
+}
+
+.flexIt{
+  flex: 1 1 auto;
+}

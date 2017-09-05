@@ -1,0 +1,114 @@
+@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.stream-info-header{
+  margin: 0 0 24px 0;
+}
+
+.stream-info-title {
+  color: $kGrayscale1;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.kIconUsers{
+  padding-left: 20px;
+  line-height: 24px;
+  color: $kGrayscale3;
+  font-size: 31px;
+
+  &:before {
+    content: "\e92e";
+  }
+}
+
+.num-of-watchers {
+  color: $kTertiary;
+  font-size: 24px;
+  line-height: 24px;
+  padding-left: 20px;
+}
+
+.watching {
+  color: $kTertiary;
+  font-size: 15px;
+  line-height: 24px;
+  padding-left: 20px;
+  text-decoration: underline;
+}
+
+.notification-container{
+  border-radius: 3px;
+  background-color: $kGrayscale7;
+  padding: 13px 0 13px 13px;
+  height: 340px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stream-health-title {
+  color: $menuBkgColor;
+  height: 13px;
+  width: 100%;
+  margin-bottom: 50px;
+
+  .text {
+    padding-bottom: 15px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    line-height: 15px;
+    border-bottom: 3px solid $menuBkgColor;
+  }
+}
+
+.notification-list{
+  height: 262px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.notification-item {
+  padding-bottom: 23px;
+}
+
+.bullet {
+  font-size: 47px;
+  line-height: 23px;
+  padding-left: 2px;
+  color: $kGrayscale2;
+}
+
+.small-bullet {
+  font-size: 27px;
+  line-height: 17px;
+}
+
+.item-info {
+  padding: 0 0 0 16px;
+}
+
+.row-1 {
+  color: $kGrayscale2;
+  font-size: 14px;
+  line-height: 22px;
+  padding-bottom: 4px;
+}
+
+.status-prop {
+  padding-right: 13px;
+}
+
+.row-2 {
+  color: $kGrayscale3;
+  font-size: 12px;
+  line-height: 15px;
+}
+
+.alert {
+  margin: 1px 0 5px 0;
+}
+
+.alert-description {
+  padding: 0 0 0 7px;
+}
