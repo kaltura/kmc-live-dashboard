@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# For upgrade just type ./updateLiveDashboard <version>
+
+PRODUCT_PATH=/opt/kaltura/apps/liveDashboard
+USAGE="Usage: script for changing liveDashboard version; to run execute: ./updateLiveDashboard <version>"
+VERSION=
+
+PARAM=install
+if [ $# -eq 0 ]; then
+   echo ${USAGE}
+   exit 1
+fi
+
+VERSION="v$1"
+cd ${PRODUCT_PATH}
+
+function download_version() {
+  if [ -r ${VERSION}.zip ]; then
+    echo "File ${VERSION}.zip exists"
+    echo "rm -f ${VERSION}.zip"
+    rm -f ${VERSION}.zip
+  fi
+  echo "Downloading ${VERSION}.zip"
+  wget https://github.com/kaltura/kmc-live-dashboard/releases/download/${VERSION}/${VERSION}.zip
+  echo "Running unzip ${VERSION}.zip"
+  unzip ${VERSION}.zip
+  echo "Removing ${VERSION}.zip"
+  rm -f ${VERSION}.zip
+}
+
+function main() {
+  echo ">>>>>> starting update <<<<<<"
+	echo "update version: ${VERSION} ; action: ${PARAM}"
+
+	if [ ! -d "${VERSION}" ] ; then
+    download_version
+	else
+	  echo "Version ${VERSION} is already installed. No action done."
+	  echo "Please check updateLiveDashboard ${USAGE}"
+	fi
+}
+
+main
