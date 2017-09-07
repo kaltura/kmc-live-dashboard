@@ -40,6 +40,7 @@ import { DurationPipe } from "./pipes/duration.pipe";
 import { LocaleTimePipe } from "./pipes/locale-time.pipe";
 import { SeverityToHealthPipe } from './pipes/severity-to-health.pipe';
 import { CodeToSeverityPipe } from './pipes/code-to-severity.pipe';
+import { StreamStatusPipe } from './pipes/stream-status.pipe';
 
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
@@ -74,7 +75,8 @@ export function clientConfigurationFactory() {
     LocaleTimePipe,
     AreaBlockerComponent,
     SeverityToHealthPipe,
-    CodeToSeverityPipe
+    CodeToSeverityPipe,
+    StreamStatusPipe
   ],
   imports: [
     BrowserModule,
@@ -106,6 +108,7 @@ export function clientConfigurationFactory() {
     BootstrapService,
     LiveDashboardConfiguration,
     CodeToSeverityPipe,
+    StreamStatusPipe,
     AppLocalization,
     AppStorage
   ],
