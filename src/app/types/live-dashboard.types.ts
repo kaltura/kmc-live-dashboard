@@ -1,4 +1,5 @@
-import {KalturaLiveStreamParams} from "kaltura-typescript-client/types/KalturaLiveStreamParams";
+import { KalturaLiveStreamParams } from "kaltura-typescript-client/types/KalturaLiveStreamParams";
+import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
 
 export interface LiveEntryDynamicStreamInfo {
   redundancy?: boolean,
@@ -8,7 +9,10 @@ export interface LiveEntryDynamicStreamInfo {
   streamCreationTime?: number
 }
 
-export declare type LiveStreamStates = 'Live' | 'Initializing' | 'Offline';
+export declare type LiveStreamStates = {
+  state?: 'Live' | 'Initializing' | 'Offline',
+  serverType?: KalturaEntryServerNodeType;
+}
 
 export declare type LiveStreamSession = {
   isInProgress?: boolean,
@@ -80,7 +84,10 @@ export enum LoadingStatus {
 }
 
 export interface LiveEntryDiagnosticsInfo {
-  staticInfo?: { updatedTime?: number, data?: Object },
-  dynamicInfo?: { updatedTime?: number, data?: Object },
-  streamHealth?: { updatedTime?: number, data?: StreamHealth[] }
+  staticInfoPrimary?: { updatedTime?: number, data?: Object },
+  staticInfoSecondary?: { updatedTime?: number, data?: Object },
+  dynamicInfoPrimary?: { updatedTime?: number, data?: Object },
+  dynamicInfoSecondary?: { updatedTime?: number, data?: Object },
+  streamHealthPrimary?: { updatedTime?: number, data?: StreamHealth[] }
+  streamHealthSecondary?: { updatedTime?: number, data?: StreamHealth[] }
 }

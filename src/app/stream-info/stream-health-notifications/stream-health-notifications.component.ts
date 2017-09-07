@@ -20,7 +20,7 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._numOfWatchers = 0;
-    this.listenToEntryDiagnosticsNotifications();
+    this._listenToEntryDiagnosticsNotifications();
 
     this._numOfWatchersSubscription = this._liveEntryService.numOfWatcher$
       .subscribe((res) => {
@@ -48,10 +48,13 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
     this._entryDiagnosticsSubscription.unsubscribe();
   }
 
-  private listenToEntryDiagnosticsNotifications() {
+  private _listenToEntryDiagnosticsNotifications() {
     this._entryDiagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
-      if (response && response.streamHealth.data.length) {
-        this.streamHealthNotifications = response.streamHealth.data.concat(this.streamHealthNotifications);
+      if (response && response.streamHealthPrimary.data.length) {
+        this.streamHealthNotifications = response.streamHealthPrimary.data.concat(this.streamHealthNotifications);
+      }
+      if (response && response.streamHealthSecondary.data.length) {
+        this.streamHealthNotifications = response.streamHealthSecondary.data.concat(this.streamHealthNotifications);
       }
     });
   }
