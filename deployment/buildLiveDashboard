@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+USAGE="Usage: script to build liveDashboard. Run: <path_to_script>/buildLiveDashboard <path_to_liveDashboard_repo> <build_version>"
+ENV="prod"
+
+if [ $# -ne 2 ]; then
+  echo ${USAGE}
+  exit 1
+fi
+
+REPOSITORY_PATH=$1
+VERSION="v$2"
+BASE_HREF=/apps/liveDashboar/${VERSION}/
+cd ${REPOSITORY_PATH}
+pwd
+echo ""
+
+if [ -d "dist" ]; then
+  echo "Removing dist folder"
+  echo "rm -rf dist"
+  echo ""
+  rm -rf dist
+elif [ -d ${VERSION} ] || [ -e ${VERSION}.zip ]; then
+  echo "Removing any files related to version ${VERSION}"
+  echo "rm -rf ${VERSION}*"
+  echo ""
+  rm -rf ${VERSION}*
+fi
+
+echo ">>>>>> starting build <<<<<<"
+echo "Build version = ${VERSION} ; Base href = ${BASE_HREF} ; Env = ${ENV}"
+echo ""
+echo "ng build -bh ${BASE_HREF} --env=${ENV}"
+# Build project and give index.html the base href for the project
+ng build -bh ${BASE_HREF} --env=${ENV}
+
+# Remove dev folder from build
+echo "rm -rf ./dist/dev"
+echo ""
+rm -rf ./dist/dev
+
+# Rename created build folder to be named as build version
+echo "Renaming build folder to ${VERSION}"
+echo "mv ./dist ./${VERSION}"
+echo ""
+mv ./dist ./${VERSION}
+
+# Compress build to zip file
+echo "Compress version build folder to zip file"
+echo "zip -r ${VERSION}.zip ${VERSION}"
+zip -r ${VERSION}.zip ${VERSION}
+
+echo ""
+echo ">>>>>> liveDashboard build finished successfully <<<<<<"
+
