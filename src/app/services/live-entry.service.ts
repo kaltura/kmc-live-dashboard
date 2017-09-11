@@ -34,6 +34,7 @@ import { KalturaBeacon } from "kaltura-typescript-client/types/KalturaBeacon";
 import { LiveReportsGetEventsAction } from "kaltura-typescript-client/types/LiveReportsGetEventsAction";
 import { KalturaLiveReportType } from "kaltura-typescript-client/types/KalturaLiveReportType";
 import { KalturaLiveReportInputFilter } from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
+import { KalturaReportGraph } from "kaltura-typescript-client/types/KalturaReportGraph";
 import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaNullableBoolean";
 // Types
 import {
@@ -47,7 +48,6 @@ import { StreamStatusPipe } from "../pipes/stream-status.pipe";
 @Injectable()
 export class LiveEntryService implements OnDestroy {
 
-  private _id: string;
   // BehaviorSubject subscribed by application
   private _applicationStatus = new BehaviorSubject<ApplicationStatus>({
     streamStatus: LoadingStatus.initializing,
@@ -92,7 +92,7 @@ export class LiveEntryService implements OnDestroy {
   private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
 
   // BehaviorSubject to show number of watchers when stream is Live
-  private _numOfWatcherSubject = new BehaviorSubject<any>(null);
+  private _numOfWatcherSubject = new BehaviorSubject<KalturaReportGraph[]>(null);
   public numOfWatcher$ = this._numOfWatcherSubject.asObservable();
   private _numOfWatchersTimerSubscription: Subscription = null;
 
@@ -102,9 +102,6 @@ export class LiveEntryService implements OnDestroy {
               private _liveDashboardConfiguration: LiveDashboardConfiguration,
               private _codeToSeverityPipe: CodeToSeverityPipe,
               private _streamStatusPipe: StreamStatusPipe) {
-
-    this._id = this._liveDashboardConfiguration.entryId;
-    this._listenToNumOfWatcherWhenLive();
   }
 
   ngOnDestroy() {
@@ -125,6 +122,7 @@ export class LiveEntryService implements OnDestroy {
     this._getLiveStream();
     this._runEntryStatusMonitoring();
     this._streamHealthInitialization();
+    this._listenToNumOfWatcherWhenLive();
   }
 
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
@@ -147,7 +145,7 @@ export class LiveEntryService implements OnDestroy {
 
   private _getLiveStream(): void {
     this._liveStreamGetSubscription = this._kalturaClient.request(new LiveStreamGetAction({
-        entryId : this._id,
+        entryId : this._liveDashboardConfiguration.entryId,
         acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode]
       }))
       .subscribe(response => {
@@ -184,7 +182,7 @@ export class LiveEntryService implements OnDestroy {
   private _runEntryStatusMonitoring(): void {
     this._pullRequestEntryStatusMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new EntryServerNodeListAction({
-        filter: new KalturaEntryServerNodeFilter({entryIdEqual: this._id})
+        filter: new KalturaEntryServerNodeFilter({entryIdEqual: this._liveDashboardConfiguration.entryId})
       }))
         .do(response => {
           // Make sure primary entryServerNode is first in array
@@ -291,7 +289,7 @@ export class LiveEntryService implements OnDestroy {
       filter: new KalturaBeaconFilter({
         orderBy: '-createdAt',
         eventTypeIn: '0_healthData,1_healthData',
-        objectIdIn: this._id,
+        objectIdIn: this._liveDashboardConfiguration.entryId,
         indexTypeEqual: KalturaBeaconIndexType.log
       }),
       pager: new KalturaFilterPager({
@@ -299,7 +297,7 @@ export class LiveEntryService implements OnDestroy {
       })
     }))
     .subscribe(response => {
-      this._parseEntryBeacons(response.objects  );
+      this._parseEntryBeacons(response.objects);
       this._entryDiagnostics.next(this._entryDiagnosticsInfo);
       return this._runStreamHealthMonitoring();
     })
@@ -309,7 +307,7 @@ export class LiveEntryService implements OnDestroy {
     this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new BeaconListAction({
         filter: new KalturaBeaconFilter({
-          objectIdIn: this._id,
+          objectIdIn: this._liveDashboardConfiguration.entryId,
           indexTypeEqual: KalturaBeaconIndexType.state
         })
       }))
@@ -361,7 +359,10 @@ export class LiveEntryService implements OnDestroy {
           else {
             objToUpdate.data = privateData;
           }
-          objToUpdate.updatedTime = beaconUpdateTime;
+          // Only if beacon report time is higher (meaning more recent) than last one saved, replace it
+          if (beaconUpdateTime > objToUpdate.updatedTime) {
+            objToUpdate.updatedTime = beaconUpdateTime;
+          }
         }
       }
     });
@@ -385,19 +386,19 @@ export class LiveEntryService implements OnDestroy {
     // init the timer
     let numOfWatcherTimer$ = this._entryTimerTask.runTimer(() => {
         return this._getNumOfWatchers();
-      },
-      environment.liveEntryService.liveAnalyticsIntervalTimeInMs
-    );
+      }, environment.liveEntryService.liveAnalyticsIntervalTimeInMs);
 
     // On Live  -> Subscribe (get api call of num of watchers)
     // Else     -> Unsubscribe
     this._entryDynamicInformation.subscribe((dynamicInfo) => {
-      if (dynamicInfo && dynamicInfo.streamStatus.state === 'Live' && this._numOfWatchersTimerSubscription === null) {
-        this._numOfWatchersTimerSubscription = numOfWatcherTimer$.subscribe((response) => {
-          if (response['status'] === 'timeout') {
-            console.log('Live Entry: Error at getNumOfWatchers request.')
-          }
-        });
+      if (dynamicInfo && dynamicInfo.streamStatus.state === 'Live') {
+        if(this._numOfWatchersTimerSubscription === null) {
+          this._numOfWatchersTimerSubscription = numOfWatcherTimer$.subscribe((response) => {
+            if (response['status'] === 'timeout') {
+              console.log('Live Entry: Error at getNumOfWatchers request.')
+            }
+          });
+        }
       }
       else if (this._numOfWatchersTimerSubscription) {
         this._numOfWatchersTimerSubscription.unsubscribe();
@@ -406,24 +407,24 @@ export class LiveEntryService implements OnDestroy {
     });
   }
 
-  private _getNumOfWatchers(): Observable<any> {
-
+  private _getNumOfWatchers(): Observable<KalturaReportGraph[]> {
+    // Get results for a 90 sec window
     let liveReportsRequest = new LiveReportsGetEventsAction({
       reportType: KalturaLiveReportType.entryTimeLine,
       filter: new KalturaLiveReportInputFilter({
         entryIds: this._liveDashboardConfiguration.entryId,
-        fromTime: moment().subtract(1000, 'seconds').toDate(),
-        toTime: moment().subtract(2, 'seconds').toDate(),
+        fromTime: moment().subtract(110, 'seconds').toDate(),
+        toTime: moment().subtract(20, 'seconds').toDate(),
         live: KalturaNullableBoolean.trueValue
       })
     });
 
     return this._kalturaClient.request(liveReportsRequest)
-      .map(response => {
+      .do(response => {
           this._numOfWatcherSubject.next(response);
         },
         error => {
-          console.log("Live Entry: Error get number of watchers");
+          console.log(`Error get number of watchers; Error: ${error.message}`);
         });
   }
 }
