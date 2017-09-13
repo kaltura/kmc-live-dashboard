@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as _ from 'lodash';
-import {TranslateService} from "ng2-translate";
-import {NodeStreams} from "../types/live-dashboard.types";
+import { TranslateService } from "ng2-translate";
+import { NodeStreams } from "../types/live-dashboard.types";
+import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
 
 @Pipe({
   name: 'transcodingInfo'
@@ -11,16 +12,16 @@ export class TranscodingInfoPipe implements PipeTransform {
   constructor(private _translate: TranslateService){}
 
 
-  transform(allStreams: NodeStreams, args?: any): any {
-    let transcoding = '';
-
-    transcoding += this.appendFormattedStream(allStreams.primary,   this._translate.instant('COMMON.primary'));
-    transcoding += this.appendFormattedStream(allStreams.secondary, this._translate.instant('COMMON.secondary'));
-
-    return transcoding;
+  transform(allStreams: NodeStreams, arg?: KalturaEntryServerNodeType): string {
+    if (KalturaEntryServerNodeType.livePrimary.equals(arg)) {
+      return this.appendFormattedStream(allStreams.primary);
+    }
+    else {
+      return this.appendFormattedStream(allStreams.secondary);
+    }
   }
 
-  private appendFormattedStream(arr: any, prefix: string) {
+  private appendFormattedStream(arr: any, prefix?: string): string {
     let transcoding = '';
     let sortedStreamsArr;
 

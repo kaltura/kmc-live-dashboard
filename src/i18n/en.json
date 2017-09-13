@@ -14,7 +14,7 @@
     },
     "stream_health": {
       "tag": "Stream Health",
-      "info": "Stream Health indicates how your live stream is being received by Kaltura.\nGood - Live stream is healthy.\nFair - Viewers may experience minor issues.\nPoor - Viewers potentially experience serious viewing issues.\nN/A - Kaltura is not receiving data",
+      "info": "<i class='kIconpartial_small bullet-green'></i> <b>Good</b>: Stream is healthy<br><i class='kIconpartial_small bullet-yellow'></i> <b>Fair</b>: Viewers may be experiencing minor issues<br><i class='kIconpartial_small bullet-red'></i> <b>Poor</b>: Potentially serious viewing issues<br><i class='kIconpartial_small bullet-grey'></i> <b>N/A</b>: Kaltura is not receiving data",
       "state": {
         "N/A": "N/A",
         "Good": "Good",
@@ -61,7 +61,6 @@
   },
   "DIAGNOSTICS": {
     "stream_info": "Stream Info",
-    "watching": "Watching",
     "stream_health_title": "Stream Health"
   },
   "BASIC_SETTINGS": {

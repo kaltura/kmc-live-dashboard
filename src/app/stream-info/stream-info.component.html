@@ -4,13 +4,13 @@
         <stream-configurations></stream-configurations>
       </div>
       <div class="learn-more">
-        <div *ngIf="_dynamicInformation.streamStatus === 'Offline'" class="learn-more-not-live">
+        <div *ngIf="_dynamicInformation.streamStatus.state === 'Offline'" class="learn-more-not-live">
           <span class="learn-more-text">{{ 'DASHBOARD.learn_more_not_live_text' | translate }}</span>
           <div class="learn-more-link">
             <a [href]="_learnMoreLink" target="_blank">{{ 'DASHBOARD.learn_more_anchor' | translate }}</a>
           </div>
         </div>
-        <div *ngIf="_dynamicInformation.streamStatus !== 'Offline'" class="learn-more-is-live">
+        <div *ngIf="_dynamicInformation.streamStatus.state !== 'Offline'" class="learn-more-is-live">
           <span class="learn-more-text">{{ 'DASHBOARD.learn_more_is_live_text' | translate }}</span>
         </div>
       </div>

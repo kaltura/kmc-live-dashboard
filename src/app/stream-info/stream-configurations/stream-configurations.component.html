@@ -2,22 +2,22 @@
   <div class="property">
     <label class="configuration-label">{{ 'STREAM_CONFIG.stream_status.tag' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="_dynamicInformation.streamStatus === 'Live'"
-                           [class.bullet-yellow]="_dynamicInformation.streamStatus === 'Initializing'">•</span>
-      <span class="state">{{ 'STREAM_CONFIG.stream_status.state.' + _dynamicInformation.streamStatus | translate }}</span>
+      <span class="bullet" [class.bullet-green]="_dynamicInformation.streamStatus.state === 'Live'"
+                           [class.bullet-yellow]="_dynamicInformation.streamStatus.state === 'Initializing'">•</span>
+      <span class="state">{{ 'STREAM_CONFIG.stream_status.state.' + _dynamicInformation.streamStatus.state | translate }}</span>
     </div>
   </div>
   <div class="property">
     <div class="label-icon-duo">
       <label class="configuration-label">{{ 'STREAM_CONFIG.stream_health.tag' | translate }}</label>
-      <i class="kIconhelp_full" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'bottom'"></i>
+      <i class="kIconhelp_full" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'bottom'" [escape]="false" ></i>
     </div>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="((_streamHealth.severity | severityToHealth) === 'Good') && (_dynamicInformation.streamStatus !== 'Offline')"
-                           [class.bullet-yellow]="((_streamHealth.severity | severityToHealth) === 'Fair') && (_dynamicInformation.streamStatus !== 'Offline')"
-                           [class.bullet-red]="((_streamHealth.severity  | severityToHealth)=== 'Poor') && (_dynamicInformation.streamStatus !== 'Offline')">•</span>
-      <span class="state" *ngIf="_dynamicInformation.streamStatus === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
-      <span class="state" *ngIf="_dynamicInformation.streamStatus !== 'Offline'">
+      <span class="bullet" [class.bullet-green]="((_streamHealth.severity | severityToHealth) === 'Good') && (_dynamicInformation.streamStatus.state !== 'Offline')"
+                           [class.bullet-yellow]="((_streamHealth.severity | severityToHealth) === 'Fair') && (_dynamicInformation.streamStatus.state !== 'Offline')"
+                           [class.bullet-red]="((_streamHealth.severity  | severityToHealth)=== 'Poor') && (_dynamicInformation.streamStatus.state !== 'Offline')">•</span>
+      <span class="state" *ngIf="_dynamicInformation.streamStatus.state === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
+      <span class="state" *ngIf="_dynamicInformation.streamStatus.state !== 'Offline'">
         {{ 'STREAM_CONFIG.stream_health.state.' + (_streamHealth.severity | severityToHealth) | translate }} {{_getSourceHeight()}}
       </span>
     </div>
@@ -33,7 +33,7 @@
     <div class="label-icon-duo">
       <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
       <i class="kIconinfo infoIcon"
-         [kTooltip]="_dynamicInformation.streamStatus !== 'Offline' ? (_dynamicInformation.allStreams | transcodingInfo) : ''"
+         [kTooltip]="_dynamicInformation.streamStatus.state !== 'Offline' ? (_dynamicInformation.allStreams | transcodingInfo: _dynamicInformation.streamStatus.serverType) : ''"
          [maxWidth]="182" [placement]="'bottom'"></i>
     </div>
     <div class="configuration-status">
@@ -59,7 +59,7 @@
     <label class="configuration-label">{{ 'STREAM_CONFIG.redundancy' | translate }}</label>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="(_dynamicInformation.redundancy)">•</span>
-      <span class="state">{{_dynamicInformation.redundancy | entryDynamicInformation: _dynamicInformation.streamStatus}}</span>
+      <span class="state">{{_dynamicInformation.redundancy | entryDynamicInformation: _dynamicInformation.streamStatus.state}}</span>
     </div>
   </div>
 </div>

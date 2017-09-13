@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../../services/live-entry.service";
-import { LiveEntryTimerTaskService } from "../../services/entry-timer-task.service";
 import * as _ from 'lodash';
 import { LiveEntryDiagnosticsInfo } from "../../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
@@ -16,29 +15,27 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
   public  _numOfWatchers = 0;
   public  streamHealthNotifications = [];
 
-  constructor(private _liveEntryService: LiveEntryService, private _entryTimerTask: LiveEntryTimerTaskService) {}
+  constructor(private _liveEntryService: LiveEntryService) {}
 
   ngOnInit() {
     this._numOfWatchers = 0;
-    this.listenToEntryDiagnosticsNotifications();
+    this._listenToEntryDiagnosticsNotifications();
 
     this._numOfWatchersSubscription = this._liveEntryService.numOfWatcher$
-      .subscribe((res) => {
-
-        if (res && _.isArray(res) && res.length > 0 && res[0].data){
-          let watchers = res[0].data.split(';');
-          let numOfWatchers = 0;
-
-          _.forEachRight(watchers, (watcher) => {
+      .subscribe((response) => {
+        if (response && response.length > 0 && response[0].data) {
+          // response.data[0] is an array string, where each element is separated by ';'
+          // Each element contains three numbers: time, num of live watchers, num of dvr watchers
+          let watchers = response[0].data.split(';');
+          let audience = 0;
+          // Display the max num of watchers in 90 sec window
+          _.forEach(watchers, watcher => {
             let watcherParam = watcher.split(',');
-            numOfWatchers = (parseInt(watcherParam[1]) || 0 ) + (parseInt(watcherParam[2]) || 0 );  // live + dvr
-
-            if (numOfWatchers > 0){
-              return false;
-            }
+            let tmpAudience = (parseInt(watcherParam[1]) || 0 ) + (parseInt(watcherParam[2]) || 0 );  // live + dvr
+            audience = (tmpAudience > audience) ? tmpAudience : audience;
           });
 
-          this._numOfWatchers = numOfWatchers;
+          this._numOfWatchers = audience;
         }
       });
   }
@@ -48,10 +45,13 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
     this._entryDiagnosticsSubscription.unsubscribe();
   }
 
-  private listenToEntryDiagnosticsNotifications() {
+  private _listenToEntryDiagnosticsNotifications() {
     this._entryDiagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
-      if (response && response.streamHealth.data.length) {
-        this.streamHealthNotifications = response.streamHealth.data.concat(this.streamHealthNotifications);
+      if (response && response.streamHealthPrimary.data.length) {
+        this.streamHealthNotifications = response.streamHealthPrimary.data.concat(this.streamHealthNotifications);
+      }
+      if (response && response.streamHealthSecondary.data.length) {
+        this.streamHealthNotifications = response.streamHealthSecondary.data.concat(this.streamHealthNotifications);
       }
     });
   }
