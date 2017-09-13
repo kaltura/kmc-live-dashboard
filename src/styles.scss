@@ -9,15 +9,15 @@ $mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts
   font-size: 15px;
 }
 
-.ng-tooltip{
-  text-align: center !important;
+.ng-tooltip {
+  text-align: center;
 }
 
-.no-padding{
+.no-padding {
   padding: 0 !important;
 }
 
-.no-margin{
+.no-margin {
   margin: 0 !important;
 }
 
@@ -31,6 +31,10 @@ $mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts
 
 .bullet-red {
   color: $kDandger;
+}
+
+.bullet-grey {
+  color: $kGrayscale2;
 }
 
 .flexIt{

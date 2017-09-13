@@ -10,7 +10,7 @@
   <div class="property">
     <div class="label-icon-duo">
       <label class="configuration-label">{{ 'STREAM_CONFIG.stream_health.tag' | translate }}</label>
-      <i class="kIconhelp_full" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'bottom'"></i>
+      <i class="kIconhelp_full" [kTooltip]="'STREAM_CONFIG.stream_health.info' | translate" [maxWidth]="400" [placement]="'bottom'" [escape]="false" ></i>
     </div>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="((_streamHealth.severity | severityToHealth) === 'Good') && (_dynamicInformation.streamStatus.state !== 'Offline')"

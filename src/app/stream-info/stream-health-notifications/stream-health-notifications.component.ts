@@ -28,7 +28,6 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
           // Each element contains three numbers: time, num of live watchers, num of dvr watchers
           let watchers = response[0].data.split(';');
           let audience = 0;
-          console.log(watchers);
           // Display the max num of watchers in 90 sec window
           _.forEach(watchers, watcher => {
             let watcherParam = watcher.split(',');
