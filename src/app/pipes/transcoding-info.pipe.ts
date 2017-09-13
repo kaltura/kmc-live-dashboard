@@ -14,14 +14,14 @@ export class TranscodingInfoPipe implements PipeTransform {
 
   transform(allStreams: NodeStreams, arg?: KalturaEntryServerNodeType): string {
     if (KalturaEntryServerNodeType.livePrimary.equals(arg)) {
-      return this.appendFormattedStream(allStreams.primary,   this._translate.instant('COMMON.primary'));
+      return this.appendFormattedStream(allStreams.primary);
     }
     else {
-      return this.appendFormattedStream(allStreams.secondary, this._translate.instant('COMMON.secondary'));
+      return this.appendFormattedStream(allStreams.secondary);
     }
   }
 
-  private appendFormattedStream(arr: any, prefix: string): string {
+  private appendFormattedStream(arr: any, prefix?: string): string {
     let transcoding = '';
     let sortedStreamsArr;
 
