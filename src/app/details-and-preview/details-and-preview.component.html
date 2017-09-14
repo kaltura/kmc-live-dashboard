@@ -20,11 +20,11 @@
         <div class="content">
           <div class="row" >
             <span class="left">{{ 'STREAM_INFO.creator' | translate }}</span>
-            <span class="right" [kTooltip]="_creator" [maxWidth]="120">{{_creator}}</span>
+            <span class="right" [kTooltip]="_creator" [maxWidth]="150">{{_creator}}</span>
           </div>
           <div class="row">
             <span class="left">{{ 'STREAM_INFO.creation_date' | translate }}</span>
-            <span class="right" [kTooltip]="_date | date:'MM/dd/y HH:MM'" [maxWidth]="120">{{_date | date:'MM/dd/y HH:MM'}}</span>
+            <span class="right" [kTooltip]="_date | date:'medium'" [maxWidth]="180">{{_date | date:'MM/dd/yy HH:mm'}}</span>
           </div>
           <div class="row">
             <span class="left">{{ 'STREAM_INFO.type' | translate }}</span>
