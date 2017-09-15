@@ -16,8 +16,6 @@ import { RecordStatusPipe } from './pipes/record.status.pipe';
 import { ValueWithSpinnerPipe } from './pipes/value-with-spinner.pipe';
 
 import { PanelModule, DialogModule, DropdownModule, MessagesModule,SplitButtonModule,ToggleButtonModule, SelectButtonModule, CheckboxModule, GrowlModule,DataTableModule, SharedModule, InputTextModule, MenuModule, ButtonModule, DataGridModule,InputSwitchModule} from 'primeng/primeng';
-import {Ng2Webstorage} from 'ng2-webstorage';
-
 
 import { HttpModule }    from '@angular/http';
 
@@ -48,8 +46,7 @@ import {KalturaAPIClient} from './kaltura-api/kaltura-api-client';
       MenuModule,
       DialogModule,
       DropdownModule,
-      CheckboxModule,
-      Ng2Webstorage
+      CheckboxModule
     ],
   declarations:
     [

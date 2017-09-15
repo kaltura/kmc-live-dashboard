@@ -107,6 +107,6 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._subscriptionsArray.forEach(s => s.unsubscribe() );
+    this._subscriptionsArray.forEach(s => s.unsubscribe());
   }
 }
