@@ -20,6 +20,12 @@
         "Good": "Good",
         "Fair": "Fair",
         "Poor": "Poor"
+      },
+      "tooltip": {
+        "N/A": "Kaltura is not receiving data",
+        "Good": "Stream is healthy",
+        "Fair": "Viewers may be experiencing minor issues",
+        "Poor": "Potentially serious viewing issues"
       }
     },
     "elapsed_time": "Elapsed Time",
