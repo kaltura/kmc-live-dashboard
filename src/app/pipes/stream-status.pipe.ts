@@ -8,6 +8,7 @@ export class StreamStatusPipe implements PipeTransform {
 
   transform(entryServerNodeStatus: KalturaEntryServerNodeStatus): 'Live' | 'Initializing' | 'Offline' {
     switch (entryServerNodeStatus) {
+      case KalturaEntryServerNodeStatus.authenticated:
       case KalturaEntryServerNodeStatus.broadcasting:
         return 'Initializing';
       case KalturaEntryServerNodeStatus.playable:

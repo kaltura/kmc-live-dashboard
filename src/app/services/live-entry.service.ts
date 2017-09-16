@@ -299,6 +299,7 @@ export class LiveEntryService implements OnDestroy {
     .subscribe(response => {
       this._parseEntryBeacons(response.objects);
       this._entryDiagnostics.next(this._entryDiagnosticsInfo);
+      this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
       return this._runStreamHealthMonitoring();
     })
   }
@@ -328,7 +329,6 @@ export class LiveEntryService implements OnDestroy {
   }
 
   private _parseEntryBeacons(beaconsArray: KalturaBeacon[]): void {
-
     // As this is only the delta portion of the reports (beacon) so
     // only the delta will be pushed as an event subject.
     this._entryDiagnosticsInfo.streamHealthPrimary.data = [];

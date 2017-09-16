@@ -1,14 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as moment from 'moment';
 import Duration = moment.Duration;
-import {TranslateService} from "ng2-translate";
+import { TranslateService } from "ng2-translate";
 
 @Pipe({
   name: 'duration'
 })
-export class DurationPipe implements PipeTransform{
+export class DurationPipe implements PipeTransform {
 
-  constructor(private _translate: TranslateService){}
+  constructor(private _translate: TranslateService) {}
 
   transform(duration: Duration) : string {
     let timeString = '00:00:00';
