@@ -34,7 +34,9 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
     // Dynamic configuration
     this._dynamicInformation = {
       redundancy: false,
-      streamStatus: 'Offline'
+      streamStatus: {
+        state: 'Offline'
+      }
     };
     this._streamHealth = { severity: AlertSeverity.info };
   }

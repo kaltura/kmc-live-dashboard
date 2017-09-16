@@ -84,32 +84,40 @@
   "ALERTS": {
     "no-alerts": "No reported issues",
     "100": {
-      "title": "Encoder has restarted",
-      "hint": ""
+      "message-log": "Encoder re-connection occurred",
+      "message-text-box": "Encoder re-connection occurred. Please check your encoder logs"
     },
     "101": {
-      "title": "Encoder reported bitrate {{configuredBitrate}} doesn’t match actual bitrate {{incomingBitrate}}",
-      "hint": ""
+      "message-log": "Declared and actual bitrate unmatched",
+      "message-text-box": "Detected incoming actual bitrate (value) is different from declared one (value). Make sure your encoder is configured to use CBR (constant bitrate)"
     },
     "102": {
-      "title": "Encoder stopped sending audio data",
-      "hint": ""
+      "message-log": "Audio track dropped",
+      "message-text-box": "Audio track has been dropped from your broadcast. Check your encoder logs"
     },
     "103": {
-      "title": "Encoder stopped sending video data",
-      "hint": ""
+      "message-log": "Video track dropped",
+      "message-text-box": "Video track has been dropped from your broadcast. Check your encoder logs"
     },
     "104": {
-      "title": "Encoder streaming rate is slower than expected",
-      "hint": ""
+      "message-log": "Incoming video rate is too slow",
+      "message-text-box": "Incoming video rate is too slow - we are not receiving enough video to maintain smooth streaming. Viewers may experience buffering. Please check your encoder CPU, available bandwidth and consider to reduce the bitrate in your encoder configuration"
     },
     "105": {
-      "title": "Encoder stopped streaming",
-      "hint": ""
+      "message-log": "Encoder stopped streaming",
+      "message-text-box": ""
     },
     "106": {
-      "title": "Encoder started streaming",
-      "hint": ""
+      "message-log": "Encoder started streaming",
+      "message-text-box": ""
+    },
+    "107": {
+      "message-log": "Detected key frame interval/GOP length is [{{actualKeyFrameInterval}}] seconds",
+      "message-text-box": "Detected key frame interval/GOP length is [{{actualKeyFrameInterval}}] seconds. Recommended value is 2 seconds."
+    },
+    "108": {
+      "message-log": "High FPS detected [{{frameRate}}]",
+      "message-text-box": "High FPS detected [{{frameRate}}]. Recommended value is up to 30 frames per second."
     }
   },
   "ERRORS": {
