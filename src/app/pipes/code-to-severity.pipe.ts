@@ -10,11 +10,11 @@ export class CodeToSeverityPipe implements PipeTransform {
   transform(code : number): number {
 
     switch (code) {
-      case DiagnosticsErrorCodes.MissingTrackAlert:
-      case DiagnosticsErrorCodes.InvalidKeyFramesAlert:
       case DiagnosticsErrorCodes.BitrateUnmatched:
       case DiagnosticsErrorCodes.EntryStopped:
       case DiagnosticsErrorCodes.EntryStarted:
+      case DiagnosticsErrorCodes.InvalidKeyFrameInterval:
+      case DiagnosticsErrorCodes.HighFpsRate:
         return AlertSeverity.info;
 
       case DiagnosticsErrorCodes.EntryRestartedAlert:

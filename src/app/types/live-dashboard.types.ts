@@ -32,15 +32,15 @@ export interface Alert {
 }
 
 export enum DiagnosticsErrorCodes  {
-  MissingTrackAlert = 4,
-  InvalidKeyFramesAlert = 6,
   EntryRestartedAlert = 100,
   BitrateUnmatched = 101,
   NoAudioSignal = 102,
   NoVideoSignal = 103,
   PtsDrift = 104,
   EntryStopped = 105,
-  EntryStarted = 106
+  EntryStarted = 106,
+  InvalidKeyFrameInterval = 107,
+  HighFpsRate = 108
 }
 
 export enum AlertSeverity {
