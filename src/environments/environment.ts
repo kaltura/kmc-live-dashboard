@@ -7,7 +7,8 @@ export const environment = {
   production: false,
   "bootstrap": {
     "service_url_extension": "/api_v3/index.php",
-    "parameters_error": "Invalid Application Parameters! Please restart application"
+    "parameters_error": "Invalid Application Parameters! Please restart application",
+    "default_lang": "en"
   },
   "liveEntryService": {
     "streamStatusIntervalTimeInMs": 5000,
@@ -20,6 +21,9 @@ export const environment = {
   },
   "externalLinks": {
     "LEARN_MORE": "https://knowledge.kaltura.com/getting-started-kaltura-live"
+  },
+  "loadingError": {
+    "liveEntryFailed": "Failed to load Live Entry. Please restart application"
   },
   "flavorsDefinitions": {
     "sourceFlavorId": "32"
