@@ -10,7 +10,7 @@ fi
 
 REPOSITORY_PATH=$1
 VERSION="v$2"
-BASE_HREF=/apps/liveDashboar/${VERSION}/
+BASE_HREF=/apps/liveDashboard/${VERSION}/
 cd ${REPOSITORY_PATH}
 pwd
 echo ""

@@ -7,7 +7,6 @@ export const environment = {
   production: false,
   "bootstrap": {
     "service_url_extension": "/api_v3/index.php",
-    "parameters_error": "Invalid Application Parameters! Please restart application",
     "default_lang": "en"
   },
   "liveEntryService": {

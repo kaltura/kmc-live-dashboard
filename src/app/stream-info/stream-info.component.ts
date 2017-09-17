@@ -20,7 +20,11 @@ export class StreamInfoComponent implements OnInit, OnDestroy {
   private _dynamicInformationSubscription: ISubscription;
 
   constructor(private _liveEntryService: LiveEntryService) {
-    this._dynamicInformation = { streamStatus: 'Offline' };
+    this._dynamicInformation = {
+      streamStatus: {
+        state: 'Offline'
+      }
+    };
   }
 
   ngOnInit() {
