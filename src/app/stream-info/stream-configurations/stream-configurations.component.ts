@@ -7,6 +7,7 @@ import { environment } from "../../../environments/environment"
 import { LiveEntryService } from "../../services/live-entry.service";
 import { AlertSeverity, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration, LiveEntryDiagnosticsInfo } from "../../types/live-dashboard.types";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
+import {AppLocalization} from "@kaltura-ng/kaltura-common";
 
 
 @Component({
@@ -19,12 +20,13 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
   public  _streamDuration: Duration;
   public  _staticConfiguration: LiveEntryStaticConfiguration;
   public  _dynamicInformation: LiveEntryDynamicStreamInfo;
+  public  _streamHealthTooltip: string = "";
   public  _streamHealth: {
     severity: AlertSeverity,
     resolution?: number
   };
 
-  constructor(private _liveEntryService: LiveEntryService) {
+  constructor(private _liveEntryService: LiveEntryService, private _appLocalization: AppLocalization) {
     // Static configuration
     this._staticConfiguration = {
       dvr: false,
@@ -54,6 +56,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
       }
     }));
     this._startStreamHealthSubscription();
+    this._buildStreamHealthToolTip();
   }
 
   private _startStreamHealthSubscription(): void {
@@ -106,6 +109,14 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
     }
     else
       return '';
+  }
+
+  private _buildStreamHealthToolTip(): void {
+    let lineGood = `<i class='kIconpartial_small bullet-green'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.Good')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.Good')}<br>`;
+    let lineFair = `<i class='kIconpartial_small bullet-yellow'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.Fair')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.Fair')}<br>`;
+    let linePoor = `<i class='kIconpartial_small bullet-red'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.Poor')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.Poor')}<br>`;
+    let lineNA = `<i class='kIconpartial_small bullet-grey'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.N/A')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.N/A')}`;
+    this._streamHealthTooltip = lineGood + lineFair + linePoor + lineNA;
   }
 
   ngOnDestroy() {

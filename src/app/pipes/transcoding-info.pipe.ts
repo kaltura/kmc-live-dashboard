@@ -9,9 +9,6 @@ import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/Kalt
 })
 export class TranscodingInfoPipe implements PipeTransform {
 
-  constructor(private _translate: TranslateService){}
-
-
   transform(allStreams: NodeStreams, arg?: KalturaEntryServerNodeType): string {
     if (KalturaEntryServerNodeType.livePrimary.equals(arg)) {
       return this.appendFormattedStream(allStreams.primary);

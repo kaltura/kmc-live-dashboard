@@ -4,6 +4,7 @@ import { LiveDashboardConfiguration } from "./services/live-dashboard-configurat
 import { Observable } from "rxjs/Observable";
 import { TranslateService } from "ng2-translate";
 import { environment } from "../environments/environment";
+import { AppLocalization } from "@kaltura-ng/kaltura-common";
 
 declare var window: any;
 
@@ -13,7 +14,7 @@ export class BootstrapService {
   constructor(private _kalturaClient: KalturaClient,
               private _kalturaClientConfiguration: KalturaClientConfiguration,
               private _liveDashboardConfiguration: LiveDashboardConfiguration,
-              private _translate: TranslateService) {
+              private _appLocalization: AppLocalization) {
   }
 
   public initialize(): Observable<any> {
@@ -30,12 +31,10 @@ export class BootstrapService {
       this._kalturaClient.endpointUrl = this._liveDashboardConfiguration.service_url + environment.bootstrap.service_url_extension;
       this._kalturaClientConfiguration.clientTag = 'KalturaLiveDashboard';
 
-      // init i18n - Set default language
-      this._translate.setDefaultLang(environment.bootstrap.default_lang);
+      // init i18n - Set english as default language and initialize localization service
       // use only prefix (e.g: all english begin with en-xx)
       let browserLang = this._liveDashboardConfiguration.lang.substr(0, 2);
-
-      return this._translate.use(browserLang);
+      return this._appLocalization.load(browserLang, environment.bootstrap.default_lang);
     }
     else {
       return Observable.throw(new Error('missing parameters'));
