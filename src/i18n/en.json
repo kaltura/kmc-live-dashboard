@@ -106,12 +106,12 @@
       "message-text-box": "Incoming video rate is too slow - we are not receiving enough video to maintain smooth streaming. Viewers may experience buffering. Please check your encoder CPU, available bandwidth and consider to reduce the bitrate in your encoder configuration"
     },
     "105": {
-      "message-log": "Encoder stopped streaming",
-      "message-text-box": ""
+      "message-log": "Encoder stop detected",
+      "message-text-box": "Encoder stop detected"
     },
     "106": {
-      "message-log": "Encoder started streaming",
-      "message-text-box": ""
+      "message-log": "Encoder start detected",
+      "message-text-box": "Encoder start detected"
     },
     "107": {
       "message-log": "Detected key frame interval/GOP length is [{{actualKeyFrameInterval}}] seconds",
