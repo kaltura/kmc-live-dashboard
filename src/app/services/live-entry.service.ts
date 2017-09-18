@@ -287,7 +287,7 @@ export class LiveEntryService implements OnDestroy {
   private _streamHealthInitialization(): void {
     this._kalturaClient.request(new BeaconListAction({
       filter: new KalturaBeaconFilter({
-        orderBy: '-createdAt',
+        orderBy: '-updatedAt',
         eventTypeIn: '0_healthData,1_healthData',
         objectIdIn: this._liveDashboardConfiguration.entryId,
         indexTypeEqual: KalturaBeaconIndexType.log
