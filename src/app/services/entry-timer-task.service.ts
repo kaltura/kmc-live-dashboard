@@ -6,14 +6,19 @@ import { KalturaAPIException } from "kaltura-typescript-client";
 export class LiveEntryTimerTaskService {
   constructor() { }
 
-  public runTimer<T>(func: ()=> Observable<T> | null, interval: number): Observable<{ error?: string | KalturaAPIException }> {
+  public runTimer<T>(func: ()=> Observable<T> | null, interval: number, isImmediate = false): Observable<{ error?: string | KalturaAPIException }> {
 
     return Observable.create(observer => {
       let active = true;
       let timeout;
       let subscription;
 
-      run();
+      if (isImmediate) {
+        run()
+      }
+      else {
+        execute();
+      }
 
       function execute() {
         timeout = setTimeout(() => {

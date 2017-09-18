@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { BootstrapService } from "./bootstrap.service";
 import { LiveEntryService } from "./services/live-entry.service";
-import { AppLocalization } from "@kaltura-ng/kaltura-common";
 import { AreaBlockerMessage } from "@kaltura-ng/kaltura-ui";
 import { LoadingStatus } from "./types/live-dashboard.types";
+import { environment } from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -16,15 +16,13 @@ export class AppComponent implements OnInit {
   public _sectionBlockerMessage: AreaBlockerMessage;
 
   constructor(private _bootstrapService: BootstrapService,
-              private _liveEntryService: LiveEntryService,
-              private _appLocalization: AppLocalization) {
+              private _liveEntryService: LiveEntryService) {
   }
 
   ngOnInit() {
     this._bootstrapService.initialize().subscribe(() => {
         const appStatusSubscription = this._liveEntryService.applicationStatus$.subscribe(status => {
             if ((status.liveEntry === LoadingStatus.succeeded) &&
-                (status.streamStatus === LoadingStatus.succeeded) &&
                 (status.streamHealth === LoadingStatus.succeeded)) {
               this._applicationLoading = false;
               this._applicationLoaded = true;
@@ -37,7 +35,7 @@ export class AppComponent implements OnInit {
       (error) => {
         this._applicationLoading = false;
         this._sectionBlockerMessage = new AreaBlockerMessage({
-          message: this._appLocalization.get('BOOTSTRAP.parameters_error'),
+          message: environment.bootstrap.parameters_error,
           buttons: []
         });
       });
