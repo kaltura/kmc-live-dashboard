@@ -1,7 +1,4 @@
 {
-  "BOOTSTRAP": {
-    "parameters_error": "Invalid Application Parameters! Please restart application"
-  },
   "COMMON": {
     "primary": "Primary",
     "secondary": "Secondary"

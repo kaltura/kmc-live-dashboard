@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../../services/live-entry.service";
 import * as _ from 'lodash';
-import { LiveEntryDiagnosticsInfo } from "../../types/live-dashboard.types";
+import { StreamHealth } from "../../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
 
 @Component({
@@ -53,7 +53,17 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
       if (response && response.streamHealthSecondary.data.length) {
         this.streamHealthNotifications = response.streamHealthSecondary.data.concat(this.streamHealthNotifications);
       }
+      this.streamHealthNotifications.sort(this._sortHealthNotifications);
     });
   }
 
+  private _sortHealthNotifications(a: StreamHealth, b: StreamHealth) {
+    if (a.updatedTime > b.updatedTime) {
+      return -1;
+    }
+    if (a.updatedTime < b.updatedTime) {
+      return 1
+    }
+    return 0;
+  }
 }

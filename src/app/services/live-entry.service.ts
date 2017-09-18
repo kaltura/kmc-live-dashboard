@@ -190,7 +190,7 @@ export class LiveEntryService implements OnDestroy {
           this._updatedApplicationStatus('streamStatus', LoadingStatus.succeeded);
           return;
         })
-    }, environment.liveEntryService.streamStatusIntervalTimeInMs)
+    }, environment.liveEntryService.streamStatusIntervalTimeInMs, true)
       .subscribe(response => {
         if (response.error instanceof KalturaAPIException) {
           console.log(`[EntryServeNodeList] Error: ${response.error.message}`);
