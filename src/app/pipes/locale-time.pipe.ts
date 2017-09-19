@@ -9,10 +9,11 @@ export class LocaleTimePipe implements PipeTransform {
 
   constructor(private _liveDashboardConfiguration: LiveDashboardConfiguration) {}
 
-  transform(seconds: number): string
-  {
-    let time = moment(seconds).locale(this._liveDashboardConfiguration.lang).format('ddd, ll LT');
+  transform(time: number, longFormat?: boolean): string {
+    if (longFormat) {
+      return moment(time).locale(this._liveDashboardConfiguration.lang).format('ll LT');
+    }
 
-    return time;
+    return moment(time).locale(this._liveDashboardConfiguration.lang).format('l LT');
   }
 }

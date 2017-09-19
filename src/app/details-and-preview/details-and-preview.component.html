@@ -23,7 +23,7 @@
         </div>
         <div class="row">
           <span class="left">{{ 'STREAM_INFO.creation_date' | translate }}</span>
-          <span class="right" [kTooltip]="_date | date:'medium'" [maxWidth]="180">{{_date | date:'MM/dd/yy HH:mm'}}</span>
+          <span class="right" [kTooltip]="_date | localeTime: true" [maxWidth]="180">{{_date | localeTime}}</span>
         </div>
         <div class="row">
           <span class="left">{{ 'STREAM_INFO.type' | translate }}</span>
