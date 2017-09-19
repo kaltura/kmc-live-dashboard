@@ -3,7 +3,7 @@ import { LiveEntryService } from "../services/live-entry.service";
 import { KalturaEntryModerationStatus } from "kaltura-typescript-client/types/KalturaEntryModerationStatus";
 import { KalturaMediaType } from "kaltura-typescript-client/types/KalturaMediaType";
 import { LiveDashboardConfiguration } from "../services/live-dashboard-configuration.service";
-import { LiveEntryDynamicStreamInfo, LoadingStatus } from "../types/live-dashboard.types";
+import { LiveEntryDynamicStreamInfo } from "../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
 
 @Component({
