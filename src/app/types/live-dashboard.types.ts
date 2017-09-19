@@ -1,11 +1,9 @@
-import { KalturaLiveStreamParams } from "kaltura-typescript-client/types/KalturaLiveStreamParams";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
 
 export interface LiveEntryDynamicStreamInfo {
   redundancy?: boolean,
   streamStatus?: LiveStreamStates,
   streamSession?: LiveStreamSession,
-  allStreams?: NodeStreams
   streamCreationTime?: number
 }
 
@@ -21,8 +19,8 @@ export declare type LiveStreamSession = {
 }
 
 export class NodeStreams {
-  primary: KalturaLiveStreamParams[];
-  secondary: KalturaLiveStreamParams[];
+  primary: FlavorObject[];
+  secondary: FlavorObject[];
 }
 
 export interface Alert {
@@ -86,8 +84,43 @@ export enum LoadingStatus {
 export interface LiveEntryDiagnosticsInfo {
   staticInfoPrimary?: { updatedTime?: number, data?: Object },
   staticInfoSecondary?: { updatedTime?: number, data?: Object },
-  dynamicInfoPrimary?: { updatedTime?: number, data?: Object },
-  dynamicInfoSecondary?: { updatedTime?: number, data?: Object },
+  dynamicInfoPrimary?: { updatedTime?: number, data?: DiagnosticsDynamicInfo },
+  dynamicInfoSecondary?: { updatedTime?: number, data?: DiagnosticsDynamicInfo },
   streamHealthPrimary?: { updatedTime?: number, data?: StreamHealth[] }
   streamHealthSecondary?: { updatedTime?: number, data?: StreamHealth[] }
+}
+
+export interface DiagnosticsDynamicInfo {
+  inputs?: InputStreamObject[],
+  flavors?: FlavorObject[]
+}
+
+export interface InputStreamObject {
+  index: string,
+  bitrate: number,
+  ptsData: number[][]
+}
+
+export interface FlavorObject {
+  name?: string,
+  runStatus?: string,
+  lastM3U8Time?: string,
+  mediaInfo?: FlavorParams,
+  wowzaUrl?: string
+
+}
+
+export interface FlavorParams {
+  bitrate_kbps?: number,
+  resolution?: number[],
+  framesPerSecond?: number,
+  lastChunkName?: string,
+  keyFramesDistance?: number,
+  drift?: {
+    deltaClock?: number,
+    deltaPts?: number,
+    refEncoderDts?: number,
+    refPts?: number,
+    time?: Date
+  }
 }

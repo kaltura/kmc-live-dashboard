@@ -13,12 +13,12 @@
       <i class="kIconhelp_full" [kTooltip]="_streamHealthTooltip" [maxWidth]="400" [placement]="'bottom'" [escape]="false" ></i>
     </div>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="((_streamHealth.severity | severityToHealth) === 'Good') && (_dynamicInformation.streamStatus.state !== 'Offline')"
-                           [class.bullet-yellow]="((_streamHealth.severity | severityToHealth) === 'Fair') && (_dynamicInformation.streamStatus.state !== 'Offline')"
-                           [class.bullet-red]="((_streamHealth.severity  | severityToHealth)=== 'Poor') && (_dynamicInformation.streamStatus.state !== 'Offline')">•</span>
+      <span class="bullet" [class.bullet-green]="((_streamSeverity | severityToHealth) === 'Good') && (_dynamicInformation.streamStatus.state !== 'Offline')"
+                           [class.bullet-yellow]="((_streamSeverity | severityToHealth) === 'Fair') && (_dynamicInformation.streamStatus.state !== 'Offline')"
+                           [class.bullet-red]="((_streamSeverity  | severityToHealth)=== 'Poor') && (_dynamicInformation.streamStatus.state !== 'Offline')">•</span>
       <span class="state" *ngIf="_dynamicInformation.streamStatus.state === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
       <span class="state" *ngIf="_dynamicInformation.streamStatus.state !== 'Offline'">
-        {{ 'STREAM_CONFIG.stream_health.state.' + (_streamHealth.severity | severityToHealth) | translate }} {{_getSourceHeight()}}
+        {{ 'STREAM_CONFIG.stream_health.state.' + (_streamSeverity | severityToHealth) | translate }} {{_getSourceHeight()}}
       </span>
     </div>
   </div>
@@ -33,8 +33,8 @@
     <div class="label-icon-duo">
       <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
       <i class="kIconinfo infoIcon"
-         [kTooltip]="_dynamicInformation.streamStatus.state !== 'Offline' ? (_dynamicInformation.allStreams | transcodingInfo: _dynamicInformation.streamStatus.serverType) : ''"
-         [maxWidth]="130" [placement]="'bottom'"></i>
+         [kTooltip]="_dynamicInformation.streamStatus.state !== 'Offline' ? (_allStreams | transcodingInfo: _dynamicInformation.streamStatus.serverType) : ''"
+         [maxWidth]="150" [placement]="'bottom'"></i>
     </div>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="_staticConfiguration.transcoding">•</span>
