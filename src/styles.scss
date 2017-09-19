@@ -10,7 +10,7 @@ $mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts
 }
 
 .ng-tooltip {
-  text-align: left;
+
 }
 
 .no-padding {
@@ -35,6 +35,10 @@ $mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts
 
 .bullet-grey {
   color: $kGrayscale2;
+}
+
+.alignLeft {
+  text-align: left;
 }
 
 .flexIt{

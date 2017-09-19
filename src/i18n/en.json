@@ -111,12 +111,12 @@
       "message-text-box": "Encoder start detected"
     },
     "107": {
-      "message-log": "Detected key frame interval/GOP length is [{{actualKeyFrameInterval}}] seconds",
-      "message-text-box": "Detected key frame interval/GOP length is [{{actualKeyFrameInterval}}] seconds. Recommended value is 2 seconds."
+      "message-log": "Detected key frame interval/GOP length is {{actualKeyFrameInterval}} seconds",
+      "message-text-box": "Detected key frame interval/GOP length is {{actualKeyFrameInterval}} seconds. Recommended value is 2 seconds."
     },
     "108": {
-      "message-log": "High FPS detected [{{frameRate}}]",
-      "message-text-box": "High FPS detected [{{frameRate}}]. Recommended value is up to 30 frames per second."
+      "message-log": "High FPS detected {{frameRate}}",
+      "message-text-box": "High FPS detected {{frameRate}}. Recommended value is up to 30 frames per second."
     }
   },
   "ERRORS": {

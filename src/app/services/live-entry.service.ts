@@ -206,7 +206,7 @@ export class LiveEntryService implements OnDestroy {
     let newStreamState = this._getStreamStatus(snList, dynamicConfigObj);
     this._streamSessionStateUpdate(dynamicConfigObj.streamStatus.state, newStreamState.state, dynamicConfigObj.streamSession);
     dynamicConfigObj.streamStatus = newStreamState;
-    this._updateStreamsInfo(snList, dynamicConfigObj);
+    this._updateStreamCreationTime(snList, dynamicConfigObj);
 
     this._entryDynamicInformation.next(dynamicConfigObj);
   }
@@ -262,20 +262,11 @@ export class LiveEntryService implements OnDestroy {
     }
   }
 
-  private _updateStreamsInfo(serverNodeList: KalturaEntryServerNode[], dynamicInfoObj: LiveEntryDynamicStreamInfo): void {
-    dynamicInfoObj.allStreams = new NodeStreams();
+  private _updateStreamCreationTime(serverNodeList: KalturaEntryServerNode[], dynamicInfoObj: LiveEntryDynamicStreamInfo): void {
     if (serverNodeList.length > 0) {
       dynamicInfoObj.streamCreationTime = serverNodeList[0].createdAt ? serverNodeList[0].createdAt.valueOf() : null;
       // find all primary & secondary streams and find earliest createdAt stream time
       serverNodeList.forEach((eServerNode) => {
-        // get all stream available (primary, secondary)
-        if (KalturaEntryServerNodeType.livePrimary.equals(eServerNode.serverType)) {
-          dynamicInfoObj.allStreams.primary = (<KalturaLiveEntryServerNode> eServerNode).streams;
-        }
-        else if (KalturaEntryServerNodeType.liveBackup.equals(eServerNode.serverType)) {
-          dynamicInfoObj.allStreams.secondary = (<KalturaLiveEntryServerNode> eServerNode).streams;
-        }
-
         // get the earliest eServerNode.createdAt time available
         if (moment(eServerNode.createdAt).isBefore(dynamicInfoObj.streamCreationTime)) {
           dynamicInfoObj.streamCreationTime = eServerNode.createdAt.valueOf();

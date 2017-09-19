@@ -5,9 +5,12 @@ import * as moment from 'moment';
 import Duration = moment.Duration;
 import { environment } from "../../../environments/environment"
 import { LiveEntryService } from "../../services/live-entry.service";
-import { AlertSeverity, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration, LiveEntryDiagnosticsInfo } from "../../types/live-dashboard.types";
+import {
+  AlertSeverity, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration, LiveEntryDiagnosticsInfo,
+  FlavorObject, NodeStreams
+} from "../../types/live-dashboard.types";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
-import {AppLocalization} from "@kaltura-ng/kaltura-common";
+import { AppLocalization } from "@kaltura-ng/kaltura-common";
 
 
 @Component({
@@ -21,10 +24,8 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
   public  _staticConfiguration: LiveEntryStaticConfiguration;
   public  _dynamicInformation: LiveEntryDynamicStreamInfo;
   public  _streamHealthTooltip: string = "";
-  public  _streamHealth: {
-    severity: AlertSeverity,
-    resolution?: number
-  };
+  public  _allStreams: NodeStreams;
+  public  _streamSeverity: AlertSeverity;
 
   constructor(private _liveEntryService: LiveEntryService, private _appLocalization: AppLocalization) {
     // Static configuration
@@ -40,7 +41,8 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
         state: 'Offline'
       }
     };
-    this._streamHealth = { severity: AlertSeverity.info };
+    this._allStreams = { primary: [], secondary: [] };
+    this._streamSeverity = AlertSeverity.info;
   }
 
   ngOnInit() {
@@ -62,20 +64,34 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
   private _startStreamHealthSubscription(): void {
     this._subscriptionsArray.push(this._liveEntryService.entryDiagnostics$.subscribe((response: LiveEntryDiagnosticsInfo) => {
       if (response) {
-        if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType)) {
-          if (response.streamHealthPrimary.data.length) {
-            // get the last report status as general status
-            this._streamHealth.severity = response.streamHealthPrimary.data[0].severity;
-          }
-        }
-        else {
-          if (response.streamHealthSecondary.data.length) {
-            // get the last report status as general status
-            this._streamHealth.severity = response.streamHealthSecondary.data[0].severity;
-          }
-        }
+        this._getStreamsFlavors(response);
+        this._getStreamsSeverity(response);
       }
     }));
+  }
+
+  private _getStreamsFlavors(diagnostics: LiveEntryDiagnosticsInfo): void {
+    if (diagnostics.dynamicInfoPrimary.data) {
+      this._allStreams.primary = diagnostics.dynamicInfoPrimary.data.flavors;
+    }
+    if (diagnostics.dynamicInfoSecondary.data) {
+      this._allStreams.secondary = diagnostics.dynamicInfoSecondary.data.flavors;
+    }
+  }
+
+  private _getStreamsSeverity(diagnostics: LiveEntryDiagnosticsInfo): void {
+    if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType)) {
+      if (diagnostics.streamHealthPrimary.data.length) {
+        // get the last report status as general status
+        this._streamSeverity = diagnostics.streamHealthPrimary.data[0].severity;
+      }
+    }
+    else {
+      if (diagnostics.streamHealthSecondary.data.length) {
+        // get the last report status as general status
+        this._streamSeverity = diagnostics.streamHealthSecondary.data[0].severity;
+      }
+    }
   }
 
   private _startCalculatingStreamDurationTime(): void {
@@ -93,29 +109,33 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
   }
 
   public _getSourceHeight(): string {
-    if (this._dynamicInformation.allStreams.primary) {
-      let sourceStream = this._dynamicInformation.allStreams.primary.find(s => {
-        return s.flavorId === environment.flavorsDefinitions.sourceFlavorId
-      });
-
-      return sourceStream ? `(${sourceStream.height}p)` : '';
+    let flavorsArray: FlavorObject[] = [];
+    if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType)) {
+      flavorsArray = this._allStreams.primary;
     }
-    else if (this._dynamicInformation.allStreams.secondary) {
-      let sourceStream = this._dynamicInformation.allStreams.secondary.find(s => {
-        return s.flavorId === environment.flavorsDefinitions.sourceFlavorId
-      });
-
-      return sourceStream ? `(${sourceStream.height}p)` : '';
+    else if (KalturaEntryServerNodeType.liveBackup.equals(this._dynamicInformation.streamStatus.serverType)) {
+      flavorsArray = this._allStreams.secondary;
     }
-    else
-      return '';
+
+    if (flavorsArray.length) {
+      let source = flavorsArray.find(f => { return f.name === environment.flavorsDefinitions.sourceFlavorId });
+
+      return source? `(${source.mediaInfo.resolution[1]}p)` : '';
+    }
+
+    return '';
   }
 
   private _buildStreamHealthToolTip(): void {
-    let lineGood = `<i class='kIconpartial_small bullet-green'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.Good')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.Good')}<br>`;
-    let lineFair = `<i class='kIconpartial_small bullet-yellow'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.Fair')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.Fair')}<br>`;
-    let linePoor = `<i class='kIconpartial_small bullet-red'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.Poor')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.Poor')}<br>`;
-    let lineNA = `<i class='kIconpartial_small bullet-grey'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.N/A')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.N/A')}`;
+    function alignTooltipLeft(text: string): string {
+      return `<div class=alignLeft>${text}</div>`;
+    }
+
+    let lineGood = alignTooltipLeft(`<i class='kIconpartial_small bullet-green'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.Good')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.Good')}`);
+    let lineFair = alignTooltipLeft(`<i class='kIconpartial_small bullet-yellow'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.Fair')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.Fair')}`);
+    let linePoor = alignTooltipLeft(`<i class='kIconpartial_small bullet-red'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.Poor')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.Poor')}`);
+    let lineNA = alignTooltipLeft(`<i class='kIconpartial_small bullet-grey'></i> <b>${this._appLocalization.get('STREAM_CONFIG.stream_health.state.N/A')}</b>: ${this._appLocalization.get('STREAM_CONFIG.stream_health.tooltip.N/A')}`);
+
     this._streamHealthTooltip = lineGood + lineFair + linePoor + lineNA;
   }
 

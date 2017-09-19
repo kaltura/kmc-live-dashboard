@@ -20,19 +20,19 @@ export class TranscodingInfoPipe implements PipeTransform {
 
   private appendFormattedStream(arr: any, prefix?: string): string {
     let transcoding = '';
-    let sortedStreamsArr;
+    let sortedFlavorsArr;
 
     if (_.isArray(arr) && arr.length > 0) {
       if (prefix) {
         transcoding =  prefix + '\n';
       }
 
-      sortedStreamsArr = _.sortBy(arr, (stream) => {
-        return (-stream.bitrate);
+      sortedFlavorsArr = _.sortBy(arr, flavor => {
+        return (-flavor.bitrate_kbps);
       });  // '-' minus sign is for desc
 
-      _.forEach(sortedStreamsArr, (stream) => {
-        transcoding += `${stream.width}x${stream.height} @ ${Math.floor(stream.bitrate / 1024)}Kbps `;
+      _.forEach(sortedFlavorsArr, flavor => {
+        transcoding += `${flavor.mediaInfo.resolution[0]}x${flavor.mediaInfo.resolution[1]} @ ${flavor.mediaInfo.bitrate_kbps}Kbps `;
       });
     }
     return transcoding;
