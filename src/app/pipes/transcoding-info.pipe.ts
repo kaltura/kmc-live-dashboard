@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as _ from 'lodash';
-import { TranslateService } from "ng2-translate";
-import { NodeStreams } from "../types/live-dashboard.types";
+import { FlavorObject, NodeStreams } from "../types/live-dashboard.types";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
 
 @Pipe({
@@ -18,7 +17,7 @@ export class TranscodingInfoPipe implements PipeTransform {
     }
   }
 
-  private appendFormattedStream(arr: any, prefix?: string): string {
+  private appendFormattedStream(arr: FlavorObject[], prefix?: string): string {
     let transcoding = '';
     let sortedFlavorsArr;
 
@@ -28,9 +27,8 @@ export class TranscodingInfoPipe implements PipeTransform {
       }
 
       sortedFlavorsArr = _.sortBy(arr, flavor => {
-        return (-flavor.bitrate_kbps);
+        return (-flavor.mediaInfo.bitrate_kbps);
       });  // '-' minus sign is for desc
-
       _.forEach(sortedFlavorsArr, flavor => {
         transcoding += `${flavor.mediaInfo.resolution[0]}x${flavor.mediaInfo.resolution[1]} @ ${flavor.mediaInfo.bitrate_kbps}Kbps `;
       });
