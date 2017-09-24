@@ -19,8 +19,6 @@
 
     <!-- list item -->
     <div *ngFor="let notification of streamHealthNotifications" class="notification-item grid col-12 no-margin">
-      <div class="bullet">•</div>
-
       <div class="item-info col">
         <div class="row-1">
           <span class="status-prop">{{ notification.updatedTime | localeTime: true }}</span>
