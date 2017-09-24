@@ -3,7 +3,7 @@ import { LiveEntryService } from "../services/live-entry.service";
 import { KalturaEntryModerationStatus } from "kaltura-typescript-client/types/KalturaEntryModerationStatus";
 import { KalturaMediaType } from "kaltura-typescript-client/types/KalturaMediaType";
 import { LiveDashboardConfiguration } from "../services/live-dashboard-configuration.service";
-import { LiveEntryDynamicStreamInfo } from "../types/live-dashboard.types";
+import { LiveEntryDynamicStreamInfo, LoadingStatus } from "../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
 
 @Component({
@@ -12,6 +12,8 @@ import { ISubscription } from "rxjs/Subscription";
   styleUrls: ['./details-and-preview.component.scss']
 })
 export class DetailAndPreviewComponent implements OnInit, OnDestroy {
+  public  _applicationLoaded: boolean;
+  private _applicationStatusSubscription: ISubscription;
   private _liveStreamSubscription: ISubscription;
   private _dynamicInformationSubscription: ISubscription;
   public  _creator: string;
@@ -30,13 +32,25 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
               private _liveDashboardConfiguration: LiveDashboardConfiguration) { }
 
   ngOnInit() {
+    this._listenToApplicationStatus();
     this._subscribeToLiveStream();
     this._subscribeToDynamicInformation();
   }
 
   ngOnDestroy() {
+    this._applicationStatusSubscription.unsubscribe();
     this._liveStreamSubscription.unsubscribe();
     this._dynamicInformationSubscription.unsubscribe();
+  }
+
+  private _listenToApplicationStatus(): void {
+    this._applicationStatusSubscription = this._liveEntryService.applicationStatus$
+      .subscribe(response => {
+        if (response) {
+          this._applicationLoaded = (response.liveEntry === LoadingStatus.succeeded) &&
+                                    (response.streamStatus === LoadingStatus.succeeded)
+        }
+      });
   }
 
   private _subscribeToLiveStream(): void {

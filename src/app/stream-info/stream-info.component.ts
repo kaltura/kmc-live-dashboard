@@ -28,8 +28,8 @@ export class StreamInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.listenToApplicationStatus();
-    this.listenToDynamicStreamInfo();
+    this._listenToApplicationStatus();
+    this._listenToDynamicStreamInfo();
   }
 
   ngOnDestroy() {
@@ -37,7 +37,7 @@ export class StreamInfoComponent implements OnInit, OnDestroy {
     this._dynamicInformationSubscription.unsubscribe();
   }
 
-  private listenToApplicationStatus(): void {
+  private _listenToApplicationStatus(): void {
     this._applicationStatusSubscription = this._liveEntryService.applicationStatus$
       .subscribe(response => {
         if (response) {
@@ -48,7 +48,7 @@ export class StreamInfoComponent implements OnInit, OnDestroy {
     });
   }
 
-  private listenToDynamicStreamInfo(): void {
+  private _listenToDynamicStreamInfo(): void {
     this._dynamicInformationSubscription = this._liveEntryService.entryDynamicInformation$.subscribe(response => {
       if (response) {
         this._dynamicInformation = response;
