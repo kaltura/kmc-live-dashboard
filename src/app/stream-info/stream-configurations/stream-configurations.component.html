@@ -34,7 +34,7 @@
       <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
       <i class="kIconinfo infoIcon"
          [kTooltip]="((_dynamicInformation.streamStatus.state !== 'Offline') && (_allStreams.primary.length || _allStreams.secondary.length)) ? (_allStreams | transcodingInfo: _dynamicInformation.streamStatus.serverType) : ''"
-         [maxWidth]="150" [placement]="'bottom'"></i>
+         [maxWidth]="145" [placement]="'bottom'"></i>
     </div>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="_staticConfiguration.transcoding">•</span>
