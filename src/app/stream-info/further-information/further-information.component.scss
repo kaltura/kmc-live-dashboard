@@ -1,0 +1,35 @@
+@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.component-text {
+  color: $kGrayscale2;
+}
+
+.learn-more-not-live {
+  padding: 32px 0 22px 0;
+}
+
+.learn-more-link {
+  margin-top: 5px;
+  text-decoration: underline;
+  color: $kTertiary;
+
+  &:hover {
+    color: darken($kTertiary, 20%);
+  }
+}
+
+.further-information-box {
+  padding: 33px 0 33px 0;
+}
+
+.alert-message {
+  margin: 0 15px;
+}
+
+.arrow-disabled {
+  color: $kGrayscale5;
+}
+
+.arrow-enabled {
+  color: $kGrayscale1;
+}

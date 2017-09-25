@@ -18,7 +18,7 @@
   <div class="notification-list">
 
     <!-- list item -->
-    <div *ngFor="let notification of streamHealthNotifications" class="notification-item grid col-12 no-margin">
+    <div *ngFor="let notification of _streamHealthNotifications" class="notification-item grid col-12 no-margin">
       <div class="item-info col">
         <div class="row-1">
           <span class="status-prop">{{ notification.updatedTime | localeTime: true }}</span>
@@ -32,7 +32,7 @@
                  [class.bullet-green]=  "((alert.Code | codeToSeverity | severityToHealth) === 'Good')"
                  [class.bullet-yellow]= "((alert.Code | codeToSeverity | severityToHealth) === 'Fair')"
                  [class.bullet-red]=    "((alert.Code | codeToSeverity | severityToHealth) === 'Poor')">•</span>
-            <span class="col alert-description">{{ "ALERTS." + alert.Code + ".message-log" | translate: alert.Arguments}}</span>
+            <span class="col alert-description">{{ "ALERTS." + alert.Code + ".message-log" | translate: alert.Arguments }}</span>
           </div>
           <div *ngIf="notification.alerts.length == 0">{{ "ALERTS.no-alerts" | translate }}</div>
         </div>

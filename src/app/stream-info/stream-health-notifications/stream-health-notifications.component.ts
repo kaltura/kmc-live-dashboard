@@ -13,7 +13,7 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
   private _entryDiagnosticsSubscription: ISubscription;
   private _numOfWatchersSubscription: ISubscription;
   public  _numOfWatchers = 0;
-  public  streamHealthNotifications = [];
+  public  _streamHealthNotifications = [];
 
   constructor(private _liveEntryService: LiveEntryService) {}
 
@@ -48,12 +48,12 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
   private _listenToEntryDiagnosticsNotifications() {
     this._entryDiagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe(response => {
       if (response && response.streamHealthPrimary.data.length) {
-        this.streamHealthNotifications = response.streamHealthPrimary.data.concat(this.streamHealthNotifications);
+        this._streamHealthNotifications = response.streamHealthPrimary.data.concat(this._streamHealthNotifications);
       }
       if (response && response.streamHealthSecondary.data.length) {
-        this.streamHealthNotifications = response.streamHealthSecondary.data.concat(this.streamHealthNotifications);
+        this._streamHealthNotifications = response.streamHealthSecondary.data.concat(this._streamHealthNotifications);
       }
-      this.streamHealthNotifications.sort(this._sortHealthNotifications);
+      this._streamHealthNotifications.sort(this._sortHealthNotifications);
     });
   }
 
