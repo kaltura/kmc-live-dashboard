@@ -88,7 +88,7 @@
     },
     "101": {
       "message-log": "Declared and actual bitrate unmatched",
-      "message-text-box": "Detected incoming actual bitrate (value) is different from declared one (value). Make sure your encoder is configured to use CBR (constant bitrate)"
+      "message-text-box": "Detected incoming actual bitrate ({{incomingBitrate}}) is different from declared one ({{configuredBitrate}}). Make sure your encoder is configured to use CBR (constant bitrate)"
     },
     "102": {
       "message-log": "Audio track dropped",

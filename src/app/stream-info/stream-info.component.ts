@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../services/live-entry.service";
-import { LiveEntryDynamicStreamInfo, LoadingStatus } from "../types/live-dashboard.types";
+import { LoadingStatus } from "../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
-import { environment } from "../../environments/environment";
 
 import 'rxjs/Rx';
 
@@ -15,29 +14,18 @@ import 'rxjs/Rx';
 export class StreamInfoComponent implements OnInit, OnDestroy {
   public  _applicationLoaded: boolean;
   private _applicationStatusSubscription: ISubscription;
-  public  _learnMoreLink = environment.externalLinks.LEARN_MORE;
-  public  _dynamicInformation: LiveEntryDynamicStreamInfo;
-  private _dynamicInformationSubscription: ISubscription;
 
-  constructor(private _liveEntryService: LiveEntryService) {
-    this._dynamicInformation = {
-      streamStatus: {
-        state: 'Offline'
-      }
-    };
-  }
+  constructor(private _liveEntryService: LiveEntryService) { }
 
   ngOnInit() {
-    this.listenToApplicationStatus();
-    this.listenToDynamicStreamInfo();
+    this._listenToApplicationStatus();
   }
 
   ngOnDestroy() {
     this._applicationStatusSubscription.unsubscribe();
-    this._dynamicInformationSubscription.unsubscribe();
   }
 
-  private listenToApplicationStatus(): void {
+  private _listenToApplicationStatus(): void {
     this._applicationStatusSubscription = this._liveEntryService.applicationStatus$
       .subscribe(response => {
         if (response) {
@@ -45,14 +33,6 @@ export class StreamInfoComponent implements OnInit, OnDestroy {
                                     (response.streamStatus === LoadingStatus.succeeded) &&
                                     (response.streamHealth === LoadingStatus.succeeded)
         }
-    });
-  }
-
-  private listenToDynamicStreamInfo(): void {
-    this._dynamicInformationSubscription = this._liveEntryService.entryDynamicInformation$.subscribe(response => {
-      if (response) {
-        this._dynamicInformation = response;
-      }
     });
   }
 }

@@ -21,41 +21,22 @@
     }
   }
 
-  .learn-more {
+  further-information {
+    flex: 1 1 0%;
+    padding: 0 45px;
+  }
+
+  .further-information-box {
     align-self: flex-start;
-    flex: 1 100%;
+    flex: 1 1 0%;
     height: 84px;
     display: flex;
     align-items: center;
     justify-content: center;
 
-    div {
-      width: 489px;
-      margin: auto;
-    }
     border-top: 1px solid $kGrayscale6;
     border-bottom: 1px solid $kGrayscale6;
     text-align: center;
-    .learn-more-not-live {
-      padding: 32px 0 22px 0;
-    }
-    .learn-more-text {
-      color: $kGrayscale2;
-    }
-
-    .learn-more-link {
-      margin-top: 5px;
-      text-decoration: underline;
-      color: $kTertiary;
-
-      &:hover {
-        color: darken($kTertiary, 20%);
-      }
-    }
-
-    .learn-more-is-live {
-      padding: 32px 0 32px 0;
-    }
   }
 
   .main {
