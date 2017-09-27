@@ -202,13 +202,20 @@ export class LiveEntryService implements OnDestroy {
   private _parseEntryServeNodeList(snList: KalturaEntryServerNode[]): void {
     let dynamicConfigObj = this._entryDynamicInformation.getValue();
     // Check redundancy if more than one serverNode was returned
-    dynamicConfigObj.redundancy = (snList.length > 1);
+    dynamicConfigObj.redundancy = this._getRedundancyStatus(snList);
     let newStreamState = this._getStreamStatus(snList, dynamicConfigObj);
     this._streamSessionStateUpdate(dynamicConfigObj.streamStatus.state, newStreamState.state, dynamicConfigObj.streamSession);
     dynamicConfigObj.streamStatus = newStreamState;
     this._updateStreamCreationTime(snList, dynamicConfigObj);
 
     this._entryDynamicInformation.next(dynamicConfigObj);
+  }
+
+  private _getRedundancyStatus(serverNodeList: KalturaEntryServerNode[]): boolean {
+    if (serverNodeList.length > 1) {
+      return serverNodeList.every(sn => sn.status !== KalturaEntryServerNodeStatus.markedForDeletion);
+    }
+    return false;
   }
 
   private _getStreamStatus(serverNodeList: KalturaEntryServerNode[], currentInfo: LiveEntryDynamicStreamInfo): LiveStreamStates {
