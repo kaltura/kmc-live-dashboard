@@ -346,7 +346,7 @@ export class LiveEntryService implements OnDestroy {
               updatedTime: beaconUpdateTime,
               severity: privateData.maxSeverity,
               isPrimary: isPrimary,
-              alerts: _.isArray(privateData.alerts) ?  privateData.alerts : []
+              alerts: _.isArray(privateData.alerts) ? _.uniqBy(privateData.alerts, 'Code') : []
             };
             // sort alerts by their severity (-desc)
             report.alerts = (_.sortBy(report.alerts, [(alert)=> {
