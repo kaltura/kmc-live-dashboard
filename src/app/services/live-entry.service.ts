@@ -38,8 +38,9 @@ import { KalturaReportGraph } from "kaltura-typescript-client/types/KalturaRepor
 import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaNullableBoolean";
 // Types
 import {
-  NodeStreams, LiveStreamStates, LiveStreamSession, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
-  ApplicationStatus, LoadingStatus, LiveEntryDiagnosticsInfo, StreamHealth
+  LiveStreamStates, LiveStreamSession, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
+  ApplicationStatus, LoadingStatus, LiveEntryDiagnosticsInfo, StreamHealth, DiagnosticsHealthInfo,
+  DiagnosticsDynamicInfo
 } from "../types/live-dashboard.types";
 // Pipes
 import { CodeToSeverityPipe } from "../pipes/code-to-severity.pipe";
@@ -75,19 +76,20 @@ export class LiveEntryService implements OnDestroy {
   });
   public  entryDynamicInformation$ = this._entryDynamicInformation.asObservable();
   // BehaviorSubjects subscribed by configuration display component for diagnostics and health monitoring
-  private _entryDiagnosticsInfo: LiveEntryDiagnosticsInfo = {
+  private _entryDiagnosticsObject: LiveEntryDiagnosticsInfo = {
     staticInfoPrimary: { updatedTime: 0 },
     staticInfoSecondary: { updatedTime: 0 },
     dynamicInfoPrimary: { updatedTime: 0 },
     dynamicInfoSecondary: { updatedTime: 0 },
-    streamHealthPrimary: { updatedTime: 0 },
-    streamHealthSecondary: { updatedTime: 0 }
+    streamHealth: { updatedTime: Date.now(), data: { primary: [], secondary: [] } }
   };
   private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
   public  entryDiagnostics$ = this._entryDiagnostics.asObservable();
 
-  private _pullRequestEntryStatusMonitoring: ISubscription;
-  private _pullRequestStreamHealthMonitoring: ISubscription;
+  private _subscriptionEntryStatusMonitoring: ISubscription;
+  private _subscriptionStreamHealthInitialization: ISubscription;
+  private _subscriptionStreamHealthMonitoring: ISubscription;
+  private _subscriptionDiagnosticsMonitoring: ISubscription;
 
   private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
 
@@ -106,8 +108,10 @@ export class LiveEntryService implements OnDestroy {
 
   ngOnDestroy() {
     this._liveStream.unsubscribe();
-    this._pullRequestEntryStatusMonitoring.unsubscribe();
-    this._pullRequestStreamHealthMonitoring.unsubscribe();
+    this._subscriptionEntryStatusMonitoring.unsubscribe();
+    this._subscriptionStreamHealthInitialization.unsubscribe();
+    this._subscriptionStreamHealthMonitoring.unsubscribe();
+    this._subscriptionDiagnosticsMonitoring.unsubscribe();
     if (this._liveStreamGetSubscription) {
       this._liveStreamGetSubscription.unsubscribe();
     }
@@ -180,7 +184,7 @@ export class LiveEntryService implements OnDestroy {
   }
 
   private _runEntryStatusMonitoring(): void {
-    this._pullRequestEntryStatusMonitoring = this._entryTimerTask.runTimer(() => {
+    this._subscriptionEntryStatusMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new EntryServerNodeListAction({
         filter: new KalturaEntryServerNodeFilter({entryIdEqual: this._liveDashboardConfiguration.entryId})
       }))
@@ -283,7 +287,7 @@ export class LiveEntryService implements OnDestroy {
   }
 
   private _streamHealthInitialization(): void {
-    this._kalturaClient.request(new BeaconListAction({
+    this._subscriptionStreamHealthInitialization = this._kalturaClient.request(new BeaconListAction({
       filter: new KalturaBeaconFilter({
         orderBy: '-updatedAt',
         eventTypeIn: '0_healthData,1_healthData',
@@ -295,42 +299,72 @@ export class LiveEntryService implements OnDestroy {
       })
     }))
     .subscribe(response => {
-      this._parseEntryBeacons(response.objects);
-      this._entryDiagnostics.next(this._entryDiagnosticsInfo);
+      this._parseBeacons(response.objects, true);
+      this._entryDiagnostics.next(this._entryDiagnosticsObject);
       this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
-      return this._runStreamHealthMonitoring();
+      this._runStreamHealthMonitoring();
+      this._runDiagnosticsDataMonitoring();
     })
   }
 
   private _runStreamHealthMonitoring(): void {
-    this._pullRequestStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
+    this._subscriptionStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new BeaconListAction({
         filter: new KalturaBeaconFilter({
+          orderBy: '-updatedAt',
+          updatedAtGreaterThanOrEqual: new Date(this._entryDiagnosticsObject.streamHealth.updatedTime),
+          eventTypeIn: '0_healthData,1_healthData',
           objectIdIn: this._liveDashboardConfiguration.entryId,
-          indexTypeEqual: KalturaBeaconIndexType.state
+          indexTypeEqual: KalturaBeaconIndexType.log
         })
       }))
         .do(response => {
-          // Update diagnostics object with recent beacons info
-          this._parseEntryBeacons(response.objects);
-          this._entryDiagnostics.next(this._entryDiagnosticsInfo);
-          this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
+          // Update diagnostics object with recent health beacons
+          this._parseBeacons(response.objects, true);
+          this._entryDiagnostics.next(this._entryDiagnosticsObject);
           return;
         })
     }, environment.liveEntryService.streamHealthIntervalTimeInMs)
       .subscribe(response => {
         if (response.error instanceof KalturaAPIException) {
-          console.log(`[BeaconList] Error: ${response.error.message}`);
-          this._updatedApplicationStatus('streamStatus', LoadingStatus.failed);
+          console.log(`[BeaconHealthMonitoring] Error: ${response.error.message}`);
         }
       });
   }
 
-  private _parseEntryBeacons(beaconsArray: KalturaBeacon[]): void {
-    // As this is only the delta portion of the reports (beacon) so
+  private _runDiagnosticsDataMonitoring(): void {
+    this._subscriptionDiagnosticsMonitoring = this._entryTimerTask.runTimer(() => {
+      return this._kalturaClient.request(new BeaconListAction({
+        filter: new KalturaBeaconFilter({
+          eventTypeIn: '0_staticData,0_dynamicData,1_staticData,1_dynamicData',
+          objectIdIn: this._liveDashboardConfiguration.entryId,
+          indexTypeEqual: KalturaBeaconIndexType.state
+        })
+      }))
+        .do(response => {
+          // Update diagnostics object with recent data beacons
+          this._parseBeacons(response.objects);
+          this._entryDiagnostics.next(this._entryDiagnosticsObject);
+        })
+    }, environment.liveEntryService.streamDiagnosticsIntervalTimeInMs, true)
+      .subscribe(response => {
+        if (response.error instanceof KalturaAPIException) {
+          console.log(`[BeaconDiagnosticsMonitoring] Error: ${response.error.message}`);
+        }
+      })
+  }
+
+  private _parseBeacons(beaconsArray: KalturaBeacon[], isLoggedType = false) {
     // only the delta will be pushed as an event subject.
-    this._entryDiagnosticsInfo.streamHealthPrimary.data = [];
-    this._entryDiagnosticsInfo.streamHealthSecondary.data = [];
+    if (isLoggedType) {
+      this._entryDiagnosticsObject.streamHealth.data.primary = [];
+      this._entryDiagnosticsObject.streamHealth.data.secondary = [];
+
+      // Make sure last beacon's updatedTime in the array matches the last one received by service and remove it.
+      if (this._entryDiagnosticsObject.streamHealth.updatedTime === beaconsArray[beaconsArray.length - 1].updatedAt.valueOf()) {
+        beaconsArray.pop();
+      }
+    }
 
     _.each(beaconsArray, b => {
       let privateData = JSON.parse(b.privateData);
@@ -338,42 +372,49 @@ export class LiveEntryService implements OnDestroy {
       let isPrimary = (b.eventType[0] === '0');
       let beaconUpdateTime = b.updatedAt.valueOf();
 
-      let objToUpdate = this._getDiagnosticsObjToUpdate(eventType, isPrimary);
-      if (objToUpdate) {
-        if (beaconUpdateTime !== objToUpdate.updatedTime) {
-          if (eventType === 'healthData') {
-            let report = {
-              updatedTime: beaconUpdateTime,
-              severity: privateData.maxSeverity,
-              isPrimary: isPrimary,
-              alerts: _.isArray(privateData.alerts) ?  privateData.alerts : []
-            };
-            // sort alerts by their severity (-desc)
-            report.alerts = (_.sortBy(report.alerts, [(alert)=> {
-              return -this._codeToSeverityPipe.transform(alert.Code).valueOf();
-            }]));
-            (<StreamHealth[]>objToUpdate.data).push(report);
-          }
-          else {
-            objToUpdate.data = privateData;
-          }
-          // Only if beacon report time is higher (meaning more recent) than last one saved, replace it
-          if (beaconUpdateTime > objToUpdate.updatedTime) {
-            objToUpdate.updatedTime = beaconUpdateTime;
-          }
+      let objectToUpdate = this._getDiagnosticsObjToUpdate(eventType, isPrimary);
+      if (objectToUpdate && (beaconUpdateTime !== objectToUpdate.updatedTime)) {
+        if (eventType === 'healthData') {
+          this._handleHealthBeacon(beaconUpdateTime, isPrimary, privateData, objectToUpdate);
         }
+        else {
+          objectToUpdate.data = privateData
+        }
+      }
+      // Only if beacon report time is higher (meaning more recent) than last one saved, replace it
+      if (beaconUpdateTime > objectToUpdate.updatedTime) {
+        objectToUpdate.updatedTime = beaconUpdateTime;
       }
     });
   }
 
-  private _getDiagnosticsObjToUpdate(event: string, isPrimary: boolean): { updatedTime?: number, data?: Object | StreamHealth[]} {
+  private _handleHealthBeacon(beaconTime: number, isPrimary: boolean, metaData: any, diagnosticsObject: { updatedTime?: number, data?: DiagnosticsHealthInfo }): void {
+    let report = {
+      updatedTime: beaconTime,
+      severity: metaData.maxSeverity,
+      isPrimary: isPrimary,
+      alerts: _.isArray(metaData.alerts) ? _.uniqBy(metaData.alerts, 'Code') : []
+    };
+    // sort alerts by their severity (-desc)
+    report.alerts = (_.sortBy(report.alerts, [(alert) => {
+      return -this._codeToSeverityPipe.transform(alert.Code).valueOf();
+    }]));
+    if (isPrimary) {
+      (<StreamHealth[]>diagnosticsObject.data.primary).push(report);
+    }
+    else {
+      (<StreamHealth[]>diagnosticsObject.data.secondary).push(report);
+    }
+  }
+
+  private _getDiagnosticsObjToUpdate(event: string, isPrimary: boolean): { updatedTime?: number, data?: Object | DiagnosticsDynamicInfo | DiagnosticsHealthInfo } {
     switch(event) {
       case 'staticData':
-        return (isPrimary) ? this._entryDiagnosticsInfo.staticInfoPrimary : this._entryDiagnosticsInfo.staticInfoSecondary;
+        return (isPrimary) ? this._entryDiagnosticsObject.staticInfoPrimary : this._entryDiagnosticsObject.staticInfoSecondary;
       case 'dynamicData':
-        return (isPrimary) ? this._entryDiagnosticsInfo.dynamicInfoPrimary : this._entryDiagnosticsInfo.dynamicInfoSecondary;
+        return (isPrimary) ? this._entryDiagnosticsObject.dynamicInfoPrimary : this._entryDiagnosticsObject.dynamicInfoSecondary;
       case 'healthData':
-        return (isPrimary) ? this._entryDiagnosticsInfo.streamHealthPrimary : this._entryDiagnosticsInfo.streamHealthSecondary;
+        return this._entryDiagnosticsObject.streamHealth;
       default:
         console.log(`Beacon event Type unknown: ${event}`);
         return null;
