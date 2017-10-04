@@ -8,6 +8,7 @@ export const environment = {
   "liveEntryService": {
     "streamStatusIntervalTimeInMs": 5000,
     "streamHealthIntervalTimeInMs": 10000,
+    "streamDiagnosticsIntervalTimeInMs": 30000,
     "liveAnalyticsIntervalTimeInMs": 30000,
     "streamSessionGracePeriodInMs": 180000,
     "maxBeaconHealthReportsToShow": 50,
