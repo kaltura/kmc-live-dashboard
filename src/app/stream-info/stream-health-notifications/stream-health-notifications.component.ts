@@ -47,11 +47,11 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
 
   private _listenToEntryDiagnosticsNotifications() {
     this._entryDiagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe(response => {
-      if (response && response.streamHealthPrimary.data.length) {
-        this._streamHealthNotifications = response.streamHealthPrimary.data.concat(this._streamHealthNotifications);
+      if (response && response.streamHealth.data.primary.length) {
+        this._streamHealthNotifications = response.streamHealth.data.primary.concat(this._streamHealthNotifications);
       }
-      if (response && response.streamHealthSecondary.data.length) {
-        this._streamHealthNotifications = response.streamHealthSecondary.data.concat(this._streamHealthNotifications);
+      if (response && response.streamHealth.data.secondary.length) {
+        this._streamHealthNotifications = response.streamHealth.data.secondary.concat(this._streamHealthNotifications);
       }
       this._streamHealthNotifications.sort(this._sortHealthNotifications);
     });

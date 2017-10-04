@@ -86,8 +86,12 @@ export interface LiveEntryDiagnosticsInfo {
   staticInfoSecondary?: { updatedTime?: number, data?: Object },
   dynamicInfoPrimary?: { updatedTime?: number, data?: DiagnosticsDynamicInfo },
   dynamicInfoSecondary?: { updatedTime?: number, data?: DiagnosticsDynamicInfo },
-  streamHealthPrimary?: { updatedTime?: number, data?: StreamHealth[] }
-  streamHealthSecondary?: { updatedTime?: number, data?: StreamHealth[] }
+  streamHealth?: { updatedTime?: number, data?: DiagnosticsHealthInfo  }
+}
+
+export interface DiagnosticsHealthInfo {
+  primary?: StreamHealth[],
+  secondary?: StreamHealth[]
 }
 
 export interface DiagnosticsDynamicInfo {
