@@ -81,15 +81,15 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
 
   private _getStreamsSeverity(diagnostics: LiveEntryDiagnosticsInfo): void {
     if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType)) {
-      if (diagnostics.streamHealthPrimary.data.length) {
+      if (diagnostics.streamHealth.data.primary.length) {
         // get the last report status as general status
-        this._streamSeverity = diagnostics.streamHealthPrimary.data[0].severity;
+        this._streamSeverity = diagnostics.streamHealth.data.primary[0].severity;
       }
     }
     else {
-      if (diagnostics.streamHealthSecondary.data.length) {
+      if (diagnostics.streamHealth.data.secondary.length) {
         // get the last report status as general status
-        this._streamSeverity = diagnostics.streamHealthSecondary.data[0].severity;
+        this._streamSeverity = diagnostics.streamHealth.data.secondary[0].severity;
       }
     }
   }

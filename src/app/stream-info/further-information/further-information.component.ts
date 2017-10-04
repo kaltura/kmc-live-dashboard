@@ -47,12 +47,12 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
   private _listenToHealthDiagnostics(): void {
     this._diagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe(response => {
       if (response && this._dynamicInformation.streamStatus.serverType) {
-        if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType) && response.streamHealthPrimary.data.length) {
-          this._alertsArray = response.streamHealthPrimary.data[0].alerts;
+        if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType) && response.streamHealth.data.primary.length) {
+          this._alertsArray = response.streamHealth.data.primary[0].alerts;
           this._alertIndex = 0;
         }
-        else if (KalturaEntryServerNodeType.liveBackup.equals(this._dynamicInformation.streamStatus.serverType) && response.streamHealthSecondary.data.length) {
-          this._alertsArray = response.streamHealthSecondary.data[0].alerts;
+        else if (KalturaEntryServerNodeType.liveBackup.equals(this._dynamicInformation.streamStatus.serverType) && response.streamHealth.data.secondary.length) {
+          this._alertsArray = response.streamHealth.data.secondary[0].alerts;
           this._alertIndex = 0;
         }
       }
