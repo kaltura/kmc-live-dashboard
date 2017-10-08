@@ -440,6 +440,8 @@ export class LiveEntryService implements OnDestroy {
         }
       }
       else if (this._numOfWatchersTimerSubscription) {
+        // Erase last graph value in the behavior subject so component will know to stop displaying watchers
+        this._numOfWatcherSubject.next(null);
         this._numOfWatchersTimerSubscription.unsubscribe();
         this._numOfWatchersTimerSubscription = null;
       }
