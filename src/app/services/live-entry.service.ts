@@ -355,16 +355,13 @@ export class LiveEntryService implements OnDestroy {
   }
 
   private _parseBeacons(beaconsArray: KalturaBeacon[], isLoggedType = false) {
-    if (!beaconsArray.length)
-      return;
-
     // only the delta will be pushed as an event subject.
     if (isLoggedType) {
       this._entryDiagnosticsObject.streamHealth.data.primary = [];
       this._entryDiagnosticsObject.streamHealth.data.secondary = [];
 
       // Make sure last beacon's updatedTime in the array matches the last one received by service and remove it.
-      if (this._entryDiagnosticsObject.streamHealth.updatedTime === beaconsArray[beaconsArray.length - 1].updatedAt.valueOf()) {
+      if (beaconsArray.length && (this._entryDiagnosticsObject.streamHealth.updatedTime === beaconsArray[beaconsArray.length - 1].updatedAt.valueOf())) {
         beaconsArray.pop();
       }
     }
