@@ -9,7 +9,7 @@
   align-self: flex-start;
 
   .stream-health {
-    flex:  1 100%;
+    flex:  1 0 100%;
     color: $kGrayscale3;
     font-size: 13px;
     line-height: 16px;
@@ -40,7 +40,7 @@
   }
 
   .main {
-    flex: 1 100%;
+    flex: 1 0 100%;
 
     display: flex;
     flex-flow: row nowrap;
@@ -77,7 +77,7 @@
   }
 
   footer {
-    flex: 1 100%;
+    flex: 1 0 100%;
     padding: 23px 0 17px 0;
     border-top: 1px solid $kGrayscale6;
     text-align: center;

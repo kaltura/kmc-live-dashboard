@@ -355,6 +355,9 @@ export class LiveEntryService implements OnDestroy {
   }
 
   private _parseBeacons(beaconsArray: KalturaBeacon[], isLoggedType = false) {
+    if (!beaconsArray.length)
+      return;
+
     // only the delta will be pushed as an event subject.
     if (isLoggedType) {
       this._entryDiagnosticsObject.streamHealth.data.primary = [];
