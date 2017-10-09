@@ -1,7 +1,7 @@
 import { environment } from "../../../environments/environment";
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../../services/live-entry.service";
-import { LiveEntryDynamicStreamInfo, Alert } from "../../types/live-dashboard.types";
+import { LiveEntryDynamicStreamInfo, Alert, DiagnosticsErrorCodes } from "../../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
 
@@ -45,14 +45,18 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
   }
 
   private _listenToHealthDiagnostics(): void {
+    function alertsFilter(alert: Alert): boolean {
+      return (alert.Code !== DiagnosticsErrorCodes.EntryStarted) && (alert.Code !== DiagnosticsErrorCodes.EntryStopped);
+    }
+
     this._diagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe(response => {
       if (response && this._dynamicInformation.streamStatus.serverType) {
         if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType) && response.streamHealth.data.primary.length) {
-          this._alertsArray = response.streamHealth.data.primary[0].alerts;
+          this._alertsArray = response.streamHealth.data.primary[0].alerts.filter(alertsFilter);
           this._alertIndex = 0;
         }
         else if (KalturaEntryServerNodeType.liveBackup.equals(this._dynamicInformation.streamStatus.serverType) && response.streamHealth.data.secondary.length) {
-          this._alertsArray = response.streamHealth.data.secondary[0].alerts;
+          this._alertsArray = response.streamHealth.data.secondary[0].alerts.filter(alertsFilter);
           this._alertIndex = 0;
         }
       }

@@ -125,6 +125,7 @@ export class LiveEntryService implements OnDestroy {
   public InitializeLiveEntryService(): void {
     this._getLiveStream();
     this._runEntryStatusMonitoring();
+    this._runDiagnosticsDataMonitoring();
     this._streamHealthInitialization();
     this._listenToNumOfWatcherWhenLive();
   }
@@ -303,7 +304,6 @@ export class LiveEntryService implements OnDestroy {
       this._entryDiagnostics.next(this._entryDiagnosticsObject);
       this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
       this._runStreamHealthMonitoring();
-      this._runDiagnosticsDataMonitoring();
     })
   }
 
@@ -354,14 +354,13 @@ export class LiveEntryService implements OnDestroy {
       })
   }
 
-  private _parseBeacons(beaconsArray: KalturaBeacon[], isLoggedType = false) {
-    // only the delta will be pushed as an event subject.
-    if (isLoggedType) {
-      this._entryDiagnosticsObject.streamHealth.data.primary = [];
-      this._entryDiagnosticsObject.streamHealth.data.secondary = [];
+  private _parseBeacons(beaconsArray: KalturaBeacon[], isLoggedType = false): void {
+    this._entryDiagnosticsObject.streamHealth.data.primary = [];
+    this._entryDiagnosticsObject.streamHealth.data.secondary = [];
 
+    if (beaconsArray.length && isLoggedType) {
       // Make sure last beacon's updatedTime in the array matches the last one received by service and remove it.
-      if (beaconsArray.length && (this._entryDiagnosticsObject.streamHealth.updatedTime === beaconsArray[beaconsArray.length - 1].updatedAt.valueOf())) {
+      if (this._entryDiagnosticsObject.streamHealth.updatedTime === beaconsArray[beaconsArray.length - 1].updatedAt.valueOf()) {
         beaconsArray.pop();
       }
     }
@@ -440,6 +439,8 @@ export class LiveEntryService implements OnDestroy {
         }
       }
       else if (this._numOfWatchersTimerSubscription) {
+        // Erase last graph value in the behavior subject so component will know to stop displaying watchers
+        this._numOfWatcherSubject.next(null);
         this._numOfWatchersTimerSubscription.unsubscribe();
         this._numOfWatchersTimerSubscription = null;
       }
