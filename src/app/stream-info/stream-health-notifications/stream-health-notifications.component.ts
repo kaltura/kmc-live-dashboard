@@ -37,6 +37,9 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
 
           this._numOfWatchers = audience;
         }
+        else {
+          this._numOfWatchers = 0;
+        }
       });
   }
 
