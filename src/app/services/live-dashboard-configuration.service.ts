@@ -7,4 +7,5 @@ export class LiveDashboardConfiguration {
   public entryId: string;
   public uiConfId: string;
   public lang: string;
+  public version: string;
 }
