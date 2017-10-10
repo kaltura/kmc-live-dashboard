@@ -23,6 +23,7 @@ export class BootstrapService {
       this._liveDashboardConfiguration.service_url =  window.top.kmc.vars.service_url;
       this._liveDashboardConfiguration.entryId =      window.top.kmc.vars.liveDashboard.entryId;
       this._liveDashboardConfiguration.uiConfId =     window.top.kmc.vars.liveDashboard.uiConfId;
+      this._liveDashboardConfiguration.version =      window.top.kmc.vars.liveDashboard.version;
       this._liveDashboardConfiguration.lang =         window.top.lang ? window.top.lang : 'en';
     }
 
