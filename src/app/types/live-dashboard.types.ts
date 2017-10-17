@@ -30,7 +30,7 @@ export interface Alert {
 }
 
 export enum DiagnosticsErrorCodes  {
-  EntryRestartedAlert = 100,
+  EntryRestarted = 100,
   BitrateUnmatched = 101,
   NoAudioSignal = 102,
   NoVideoSignal = 103,
@@ -38,7 +38,8 @@ export enum DiagnosticsErrorCodes  {
   EntryStopped = 105,
   EntryStarted = 106,
   InvalidKeyFrameInterval = 107,
-  HighFpsRate = 108
+  HighFpsRate = 108,
+  BackupOnlyStream = 109
 }
 
 export enum AlertSeverity {

@@ -30,7 +30,7 @@
           <div *ngFor="let alert of notification.alerts" class="grid alert">
             <span class="small-bullet"
                  [class.bullet-green]=  "((alert.Code | codeToSeverity | severityToHealth) === 'Good')"
-                 [class.bullet-yellow]= "((alert.Code | codeToSeverity | severityToHealth) === 'Fair')"
+                 [class.bullet-yellow]= "((alert.Code | codeToSeverity : _recordingEnabled | severityToHealth) === 'Fair')"
                  [class.bullet-red]=    "((alert.Code | codeToSeverity | severityToHealth) === 'Poor')">•</span>
             <span class="col alert-description">{{ "ALERTS." + alert.Code + ".message-log" | translate: alert.Arguments }}</span>
           </div>
