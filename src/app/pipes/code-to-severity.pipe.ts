@@ -7,7 +7,7 @@ import { DiagnosticsErrorCodes, AlertSeverity } from "../types/live-dashboard.ty
 })
 export class CodeToSeverityPipe implements PipeTransform {
 
-  transform(code : number): number {
+  transform(code : number, recordingEnabled?: boolean): number {
 
     switch (code) {
       case DiagnosticsErrorCodes.BitrateUnmatched:
@@ -17,13 +17,16 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.HighFpsRate:
         return AlertSeverity.info;
 
-      case DiagnosticsErrorCodes.EntryRestartedAlert:
+      case DiagnosticsErrorCodes.EntryRestarted:
         return AlertSeverity.warning;
 
       case DiagnosticsErrorCodes.NoAudioSignal:
       case DiagnosticsErrorCodes.NoVideoSignal:
       case DiagnosticsErrorCodes.PtsDrift:
         return AlertSeverity.error;
+
+      case DiagnosticsErrorCodes.BackupOnlyStream:
+        return recordingEnabled ? AlertSeverity.warning : AlertSeverity.info;
 
       default:
         return AlertSeverity.info;

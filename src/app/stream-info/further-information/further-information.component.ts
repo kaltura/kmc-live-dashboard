@@ -11,12 +11,14 @@ import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/Kalt
   styleUrls: ['./further-information.component.scss']
 })
 export class FurtherInformationComponent implements OnInit, OnDestroy {
+  private _staticInformationSubscription: ISubscription;
   public  _dynamicInformation: LiveEntryDynamicStreamInfo;
   private _dynamicInformationSubscription: ISubscription;
   public  _learnMoreLink = environment.externalLinks.LEARN_MORE;
   private _diagnosticsSubscription: ISubscription;
   public  _alertsArray: Alert[] = [];
   public  _alertIndex: number = 0;
+  private _alertsToIgnore: DiagnosticsErrorCodes[] = [DiagnosticsErrorCodes.EntryStarted, DiagnosticsErrorCodes.EntryStopped, DiagnosticsErrorCodes.BackupOnlyStream];
 
   constructor(private _liveEntryService: LiveEntryService) {
     this._dynamicInformation = {
@@ -29,11 +31,19 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._listenToDynamicStreamInfo();
     this._listenToHealthDiagnostics();
+
+    this._staticInformationSubscription = this._liveEntryService.entryStaticConfiguration$.subscribe(response => {
+      if (response && response.recording) {
+        // If recording is enabled remove the alert from the alertToIgnore array and display the warning message
+        this._alertsToIgnore.pop();
+      }
+    });
   }
 
   ngOnDestroy() {
     this._dynamicInformationSubscription.unsubscribe();
     this._diagnosticsSubscription.unsubscribe();
+    this._staticInformationSubscription.unsubscribe();
   }
 
   private _listenToDynamicStreamInfo(): void {
@@ -45,18 +55,14 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
   }
 
   private _listenToHealthDiagnostics(): void {
-    function alertsFilter(alert: Alert): boolean {
-      return (alert.Code !== DiagnosticsErrorCodes.EntryStarted) && (alert.Code !== DiagnosticsErrorCodes.EntryStopped);
-    }
-
     this._diagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe(response => {
       if (response && this._dynamicInformation.streamStatus.serverType) {
         if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType) && response.streamHealth.data.primary.length) {
-          this._alertsArray = response.streamHealth.data.primary[0].alerts.filter(alertsFilter);
+          this._alertsArray = response.streamHealth.data.primary[0].alerts.filter(alert => !this._alertsToIgnore.includes(alert.Code));
           this._alertIndex = 0;
         }
         else if (KalturaEntryServerNodeType.liveBackup.equals(this._dynamicInformation.streamStatus.serverType) && response.streamHealth.data.secondary.length) {
-          this._alertsArray = response.streamHealth.data.secondary[0].alerts.filter(alertsFilter);
+          this._alertsArray = response.streamHealth.data.secondary[0].alerts.filter(alert => !this._alertsToIgnore.includes(alert.Code));
           this._alertIndex = 0;
         }
       }
