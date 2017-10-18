@@ -39,7 +39,8 @@ export enum DiagnosticsErrorCodes  {
   EntryStarted = 106,
   InvalidKeyFrameInterval = 107,
   HighFpsRate = 108,
-  BackupOnlyStream = 109
+  BackupOnlyStreamNoRecording = 109,
+  BackupOnlyStreamRecording = 110
 }
 
 export enum AlertSeverity {

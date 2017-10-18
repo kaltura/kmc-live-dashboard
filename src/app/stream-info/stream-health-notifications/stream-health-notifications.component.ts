@@ -12,7 +12,6 @@ import { ISubscription } from "rxjs/Subscription";
 export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
   private _entryDiagnosticsSubscription: ISubscription;
   private _numOfWatchersSubscription: ISubscription;
-  private _entryStaticInfoSubscription: ISubscription;
   public  _numOfWatchers = 0;
   public  _streamHealthNotifications = [];
   public  _recordingEnabled: boolean = false;
@@ -22,13 +21,6 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._numOfWatchers = 0;
     this._listenToEntryDiagnosticsNotifications();
-
-    this._entryStaticInfoSubscription = this._liveEntryService.entryStaticConfiguration$
-      .subscribe(response => {
-        if (response && response.recording) {
-          this._recordingEnabled = true;
-        }
-      });
 
     this._numOfWatchersSubscription = this._liveEntryService.numOfWatcher$
       .subscribe((response) => {
@@ -55,7 +47,6 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._numOfWatchersSubscription.unsubscribe();
     this._entryDiagnosticsSubscription.unsubscribe();
-    this._entryStaticInfoSubscription.unsubscribe();
   }
 
   private _listenToEntryDiagnosticsNotifications() {
