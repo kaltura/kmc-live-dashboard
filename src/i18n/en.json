@@ -118,6 +118,9 @@
       "message-text-box": "High FPS detected {{frameRate}}. Recommended value is up to 30 frames per second."
     },
     "109": {
+      "message-log": "No Data is received on the primary endpoint"
+    },
+    "110": {
       "message-log": "No Data is received on the primary endpoint",
       "message-text-box": "No data is received on the primary endpoint. Broadcasting to the primary endpoint is mandatory for recording to operate."
     }

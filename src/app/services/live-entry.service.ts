@@ -40,7 +40,7 @@ import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaN
 import {
   LiveStreamStates, LiveStreamSession, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
   ApplicationStatus, LoadingStatus, LiveEntryDiagnosticsInfo, StreamHealth, DiagnosticsHealthInfo,
-  DiagnosticsDynamicInfo, DiagnosticsErrorCodes
+  DiagnosticsDynamicInfo
 } from "../types/live-dashboard.types";
 // Pipes
 import { CodeToSeverityPipe } from "../pipes/code-to-severity.pipe";
@@ -244,15 +244,16 @@ export class LiveEntryService implements OnDestroy {
     }
     else {
       if (serverNodeList.length) {
-        return {
-          state: this._streamStatusPipe.transform(serverNodeList[0].status),
-          serverType: serverNodeList[0].serverType
-        };
-      }
-      else {
-        return {
-          state: this._streamStatusPipe.transform(KalturaEntryServerNodeStatus.stopped)
+        let sn = serverNodeList.find(esn => { return esn.status !== KalturaEntryServerNodeStatus.markedForDeletion });
+        if (sn) {
+          return {
+            state: this._streamStatusPipe.transform(sn.status),
+            serverType: sn.serverType
+          };
         }
+      }
+      return {
+        state: this._streamStatusPipe.transform(KalturaEntryServerNodeStatus.stopped)
       }
     }
   }
@@ -395,9 +396,8 @@ export class LiveEntryService implements OnDestroy {
       alerts: _.isArray(metaData.alerts) ? _.uniqBy(metaData.alerts, 'Code') : []
     };
     // sort alerts by their severity (-desc)
-    let recording = this._entryStaticConfiguration.getValue() ? this._entryStaticConfiguration.getValue().recording : false;
     report.alerts = (_.sortBy(report.alerts, [(alert) => {
-      return -this._codeToSeverityPipe.transform(alert.Code, recording).valueOf();
+      return -this._codeToSeverityPipe.transform(alert.Code).valueOf();
     }]));
     if (isPrimary) {
       (<StreamHealth[]>diagnosticsObject.data.primary).push(report);

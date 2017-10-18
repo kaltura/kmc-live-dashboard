@@ -11,14 +11,13 @@ import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/Kalt
   styleUrls: ['./further-information.component.scss']
 })
 export class FurtherInformationComponent implements OnInit, OnDestroy {
-  private _staticInformationSubscription: ISubscription;
   public  _dynamicInformation: LiveEntryDynamicStreamInfo;
   private _dynamicInformationSubscription: ISubscription;
   public  _learnMoreLink = environment.externalLinks.LEARN_MORE;
   private _diagnosticsSubscription: ISubscription;
   public  _alertsArray: Alert[] = [];
   public  _alertIndex: number = 0;
-  private _alertsToIgnore: DiagnosticsErrorCodes[] = [DiagnosticsErrorCodes.EntryStarted, DiagnosticsErrorCodes.EntryStopped, DiagnosticsErrorCodes.BackupOnlyStream];
+  private _alertsToIgnore: DiagnosticsErrorCodes[] = [DiagnosticsErrorCodes.EntryStarted, DiagnosticsErrorCodes.EntryStopped, DiagnosticsErrorCodes.BackupOnlyStreamNoRecording];
 
   constructor(private _liveEntryService: LiveEntryService) {
     this._dynamicInformation = {
@@ -31,19 +30,11 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._listenToDynamicStreamInfo();
     this._listenToHealthDiagnostics();
-
-    this._staticInformationSubscription = this._liveEntryService.entryStaticConfiguration$.subscribe(response => {
-      if (response && response.recording) {
-        // If recording is enabled remove the alert from the alertToIgnore array and display the warning message
-        this._alertsToIgnore.pop();
-      }
-    });
   }
 
   ngOnDestroy() {
     this._dynamicInformationSubscription.unsubscribe();
     this._diagnosticsSubscription.unsubscribe();
-    this._staticInformationSubscription.unsubscribe();
   }
 
   private _listenToDynamicStreamInfo(): void {
