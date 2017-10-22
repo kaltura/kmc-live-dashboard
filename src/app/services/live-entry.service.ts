@@ -76,22 +76,19 @@ export class LiveEntryService implements OnDestroy {
   });
   public  entryDynamicInformation$ = this._entryDynamicInformation.asObservable();
   // BehaviorSubjects subscribed by configuration display component for diagnostics and health monitoring
-  private _entryDiagnosticsObject: LiveEntryDiagnosticsInfo = {
+  private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>({
     staticInfoPrimary: { updatedTime: 0 },
     staticInfoSecondary: { updatedTime: 0 },
     dynamicInfoPrimary: { updatedTime: 0 },
     dynamicInfoSecondary: { updatedTime: 0 },
     streamHealth: { updatedTime: Date.now(), data: { primary: [], secondary: [] } }
-  };
-  private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>(null);
+  });
   public  entryDiagnostics$ = this._entryDiagnostics.asObservable();
 
   private _subscriptionEntryStatusMonitoring: ISubscription;
   private _subscriptionStreamHealthInitialization: ISubscription;
   private _subscriptionStreamHealthMonitoring: ISubscription;
   private _subscriptionDiagnosticsMonitoring: ISubscription;
-
-  private _propertiesToUpdate = ['name', 'description', 'conversionProfileId', 'dvrStatus', 'recordStatus'];
 
   // BehaviorSubject to show number of watchers when stream is Live
   private _numOfWatcherSubject = new BehaviorSubject<KalturaReportGraph[]>(null);
@@ -195,7 +192,7 @@ export class LiveEntryService implements OnDestroy {
           this._updatedApplicationStatus('streamStatus', LoadingStatus.succeeded);
           return;
         })
-    }, environment.liveEntryService.streamStatusIntervalTimeInMs, true)
+    }, environment.liveEntryService.stream_status_interval_time_in_ms, true)
       .subscribe(response => {
         if (response.error instanceof KalturaAPIException) {
           console.log(`[EntryServeNodeList] Error: ${response.error.message}`);
@@ -270,7 +267,7 @@ export class LiveEntryService implements OnDestroy {
       session.timerStartTime = Date.now();
     }
     // If timer is running check if session grace period expired
-    if (session.shouldTimerRun && (Date.now() - session.timerStartTime > environment.liveEntryService.streamSessionGracePeriodInMs)) {
+    if (session.shouldTimerRun && (Date.now() - session.timerStartTime > environment.liveEntryService.stream_session_grace_period_in_ms)) {
       session.isInProgress = false;
     }
   }
@@ -297,12 +294,11 @@ export class LiveEntryService implements OnDestroy {
         indexTypeEqual: KalturaBeaconIndexType.log
       }),
       pager: new KalturaFilterPager({
-        pageSize: environment.liveEntryService.maxBeaconHealthReportsToShow
+        pageSize: environment.liveEntryService.max_beacon_health_reports_to_show
       })
     }))
     .subscribe(response => {
       this._parseBeacons(response.objects, true);
-      this._entryDiagnostics.next(this._entryDiagnosticsObject);
       this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
       this._runStreamHealthMonitoring();
     })
@@ -310,10 +306,11 @@ export class LiveEntryService implements OnDestroy {
 
   private _runStreamHealthMonitoring(): void {
     this._subscriptionStreamHealthMonitoring = this._entryTimerTask.runTimer(() => {
+      let lastUpdateTime = this._entryDiagnostics.getValue().streamHealth.updatedTime;
       return this._kalturaClient.request(new BeaconListAction({
         filter: new KalturaBeaconFilter({
           orderBy: '-updatedAt',
-          updatedAtGreaterThanOrEqual: new Date(this._entryDiagnosticsObject.streamHealth.updatedTime),
+          updatedAtGreaterThanOrEqual: new Date(lastUpdateTime),
           eventTypeIn: '0_healthData,1_healthData',
           objectIdIn: this._liveDashboardConfiguration.entryId,
           indexTypeEqual: KalturaBeaconIndexType.log
@@ -322,10 +319,9 @@ export class LiveEntryService implements OnDestroy {
         .do(response => {
           // Update diagnostics object with recent health beacons
           this._parseBeacons(response.objects, true);
-          this._entryDiagnostics.next(this._entryDiagnosticsObject);
           return;
         })
-    }, environment.liveEntryService.streamHealthIntervalTimeInMs)
+    }, environment.liveEntryService.stream_health_interval_time_in_ms)
       .subscribe(response => {
         if (response.error instanceof KalturaAPIException) {
           console.log(`[BeaconHealthMonitoring] Error: ${response.error.message}`);
@@ -345,9 +341,8 @@ export class LiveEntryService implements OnDestroy {
         .do(response => {
           // Update diagnostics object with recent data beacons
           this._parseBeacons(response.objects);
-          this._entryDiagnostics.next(this._entryDiagnosticsObject);
         })
-    }, environment.liveEntryService.streamDiagnosticsIntervalTimeInMs, true)
+    }, environment.liveEntryService.stream_diagnostics_interval_time_in_ms, true)
       .subscribe(response => {
         if (response.error instanceof KalturaAPIException) {
           console.log(`[BeaconDiagnosticsMonitoring] Error: ${response.error.message}`);
@@ -356,29 +351,28 @@ export class LiveEntryService implements OnDestroy {
   }
 
   private _parseBeacons(beaconsArray: KalturaBeacon[], isLoggedType = false): void {
-    this._entryDiagnosticsObject.streamHealth.data.primary = [];
-    this._entryDiagnosticsObject.streamHealth.data.secondary = [];
+    let entryDiagnosticsObject = this._entryDiagnostics.getValue();
 
     if (beaconsArray.length && isLoggedType) {
       // Make sure last beacon's updatedTime in the array matches the last one received by service and remove it.
-      if (this._entryDiagnosticsObject.streamHealth.updatedTime === beaconsArray[beaconsArray.length - 1].updatedAt.valueOf()) {
+      if (entryDiagnosticsObject.streamHealth.updatedTime === beaconsArray[beaconsArray.length - 1].updatedAt.valueOf()) {
         beaconsArray.pop();
       }
     }
-
-    _.each(beaconsArray, b => {
+    // Iterate through beacons list from oldest report to most recent
+    _.eachRight(beaconsArray, b => {
       let privateData = JSON.parse(b.privateData);
       let eventType = b.eventType.substring(2);
       let isPrimary = (b.eventType[0] === '0');
       let beaconUpdateTime = b.updatedAt.valueOf();
 
-      let objectToUpdate = this._getDiagnosticsObjToUpdate(eventType, isPrimary);
+      let objectToUpdate = this._getDiagnosticsObjToUpdate(entryDiagnosticsObject, eventType, isPrimary);
       if (objectToUpdate && (beaconUpdateTime !== objectToUpdate.updatedTime)) {
         if (eventType === 'healthData') {
           this._handleHealthBeacon(beaconUpdateTime, isPrimary, privateData, objectToUpdate);
         }
         else {
-          objectToUpdate.data = privateData
+          objectToUpdate.data = privateData;
         }
       }
       // Only if beacon report time is higher (meaning more recent) than last one saved, replace it
@@ -386,6 +380,8 @@ export class LiveEntryService implements OnDestroy {
         objectToUpdate.updatedTime = beaconUpdateTime;
       }
     });
+
+    this._entryDiagnostics.next(entryDiagnosticsObject);
   }
 
   private _handleHealthBeacon(beaconTime: number, isPrimary: boolean, metaData: any, diagnosticsObject: { updatedTime?: number, data?: DiagnosticsHealthInfo }): void {
@@ -399,22 +395,30 @@ export class LiveEntryService implements OnDestroy {
     report.alerts = (_.sortBy(report.alerts, [(alert) => {
       return -this._codeToSeverityPipe.transform(alert.Code).valueOf();
     }]));
+    // For each report add it to the beginning of the array.
+    // If array contains the maximum number of elements allowed, erase the last one and add the most recent one.
     if (isPrimary) {
-      (<StreamHealth[]>diagnosticsObject.data.primary).push(report);
+      if ((<StreamHealth[]>diagnosticsObject.data.primary).length === environment.healthNotifications.max_notifications_to_display) {
+        (<StreamHealth[]>diagnosticsObject.data.primary).pop();
+      }
+      (<StreamHealth[]>diagnosticsObject.data.primary).splice(0, 0, report);
     }
     else {
-      (<StreamHealth[]>diagnosticsObject.data.secondary).push(report);
+      if ((<StreamHealth[]>diagnosticsObject.data.secondary).length === environment.healthNotifications.max_notifications_to_display) {
+        (<StreamHealth[]>diagnosticsObject.data.secondary).pop();
+      }
+      (<StreamHealth[]>diagnosticsObject.data.secondary).splice(0, 0, report);
     }
   }
 
-  private _getDiagnosticsObjToUpdate(event: string, isPrimary: boolean): { updatedTime?: number, data?: Object | DiagnosticsDynamicInfo | DiagnosticsHealthInfo } {
+  private _getDiagnosticsObjToUpdate(entryDiagnosticsObject: LiveEntryDiagnosticsInfo, event: string, isPrimary: boolean): { updatedTime?: number, data?: Object | DiagnosticsDynamicInfo | DiagnosticsHealthInfo } {
     switch(event) {
       case 'staticData':
-        return (isPrimary) ? this._entryDiagnosticsObject.staticInfoPrimary : this._entryDiagnosticsObject.staticInfoSecondary;
+        return (isPrimary) ? entryDiagnosticsObject.staticInfoPrimary : entryDiagnosticsObject.staticInfoSecondary;
       case 'dynamicData':
-        return (isPrimary) ? this._entryDiagnosticsObject.dynamicInfoPrimary : this._entryDiagnosticsObject.dynamicInfoSecondary;
+        return (isPrimary) ? entryDiagnosticsObject.dynamicInfoPrimary : entryDiagnosticsObject.dynamicInfoSecondary;
       case 'healthData':
-        return this._entryDiagnosticsObject.streamHealth;
+        return entryDiagnosticsObject.streamHealth;
       default:
         console.log(`Beacon event Type unknown: ${event}`);
         return null;
@@ -425,7 +429,7 @@ export class LiveEntryService implements OnDestroy {
     // init the timer
     let numOfWatcherTimer$ = this._entryTimerTask.runTimer(() => {
         return this._getNumOfWatchers();
-      }, environment.liveEntryService.liveAnalyticsIntervalTimeInMs);
+      }, environment.liveEntryService.live_analytics_interval_time_in_ms);
 
     // On Live  -> Subscribe (get api call of num of watchers)
     // Else     -> Unsubscribe
