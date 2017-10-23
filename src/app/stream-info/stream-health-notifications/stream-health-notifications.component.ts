@@ -50,24 +50,20 @@ export class StreamHealthNotificationsComponent implements OnInit, OnDestroy {
   }
 
   private _listenToEntryDiagnosticsNotifications() {
-    this._entryDiagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe(response => {
-      if (response && response.streamHealth.data.primary.length) {
-        this._streamHealthNotifications = response.streamHealth.data.primary.concat(this._streamHealthNotifications);
+    function sortHealthNotifications(a: StreamHealth, b: StreamHealth) {
+      if (a.updatedTime > b.updatedTime) {
+        return -1;
       }
-      if (response && response.streamHealth.data.secondary.length) {
-        this._streamHealthNotifications = response.streamHealth.data.secondary.concat(this._streamHealthNotifications);
+      if (a.updatedTime < b.updatedTime) {
+        return 1
       }
-      this._streamHealthNotifications.sort(this._sortHealthNotifications);
-    });
-  }
+      return 0;
+    }
 
-  private _sortHealthNotifications(a: StreamHealth, b: StreamHealth) {
-    if (a.updatedTime > b.updatedTime) {
-      return -1;
-    }
-    if (a.updatedTime < b.updatedTime) {
-      return 1
-    }
-    return 0;
+    this._entryDiagnosticsSubscription = this._liveEntryService.entryDiagnostics$.subscribe(response => {
+      if (response && (response.streamHealth.data.primary.length || response.streamHealth.data.secondary.length)) {
+        this._streamHealthNotifications = [...response.streamHealth.data.primary, ...response.streamHealth.data.secondary].sort(sortHealthNotifications);
+      }
+    });
   }
 }

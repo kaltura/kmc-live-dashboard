@@ -6,14 +6,14 @@ export const environment = {
     "parameters_error": "Invalid Application Parameters! Please restart application"
   },
   "liveEntryService": {
-    "streamStatusIntervalTimeInMs": 5000,
-    "streamHealthIntervalTimeInMs": 10000,
-    "streamDiagnosticsIntervalTimeInMs": 30000,
-    "liveAnalyticsIntervalTimeInMs": 30000,
-    "streamSessionGracePeriodInMs": 180000,
-    "maxBeaconHealthReportsToShow": 50,
-    "apiCallsMaxRetriesAttempts": 5,
-    "apiCallDelayOnException": 10000
+    "stream_status_interval_time_in_ms": 5000,
+    "stream_health_interval_time_in_ms": 10000,
+    "stream_diagnostics_interval_time_in_ms": 30000,
+    "live_analytics_interval_time_in_ms": 30000,
+    "stream_session_grace_period_in_ms": 180000,
+    "max_beacon_health_reports_to_show": 50,
+    "api_calls_max_retries_attempts": 5,
+    "api_calls_delay_on_exception": 10000
   },
   "externalLinks": {
     "LEARN_MORE": "https://knowledge.kaltura.com/getting-started-kaltura-live"
@@ -22,6 +22,9 @@ export const environment = {
     "liveEntryFailed": "Failed to load Live Entry. Please restart application"
   },
   "flavorsDefinitions": {
-    "sourceFlavorId": "32"
+    "source_flavor_id": "32"
+  },
+  "healthNotifications": {
+    "max_notifications_to_display": 50
   }
 };

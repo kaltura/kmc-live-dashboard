@@ -118,7 +118,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
     }
 
     if (flavorsArray.length) {
-      let source = flavorsArray.find(f => { return f.name === environment.flavorsDefinitions.sourceFlavorId });
+      let source = flavorsArray.find(f => { return f.name === environment.flavorsDefinitions.source_flavor_id });
 
       return (source && source.mediaInfo.resolution) ? `(${source.mediaInfo.resolution[1]}p)` : '';
     }
