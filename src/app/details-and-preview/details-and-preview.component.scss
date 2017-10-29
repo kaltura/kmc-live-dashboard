@@ -36,6 +36,16 @@
     }
   }
 
+  .go-live-div {
+    padding: 12px 90px;
+
+    .go-live-button {
+      height: 34px;
+      width: 100px;
+      border: none;
+    }
+  }
+
   .details {
     border-top: 1px solid $kGrayscale4;
     //height: 70%;

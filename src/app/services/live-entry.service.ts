@@ -15,6 +15,7 @@ import { environment } from "../../environments/environment";
 // Kaltura objects and types
 import { KalturaAPIException } from "kaltura-typescript-client";
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
+import { LiveStreamUpdateAction } from "kaltura-typescript-client/types/LiveStreamUpdateAction";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
 import { EntryServerNodeListAction } from "kaltura-typescript-client/types/EntryServerNodeListAction";
 import { KalturaEntryServerNodeFilter } from "kaltura-typescript-client/types/KalturaEntryServerNodeFilter";
@@ -471,5 +472,22 @@ export class LiveEntryService implements OnDestroy {
         error => {
           console.log(`Error get number of watchers; Error: ${error.message}`);
         });
+  }
+
+  public updateLiveStreamEntry(propertiesToUpdate: string[]) {
+    let liveStreamEntryArg = new KalturaLiveStreamEntry();
+
+    propertiesToUpdate.forEach(p => {
+      liveStreamEntryArg[p] = this._liveStream.value[p];
+    });
+
+    const liveStreamUpdateSubscription = this._kalturaClient.request(new LiveStreamUpdateAction({
+      entryId: this._liveDashboardConfiguration.entryId,
+      liveStreamEntry: liveStreamEntryArg
+    }))
+      .subscribe(response => {
+        this._liveStream.next(response);
+        liveStreamUpdateSubscription.unsubscribe();
+      })
   }
 }
