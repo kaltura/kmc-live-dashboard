@@ -1,17 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../services/live-entry.service";
-import { KalturaEntryModerationStatus } from "kaltura-typescript-client/types/KalturaEntryModerationStatus";
-import { KalturaMediaType } from "kaltura-typescript-client/types/KalturaMediaType";
 import { LiveDashboardConfiguration } from "../services/live-dashboard-configuration.service";
 import { LiveEntryDynamicStreamInfo, LoadingStatus } from "../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
 import { KalturaViewMode } from "kaltura-typescript-client/types/KalturaViewMode";
-import {KalturaLiveStreamEntry} from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
-import {KalturaRecordingStatus} from "kaltura-typescript-client/types/KalturaRecordingStatus";
+import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
+import { KalturaRecordingStatus } from "kaltura-typescript-client/types/KalturaRecordingStatus";
 
 interface ExplicitLiveObject {
   enabled?: boolean,
   previewMode?: boolean
+}
+
+interface PlayerConfig {
+  partnerId?: number,
+  entryId?: string,
+  ks?: string,
+  uiConfId?: string,
+  serviceUrl?: string
+  flashVars?: Object
 }
 
 @Component({
@@ -31,10 +38,11 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   };
   public  _explicitLiveInformation: ExplicitLiveObject = {};
   public  _liveEntry: KalturaLiveStreamEntry;
-  public  _playerSrc: string = '';
+  public  _playerConfig: PlayerConfig = {};
+  public _inFullScreen = false;
 
   constructor(private _liveEntryService : LiveEntryService,
-              private _liveDashboardConfiguration: LiveDashboardConfiguration) { }
+              public _liveDashboardConfiguration: LiveDashboardConfiguration) { }
 
   ngOnInit() {
     this._listenToApplicationStatus();
@@ -63,13 +71,17 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
       if (response) {
         this._liveEntry = response;
 
-        const partnerID = response.partnerId;
-        const entryId = response.id;
-        const ks = this._liveDashboardConfiguration.ks;
-        const uiConfId = this._liveDashboardConfiguration.uiConfId;
-        const serviceUrl = this._liveDashboardConfiguration.service_url;
+        this._playerConfig.partnerId = response.partnerId;
+        this._playerConfig.entryId = response.id;
+        this._playerConfig.ks = this._liveDashboardConfiguration.ks;
+        this._playerConfig.uiConfId = this._liveDashboardConfiguration.uiConfId;
+        this._playerConfig.serviceUrl = this._liveDashboardConfiguration.service_url;
+        this._playerConfig.flashVars = {
+          SkipKSOnIsLiveRequest: false,
+          ks: this._playerConfig.ks
+        };
 
-        this._playerSrc = `${serviceUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[ks]=${ks}&entry_id=${entryId}`;
+        // this._playerSrc = `${serviceUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[SkipKSOnIsLiveRequest]=false&flashvars[ks]=${ks}&entry_id=${entryId}`;
 
         this._explicitLiveInformation.enabled = response.explicitLive;
         this._explicitLiveInformation.previewMode = response.viewMode === KalturaViewMode.preview;
@@ -97,5 +109,15 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
     this._liveEntry.recordingStatus = KalturaRecordingStatus.stopped;
 
     this._liveEntryService.updateLiveStreamEntry(['viewMode', 'recordingStatus']);
+  }
+
+  public _onPlayerReady(kdp: any) {
+    kdp.kBind( "openFullScreen", () => {
+      this._inFullScreen = true;
+    });
+    kdp.kBind( "closeFullScreen", () => {
+      this._inFullScreen = false;
+    });
+
   }
 }

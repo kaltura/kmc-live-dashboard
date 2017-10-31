@@ -28,6 +28,8 @@ import { StreamConfigurationsComponent } from './stream-info/stream-configuratio
 import { AreaBlockerComponent } from "@kaltura-ng/kaltura-ui/area-blocker";
 import { StreamHealthNotificationsComponent } from './stream-info/stream-health-notifications/stream-health-notifications.component';
 import { FurtherInformationComponent } from './stream-info/further-information/further-information.component';
+// TODO: Remove!!!
+import { KalturaPlayerComponent } from './player/player.component';
 
 // Pipes
 import { RecordingTypePipe } from './pipes/recording-type.pipe';
@@ -78,7 +80,8 @@ export function clientConfigurationFactory() {
     SeverityToHealthPipe,
     CodeToSeverityPipe,
     StreamStatusPipe,
-    FurtherInformationComponent
+    FurtherInformationComponent,
+    KalturaPlayerComponent
   ],
   imports: [
     BrowserModule,

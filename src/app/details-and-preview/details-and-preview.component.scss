@@ -11,6 +11,28 @@
     height: 157px;
     display: flex;
     flex-flow: column nowrap;
+    position: relative;
+
+    .preview_label{
+      color: $mainLinkColor;
+      font-size: 14px;
+      font-weight: bold;
+      border: solid 2px $mainLinkColor;
+      border-radius: 4px;
+      padding: 3px 11px;
+      position: absolute;
+      left: 15px;
+      top: 15px;
+    }
+
+    .preview_label_FS{
+      font-size: 32px;
+      left: 30px;
+      top: 30px;
+      border: solid 3px $mainLinkColor;
+      border-radius: 7px;
+      z-index: 10000000001;
+    }
 
     .not-broadcasting-container {
       height: 100%;
@@ -43,6 +65,34 @@
       height: 34px;
       width: 100px;
       border: none;
+      &.start {
+        &:hover {
+          background: darken($kPrimary, 10%);
+        }
+        &:active {
+          box-shadow: inset 0px 1px 3px 0 rgba(0, 0, 0, 0.50);
+        }
+        &:disabled {
+          color: $kGrayscale4;
+          background: transparent;
+          border: 1px solid $kGrayscale4;
+          cursor: none;
+          box-shadow: none;
+        }
+      }
+
+      &.stop {
+        &:hover{
+          background: darken($kDandger, 10%);
+          border: 0px solid darken($kDandger, 10%);
+        }
+        &:active:not(:disabled){
+          box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+        }
+        //&:disabled{
+        //  @extend .disabled;
+        //}
+      }
     }
   }
 
