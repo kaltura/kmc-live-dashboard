@@ -1,46 +1,60 @@
 <k-area-blocker [showLoader]="!_applicationLoaded">
   <div>
+
     <div class="streamInfo">
       <div class="preview-player">
 
         <div *ngIf="_dynamicInfo.streamStatus.state !== 'Live' && !_dynamicInfo.streamSession.isInProgress" class="not-broadcasting-container">
-          <p id="firstRow">{{ 'STREAM_INFO.not_broadcasting' | translate }}</p>
-          <p id="secondRow">{{ 'STREAM_INFO.video_no_available_explanation' | translate }}</p>
+          <p id="firstRow">{{ 'DETAILS_AND_PREVIEW.preview_player.not_broadcasting' | translate }}</p>
+          <p id="secondRow">{{ 'DETAILS_AND_PREVIEW.preview_player.video_no_available_explanation' | translate }}</p>
         </div>
 
-        <iframe *ngIf="_dynamicInfo.streamStatus.state === 'Live' || _dynamicInfo.streamSession.isInProgress"
-                [src]="_playerSrc | safe" width="100%" height="100%" allowfullscreen="true" webkitallowfullscreen="true" mozAllowFullScreen="true" frameborder="0"></iframe>
+        <k-player *ngIf="_dynamicInfo.streamStatus.state === 'Live' || _dynamicInfo.streamSession.isInProgress"
+                  [cdnUrl]="_playerConfig.serviceUrl" [pid]="_playerConfig.partnerId" [uiconfid]="_playerConfig.uiConfId"
+                  [entryid]="_playerConfig.entryId" [width]="279" [height]="157" [flashvars]="_playerConfig.flashVars"
+                  (kalturaPlayerReady)="_onPlayerReady($event)"></k-player>
 
-        <!--<div class="goLive-div">
-          <button pButton type="button" class="ui-button kButtonBranded goLive-button" label="Go Live"></button>
-        </div>-->
+        <div *ngIf="_explicitLiveInformation.enabled && (_dynamicInfo.streamStatus.state === 'Live' || _dynamicInfo.streamSession.isInProgress)">
+          <span class="preview_label" [class.preview_label_FS]="_inFullScreen" *ngIf="_explicitLiveInformation.previewMode">{{ 'DETAILS_AND_PREVIEW.preview_player.preview_label' | translate }}</span>
+        </div>
+      </div>
+
+      <div class="go-live-div" *ngIf="_explicitLiveInformation.enabled">
+        <button *ngIf="_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonBranded go-live-button start" label="{{ 'DETAILS_AND_PREVIEW.preview_player.go_live_button' | translate }}"
+                [disabled]="_dynamicInfo.streamStatus.state !== 'Live'"
+                (click)="_onClickGoLive()"
+        ></button>
+        <button *ngIf="!_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonDanger go-live-button stop" label="{{ 'DETAILS_AND_PREVIEW.preview_player.end_live_button' | translate }}"
+                [disabled]="_dynamicInfo.streamStatus.state !== 'Live'"
+                (click)="_onClickEndLive()"
+        ></button>
       </div>
       <div class="details">
-        <h1>{{ 'STREAM_INFO.details' | translate }}</h1>
+        <h1>{{ 'DETAILS_AND_PREVIEW.stream_details.details' | translate }}  </h1>
         <div class="content">
           <div class="row" >
-            <span class="left">{{ 'STREAM_INFO.creator' | translate }}</span>
-            <span class="right" [kTooltip]="_creator" [maxWidth]="150">{{_creator}}</span>
+            <span class="left">{{ 'DETAILS_AND_PREVIEW.stream_details.creator' | translate }}</span>
+            <span class="right" [kTooltip]="_liveEntry.creatorId" [maxWidth]="150">{{_liveEntry.creatorId}}</span>
           </div>
           <div class="row">
-            <span class="left">{{ 'STREAM_INFO.creation_date' | translate }}</span>
-            <span class="right" [kTooltip]="_date | localeTime: true" [maxWidth]="180">{{_date | localeTime}}</span>
+            <span class="left">{{ 'DETAILS_AND_PREVIEW.stream_details.creation_date' | translate }}</span>
+            <span class="right" [kTooltip]="_liveEntry.createdAt | localeTime: true" [maxWidth]="180">{{_liveEntry.createdAt | localeTime}}</span>
           </div>
           <div class="row">
-            <span class="left">{{ 'STREAM_INFO.type' | translate }}</span>
-            <span class="right">{{_type | entryType}}</span>
+            <span class="left">{{ 'DETAILS_AND_PREVIEW.stream_details.type' | translate }}</span>
+            <span class="right">{{_liveEntry.mediaType | entryType}}</span>
           </div>
           <div class="row">
-            <span class="left">{{ 'STREAM_INFO.moderation' | translate }}</span>
-            <span class="right">{{_moderation | moderation}}</span>
+            <span class="left">{{ 'DETAILS_AND_PREVIEW.stream_details.moderation' | translate }}</span>
+            <span class="right">{{_liveEntry.moderationStatus | moderation}}</span>
           </div>
           <div class="row">
-            <span class="left">{{ 'STREAM_INFO.plays' | translate }}</span>
-            <span class="right">{{_plays}}</span>
+            <span class="left">{{ 'DETAILS_AND_PREVIEW.stream_details.plays' | translate }}</span>
+            <span class="right">{{_liveEntry.plays}}</span>
           </div>
           <div class="row">
-            <span class="left">{{ 'STREAM_INFO.entry_id' | translate }}</span>
-            <span class="right">{{_entryId}}</span>
+            <span class="left">{{ 'DETAILS_AND_PREVIEW.stream_details.entry_id' | translate }}</span>
+            <span class="right">{{_liveEntry.id}}</span>
           </div>
         </div>
       </div>

@@ -30,7 +30,7 @@
     "core-js": "^2.4.1",
     "font-awesome": "^4.7.0",
     "gridlex": "^2.4.0",
-    "kaltura-typescript-client": "file:./tools/kaltura-typescript-client-v6.0.0-live.2.tgz",
+    "kaltura-typescript-client": "file:tools/kaltura-typescript-client-5.1.1-20171029143000.tgz",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "ng2-translate": "^5.0.0",
