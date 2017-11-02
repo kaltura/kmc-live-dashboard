@@ -81,8 +81,6 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
           ks: this._playerConfig.ks
         };
 
-        // this._playerSrc = `${serviceUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[SkipKSOnIsLiveRequest]=false&flashvars[ks]=${ks}&entry_id=${entryId}`;
-
         this._explicitLiveInformation.enabled = response.explicitLive;
         this._explicitLiveInformation.previewMode = response.viewMode === KalturaViewMode.preview;
       }
