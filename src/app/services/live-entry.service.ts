@@ -222,6 +222,7 @@ export class LiveEntryService implements OnDestroy {
   }
 
   private _getStreamStatus(serverNodeList: KalturaEntryServerNode[], currentInfo: LiveEntryDynamicStreamInfo): LiveStreamStates {
+    let liveEntry = this._liveStream.getValue();
     // Possible scenarios for streamStatus:
     // (1) If only primary -> StreamStatus equals primary status
     // (2) If only secondary -> StreamStatus equals secondary status
@@ -229,13 +230,13 @@ export class LiveEntryService implements OnDestroy {
     if (currentInfo.redundancy) {
       if (!currentInfo.streamStatus.serverType || (KalturaEntryServerNodeType.livePrimary.equals(currentInfo.streamStatus.serverType))) {
         return {
-          state: this._streamStatusPipe.transform(serverNodeList[0].status),
+          state: this._streamStatusPipe.transform(serverNodeList[0].status, liveEntry.viewMode),
           serverType: KalturaEntryServerNodeType.livePrimary
         };
       }
       else if (KalturaEntryServerNodeType.liveBackup.equals(currentInfo.streamStatus.serverType)) {
         return {
-          state: this._streamStatusPipe.transform(serverNodeList[1].status),
+          state: this._streamStatusPipe.transform(serverNodeList[1].status, liveEntry.viewMode),
           serverType: KalturaEntryServerNodeType.liveBackup
         };
       }
@@ -245,7 +246,7 @@ export class LiveEntryService implements OnDestroy {
         let sn = serverNodeList.find(esn => { return esn.status !== KalturaEntryServerNodeStatus.markedForDeletion });
         if (sn) {
           return {
-            state: this._streamStatusPipe.transform(sn.status),
+            state: this._streamStatusPipe.transform(sn.status, liveEntry.viewMode),
             serverType: sn.serverType
           };
         }

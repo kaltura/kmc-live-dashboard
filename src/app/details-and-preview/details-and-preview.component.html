@@ -4,28 +4,28 @@
     <div class="streamInfo">
       <div class="preview-player">
 
-        <div *ngIf="_dynamicInfo.streamStatus.state !== 'Live' && !_dynamicInfo.streamSession.isInProgress" class="not-broadcasting-container">
+        <div *ngIf="_dynamicInfo.streamStatus.state !== 'Live' && _dynamicInfo.streamStatus.state !== 'Preview' && !_dynamicInfo.streamSession.isInProgress" class="not-broadcasting-container">
           <p id="firstRow">{{ 'DETAILS_AND_PREVIEW.preview_player.not_broadcasting' | translate }}</p>
           <p id="secondRow">{{ 'DETAILS_AND_PREVIEW.preview_player.video_no_available_explanation' | translate }}</p>
         </div>
 
-        <k-player *ngIf="_dynamicInfo.streamStatus.state === 'Live' || _dynamicInfo.streamSession.isInProgress"
+        <k-player *ngIf="(_dynamicInfo.streamStatus.state === 'Live' || _dynamicInfo.streamStatus.state === 'Preview') || _dynamicInfo.streamSession.isInProgress"
                   [cdnUrl]="_playerConfig.serviceUrl" [pid]="_playerConfig.partnerId" [uiconfid]="_playerConfig.uiConfId"
                   [entryid]="_playerConfig.entryId" [width]="279" [height]="157" [flashvars]="_playerConfig.flashVars"
                   (kalturaPlayerReady)="_onPlayerReady($event)"></k-player>
 
-        <div *ngIf="_explicitLiveInformation.enabled && (_dynamicInfo.streamStatus.state === 'Live' || _dynamicInfo.streamSession.isInProgress)">
+        <div *ngIf="_explicitLiveInformation.enabled && (_dynamicInfo.streamStatus.state === 'Preview')">
           <span class="preview_label" [class.preview_label_FS]="_inFullScreen" *ngIf="_explicitLiveInformation.previewMode">{{ 'DETAILS_AND_PREVIEW.preview_player.preview_label' | translate }}</span>
         </div>
       </div>
 
       <div class="go-live-div" *ngIf="_explicitLiveInformation.enabled">
         <button *ngIf="_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonBranded go-live-button start" label="{{ 'DETAILS_AND_PREVIEW.preview_player.go_live_button' | translate }}"
-                [disabled]="_dynamicInfo.streamStatus.state !== 'Live'"
+                [disabled]="_dynamicInfo.streamStatus.state === 'Initializing' || _dynamicInfo.streamStatus.state === 'Offline'"
                 (click)="_onClickGoLive()"
         ></button>
         <button *ngIf="!_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonDanger go-live-button stop" label="{{ 'DETAILS_AND_PREVIEW.preview_player.end_live_button' | translate }}"
-                [disabled]="_dynamicInfo.streamStatus.state !== 'Live'"
+                [disabled]="_dynamicInfo.streamStatus.state === 'Initializing' || _dynamicInfo.streamStatus.state === 'Offline'"
                 (click)="_onClickEndLive()"
         ></button>
       </div>
