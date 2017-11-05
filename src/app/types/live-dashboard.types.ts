@@ -8,7 +8,7 @@ export interface LiveEntryDynamicStreamInfo {
 }
 
 export declare type LiveStreamStates = {
-  state?: 'Live' | 'Initializing' | 'Offline',
+  state?: 'Live' | 'Initializing' | 'Offline' | 'Preview',
   serverType?: KalturaEntryServerNodeType;
 }
 

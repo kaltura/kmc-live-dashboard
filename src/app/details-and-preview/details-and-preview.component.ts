@@ -40,6 +40,7 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   public  _liveEntry: KalturaLiveStreamEntry;
   public  _playerConfig: PlayerConfig = {};
   public _inFullScreen = false;
+  private _kdp: any;
 
   constructor(private _liveEntryService : LiveEntryService,
               public _liveDashboardConfiguration: LiveDashboardConfiguration) { }
@@ -54,6 +55,7 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
     this._applicationStatusSubscription.unsubscribe();
     this._liveStreamSubscription.unsubscribe();
     this._dynamicInformationSubscription.unsubscribe();
+    this._kdp.kUnbind('.liveDashboard');
   }
 
   private _listenToApplicationStatus(): void {
@@ -110,10 +112,11 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   }
 
   public _onPlayerReady(kdp: any) {
-    kdp.kBind( "openFullScreen", () => {
+    this._kdp = kdp;
+    kdp.kBind( "openFullScreen.liveDashboard", () => {
       this._inFullScreen = true;
     });
-    kdp.kBind( "closeFullScreen", () => {
+    kdp.kBind( "closeFullScreen.liveDashboard", () => {
       this._inFullScreen = false;
     });
 

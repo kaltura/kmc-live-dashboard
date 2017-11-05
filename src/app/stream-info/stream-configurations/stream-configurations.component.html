@@ -3,7 +3,8 @@
     <label class="configuration-label">{{ 'STREAM_CONFIG.stream_status.tag' | translate }}</label>
     <div class="configuration-status">
       <span class="bullet" [class.bullet-green]="_dynamicInformation.streamStatus.state === 'Live'"
-                           [class.bullet-yellow]="_dynamicInformation.streamStatus.state === 'Initializing'">•</span>
+                           [class.bullet-yellow]="_dynamicInformation.streamStatus.state === 'Initializing'"
+                           [class.bullet-yellow]="_dynamicInformation.streamStatus.state === 'Preview'">•</span>
       <span class="state">{{ 'STREAM_CONFIG.stream_status.state.' + _dynamicInformation.streamStatus.state | translate }}</span>
     </div>
   </div>

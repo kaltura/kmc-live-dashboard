@@ -9,7 +9,8 @@
       "state": {
         "Offline": "Offline",
         "Initializing": "Initializing",
-        "Live": "Live"
+        "Live": "Live",
+        "Preview": "Preview"
       }
     },
     "stream_health": {
