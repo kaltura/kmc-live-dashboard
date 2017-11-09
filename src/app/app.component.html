@@ -1,11 +1,11 @@
 <k-area-blocker [showLoader]="_applicationLoading" [message]="_sectionBlockerMessage">
-  <div class="app-window" *ngIf="_applicationLoaded" >
-    <div class="dashboard-window">
-      <stream-info class="flexIt"></stream-info>
-      <details-and-preview></details-and-preview>
-    </div>
+  <div class="default-mode" *ngIf="_applicationLoaded && _configuration.mode === ApplicationMode.Default">
+    <default-dashboard></default-dashboard>
     <footer>
       <span class="beta-message">{{ "DASHBOARD.beta_message" | translate: _configuration }}</span>
     </footer>
+  </div>
+  <div class="compact-window" *ngIf="_applicationLoaded && _configuration.mode === ApplicationMode.Webcast">
+    <compact-dashboard></compact-dashboard>
   </div>
 </k-area-blocker>

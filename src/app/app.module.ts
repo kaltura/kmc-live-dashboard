@@ -19,15 +19,17 @@ import { BootstrapService } from "./bootstrap.service";
 
 // Components
 import { AppComponent } from './app.component';
+import { DefaultDashboardComponent } from './default-dashboard/default-dashboard.component';
+import { CompactDashboardComponent } from './compact-dashboard/compact-dashboard.component';
 import { DetailAndPreviewComponent } from './details-and-preview/details-and-preview.component';
 import { StreamInfoComponent } from './stream-info/stream-info.component';
 import { EncoderSettingsComponent } from './stream-info/encoder-settings/encoder-settings.component';
 import { BasicSettingsComponent } from './stream-info/basic-settings/basic-settings.component';
 import { AdditionalSettingsComponent } from './stream-info/additional-settings/additional-settings.component';
-import { StreamConfigurationsComponent } from './stream-info/stream-configurations/stream-configurations.component';
+import { StreamConfigurationsComponent } from './components/stream-configurations/stream-configurations.component';
 import { AreaBlockerComponent } from "@kaltura-ng/kaltura-ui/area-blocker";
 import { StreamHealthNotificationsComponent } from './stream-info/stream-health-notifications/stream-health-notifications.component';
-import { FurtherInformationComponent } from './stream-info/further-information/further-information.component';
+import { FurtherInformationComponent } from './components/further-information/further-information.component';
 // TODO: Remove!!!
 import { KalturaPlayerComponent } from './player/player.component';
 
@@ -81,7 +83,9 @@ export function clientConfigurationFactory() {
     CodeToSeverityPipe,
     StreamStatusPipe,
     FurtherInformationComponent,
-    KalturaPlayerComponent
+    KalturaPlayerComponent,
+    DefaultDashboardComponent,
+    CompactDashboardComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ApplicationMode } from "../types/live-dashboard.types";
 
 @Injectable()
 export class LiveDashboardConfiguration {
@@ -8,4 +9,5 @@ export class LiveDashboardConfiguration {
   public uiConfId: string;
   public lang: string;
   public version: string;
+  public mode: ApplicationMode;
 }

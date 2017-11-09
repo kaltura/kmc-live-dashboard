@@ -1,5 +1,10 @@
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
 
+export enum ApplicationMode {
+  Default,
+  Webcast
+}
+
 export interface LiveEntryDynamicStreamInfo {
   redundancy?: boolean,
   streamStatus?: LiveStreamStates,

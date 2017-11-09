@@ -1,0 +1,14 @@
+@import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.stream-configuration-box {
+  flex:  1 0 100%;
+  color: #FFFFFF;
+  line-height: 16px;
+  font-size: 13px;
+  text-align: center;
+
+  div {
+    margin: 12px;
+    line-height: 18px;
+  }
+}

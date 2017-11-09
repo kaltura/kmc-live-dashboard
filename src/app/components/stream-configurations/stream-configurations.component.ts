@@ -12,11 +12,10 @@ import {
 import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
 import { AppLocalization } from "@kaltura-ng/kaltura-common";
 
-
 @Component({
   selector: 'stream-configurations',
-  templateUrl: 'stream-configurations.component.html',
-  styleUrls: ['stream-configurations.component.scss']
+  templateUrl: './stream-configurations.component.html',
+  styleUrls: ['./stream-configurations.component.scss']
 })
 export class StreamConfigurationsComponent implements OnInit, OnDestroy {
   private _subscriptionsArray: ISubscription[] = [];

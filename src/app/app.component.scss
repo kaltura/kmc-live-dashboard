@@ -1,34 +1,18 @@
 @import '../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/variables.scss';
 
-.app-window {
+.default-mode {
   max-width: 1280px;
   min-width: 1035px;
+  max-height: 655px;
   padding: 28px 28px 62px 31px;
   box-sizing: border-box;
   background-color: #FFFFFF;
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
 
-  .dashboard-window {
-    display: flex;
-    flex-flow: row nowrap;
-
-    stream-info {
-      background-color: #FFFFFF;
-    }
-
-    details-and-preview {
-      margin-left: 28px;
-    }
-  }
-
-  .parameters-error {
-    text-align: center;
-    vertical-align: middle;
-  }
-
   footer {
     text-align: right;
     margin-right: 60px;
+    margin-top: 25px;
 
     .beta-message {
       color: $kGrayscale2;
@@ -37,4 +21,11 @@
       font-weight: 500;
     }
   }
+}
+
+.compact-window {
+  width: 663px;
+  height: 327px;
+  border-radius: 6px;
+  background-color: rgba(64, 61, 61, 0.6);
 }
