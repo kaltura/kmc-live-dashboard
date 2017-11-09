@@ -1,10 +1,25 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LiveEntryService } from "../services/live-entry.service";
-import { KalturaEntryModerationStatus } from "kaltura-typescript-client/types/KalturaEntryModerationStatus";
-import { KalturaMediaType } from "kaltura-typescript-client/types/KalturaMediaType";
 import { LiveDashboardConfiguration } from "../services/live-dashboard-configuration.service";
 import { LiveEntryDynamicStreamInfo, LoadingStatus } from "../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
+import { KalturaViewMode } from "kaltura-typescript-client/types/KalturaViewMode";
+import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
+import { KalturaRecordingStatus } from "kaltura-typescript-client/types/KalturaRecordingStatus";
+
+interface ExplicitLiveObject {
+  enabled?: boolean,
+  previewMode?: boolean
+}
+
+interface PlayerConfig {
+  partnerId?: number,
+  entryId?: string,
+  ks?: string,
+  uiConfId?: string,
+  serviceUrl?: string
+  flashVars?: Object
+}
 
 @Component({
   selector: 'details-and-preview',
@@ -16,20 +31,19 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   private _applicationStatusSubscription: ISubscription;
   private _liveStreamSubscription: ISubscription;
   private _dynamicInformationSubscription: ISubscription;
-  public  _creator: string;
-  public  _date: Date;
-  public  _type: KalturaMediaType;
-  public  _moderation: KalturaEntryModerationStatus;
-  public  _plays: number;
-  public  _entryId: string;
-  public  _playerSrc: string = '';
+
   public  _dynamicInfo: LiveEntryDynamicStreamInfo = {
     redundancy: false,
     streamStatus: 'Offline'
   };
+  public  _explicitLiveInformation: ExplicitLiveObject = {};
+  public  _liveEntry: KalturaLiveStreamEntry;
+  public  _playerConfig: PlayerConfig = {};
+  public _inFullScreen = false;
+  private _kdp: any;
 
   constructor(private _liveEntryService : LiveEntryService,
-              private _liveDashboardConfiguration: LiveDashboardConfiguration) { }
+              public _liveDashboardConfiguration: LiveDashboardConfiguration) { }
 
   ngOnInit() {
     this._listenToApplicationStatus();
@@ -41,6 +55,7 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
     this._applicationStatusSubscription.unsubscribe();
     this._liveStreamSubscription.unsubscribe();
     this._dynamicInformationSubscription.unsubscribe();
+    this._kdp.kUnbind('.liveDashboard');
   }
 
   private _listenToApplicationStatus(): void {
@@ -54,22 +69,22 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   }
 
   private _subscribeToLiveStream(): void {
-    this._liveStreamSubscription = this._liveEntryService.liveStream$.subscribe(liveStreamEntry => {
-      if (liveStreamEntry) {
-        this._creator = liveStreamEntry.creatorId;
-        this._date =    liveStreamEntry.createdAt;
-        this._type =    liveStreamEntry.mediaType;
-        this._moderation = liveStreamEntry.moderationStatus;
-        this._plays =   liveStreamEntry.plays;
-        this._entryId = liveStreamEntry.id;
+    this._liveStreamSubscription = this._liveEntryService.liveStream$.subscribe(response => {
+      if (response) {
+        this._liveEntry = response;
 
-        const partnerID = liveStreamEntry.partnerId;
-        const entryId =   liveStreamEntry.id;
-        const ks =        this._liveDashboardConfiguration.ks;
-        const uiConfId =  this._liveDashboardConfiguration.uiConfId;
-        const serviceUrl = this._liveDashboardConfiguration.service_url;
+        this._playerConfig.partnerId = response.partnerId;
+        this._playerConfig.entryId = response.id;
+        this._playerConfig.ks = this._liveDashboardConfiguration.ks;
+        this._playerConfig.uiConfId = this._liveDashboardConfiguration.uiConfId;
+        this._playerConfig.serviceUrl = this._liveDashboardConfiguration.service_url;
+        this._playerConfig.flashVars = {
+          SkipKSOnIsLiveRequest: false,
+          ks: this._playerConfig.ks
+        };
 
-        this._playerSrc = `${serviceUrl}/p/${partnerID}/sp/${partnerID}00/embedIframeJs/uiconf_id/${uiConfId}/partner_id/${partnerID}?iframeembed=true&flashvars[ks]=${ks}&entry_id=${entryId}`;
+        this._explicitLiveInformation.enabled = response.explicitLive;
+        this._explicitLiveInformation.previewMode = response.viewMode === KalturaViewMode.preview;
       }
     });
   }
@@ -80,5 +95,30 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
         this._dynamicInfo = response;
       }
     });
+  }
+
+  public _onClickGoLive() {
+    this._liveEntry.viewMode = KalturaViewMode.allowAll;
+    this._liveEntry.recordingStatus = KalturaRecordingStatus.active;
+
+    this._liveEntryService.updateLiveStreamEntry(['viewMode', 'recordingStatus']);
+  }
+
+  public _onClickEndLive() {
+    this._liveEntry.viewMode = KalturaViewMode.preview;
+    this._liveEntry.recordingStatus = KalturaRecordingStatus.stopped;
+
+    this._liveEntryService.updateLiveStreamEntry(['viewMode', 'recordingStatus']);
+  }
+
+  public _onPlayerReady(kdp: any) {
+    this._kdp = kdp;
+    kdp.kBind( "openFullScreen.liveDashboard", () => {
+      this._inFullScreen = true;
+    });
+    kdp.kBind( "closeFullScreen.liveDashboard", () => {
+      this._inFullScreen = false;
+    });
+
   }
 }

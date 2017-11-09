@@ -15,6 +15,7 @@ import { environment } from "../../environments/environment";
 // Kaltura objects and types
 import { KalturaAPIException } from "kaltura-typescript-client";
 import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
+import { LiveStreamUpdateAction } from "kaltura-typescript-client/types/LiveStreamUpdateAction";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
 import { EntryServerNodeListAction } from "kaltura-typescript-client/types/EntryServerNodeListAction";
 import { KalturaEntryServerNodeFilter } from "kaltura-typescript-client/types/KalturaEntryServerNodeFilter";
@@ -221,6 +222,7 @@ export class LiveEntryService implements OnDestroy {
   }
 
   private _getStreamStatus(serverNodeList: KalturaEntryServerNode[], currentInfo: LiveEntryDynamicStreamInfo): LiveStreamStates {
+    let liveEntry = this._liveStream.getValue();
     // Possible scenarios for streamStatus:
     // (1) If only primary -> StreamStatus equals primary status
     // (2) If only secondary -> StreamStatus equals secondary status
@@ -228,13 +230,13 @@ export class LiveEntryService implements OnDestroy {
     if (currentInfo.redundancy) {
       if (!currentInfo.streamStatus.serverType || (KalturaEntryServerNodeType.livePrimary.equals(currentInfo.streamStatus.serverType))) {
         return {
-          state: this._streamStatusPipe.transform(serverNodeList[0].status),
+          state: this._streamStatusPipe.transform(serverNodeList[0].status, liveEntry.viewMode),
           serverType: KalturaEntryServerNodeType.livePrimary
         };
       }
       else if (KalturaEntryServerNodeType.liveBackup.equals(currentInfo.streamStatus.serverType)) {
         return {
-          state: this._streamStatusPipe.transform(serverNodeList[1].status),
+          state: this._streamStatusPipe.transform(serverNodeList[1].status, liveEntry.viewMode),
           serverType: KalturaEntryServerNodeType.liveBackup
         };
       }
@@ -244,7 +246,7 @@ export class LiveEntryService implements OnDestroy {
         let sn = serverNodeList.find(esn => { return esn.status !== KalturaEntryServerNodeStatus.markedForDeletion });
         if (sn) {
           return {
-            state: this._streamStatusPipe.transform(sn.status),
+            state: this._streamStatusPipe.transform(sn.status, liveEntry.viewMode),
             serverType: sn.serverType
           };
         }
@@ -471,5 +473,22 @@ export class LiveEntryService implements OnDestroy {
         error => {
           console.log(`Error get number of watchers; Error: ${error.message}`);
         });
+  }
+
+  public updateLiveStreamEntry(propertiesToUpdate: string[]) {
+    let liveStreamEntryArg = new KalturaLiveStreamEntry();
+
+    propertiesToUpdate.forEach(p => {
+      liveStreamEntryArg[p] = this._liveStream.value[p];
+    });
+
+    const liveStreamUpdateSubscription = this._kalturaClient.request(new LiveStreamUpdateAction({
+      entryId: this._liveDashboardConfiguration.entryId,
+      liveStreamEntry: liveStreamEntryArg
+    }))
+      .subscribe(response => {
+        this._liveStream.next(response);
+        liveStreamUpdateSubscription.unsubscribe();
+      })
   }
 }

@@ -9,7 +9,8 @@
       "state": {
         "Offline": "Offline",
         "Initializing": "Initializing",
-        "Live": "Live"
+        "Live": "Live",
+        "Preview": "Preview"
       }
     },
     "stream_health": {
@@ -42,16 +43,23 @@
     "save": "Save",
     "beta_message": "Live Dashboard {{version}} (Beta)"
   },
-  "STREAM_INFO": {
-    "not_broadcasting": "Currently not broadcasting",
-    "video_no_available_explanation": "video will play once broadcasting start",
-    "details": "Details",
-    "creator": "Creator",
-    "creation_date": "Creation Date",
-    "type": "Type",
-    "moderation": "Moderation",
-    "plays": "Plays",
-    "entry_id": "Entry ID"
+  "DETAILS_AND_PREVIEW": {
+    "preview_player": {
+      "not_broadcasting": "Currently not broadcasting",
+      "video_no_available_explanation": "video will play once broadcasting start",
+      "preview_label": "PREVIEW",
+      "go_live_button": "Go Live",
+      "end_live_button": "End Live"
+    },
+    "stream_details": {
+      "details": "Details",
+      "creator": "Creator",
+      "creation_date": "Creation Date",
+      "type": "Type",
+      "moderation": "Moderation",
+      "plays": "Plays",
+      "entry_id": "Entry ID"
+    }
   },
   "ENCODER_SETTINGS": {
     "encoder_settings": "Encoder Settings",
