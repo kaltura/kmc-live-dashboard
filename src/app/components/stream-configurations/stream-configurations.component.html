@@ -1,66 +1,66 @@
-<div class="stream-configurations kOverrideFAIcons">
+<div class="stream-configurations kOverrideFAIcons" [class.compact]="compactMode">
   <div class="property">
-    <label class="configuration-label">{{ 'STREAM_CONFIG.stream_status.tag' | translate }}</label>
+    <label class="configuration-label" [class.colors_reverted]="colorsReverted">{{ 'STREAM_CONFIG.stream_status.tag' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="_dynamicInformation.streamStatus.state === 'Live'"
-                           [class.bullet-yellow]="_dynamicInformation.streamStatus.state === 'Initializing'"
-                           [class.bullet-yellow]="_dynamicInformation.streamStatus.state === 'Preview'">•</span>
-      <span class="state">{{ 'STREAM_CONFIG.stream_status.state.' + _dynamicInformation.streamStatus.state | translate }}</span>
+      <span class="bullet bullet-grey" [class.bullet-green]="_dynamicInformation.streamStatus.state === 'Live'"
+                                       [class.bullet-yellow]="_dynamicInformation.streamStatus.state === 'Initializing'"
+                                       [class.bullet-yellow]="_dynamicInformation.streamStatus.state === 'Preview'">•</span>
+      <span class="state" [class.colors_reverted]="colorsReverted">{{ 'STREAM_CONFIG.stream_status.state.' + _dynamicInformation.streamStatus.state | translate }}</span>
     </div>
   </div>
   <div class="property">
     <div class="label-icon-duo">
-      <label class="configuration-label">{{ 'STREAM_CONFIG.stream_health.tag' | translate }}</label>
-      <i class="kIconhelp_full" [kTooltip]="_streamHealthTooltip" [maxWidth]="400" [placement]="'bottom'" [escape]="false"></i>
+      <label class="configuration-label" [class.colors_reverted]="colorsReverted">{{ 'STREAM_CONFIG.stream_health.tag' | translate }}</label>
+      <i class="kIconhelp_full bullet-grey" [kTooltip]="_streamHealthTooltip" [maxWidth]="400" [placement]="'bottom'" [escape]="false"></i>
     </div>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="((_streamSeverity | severityToHealth) === 'Good') && (_dynamicInformation.streamStatus.state !== 'Offline')"
-                           [class.bullet-yellow]="((_streamSeverity | severityToHealth) === 'Fair') && (_dynamicInformation.streamStatus.state !== 'Offline')"
-                           [class.bullet-red]="((_streamSeverity  | severityToHealth)=== 'Poor') && (_dynamicInformation.streamStatus.state !== 'Offline')">•</span>
-      <span class="state" *ngIf="_dynamicInformation.streamStatus.state === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
-      <span class="state" *ngIf="_dynamicInformation.streamStatus.state !== 'Offline'">
+      <span class="bullet bullet-grey" [class.bullet-green]="((_streamSeverity | severityToHealth) === 'Good') && (_dynamicInformation.streamStatus.state !== 'Offline')"
+                                       [class.bullet-yellow]="((_streamSeverity | severityToHealth) === 'Fair') && (_dynamicInformation.streamStatus.state !== 'Offline')"
+                                       [class.bullet-red]="((_streamSeverity  | severityToHealth)=== 'Poor') && (_dynamicInformation.streamStatus.state !== 'Offline')">•</span>
+      <span class="state" [class.colors_reverted]="colorsReverted" *ngIf="_dynamicInformation.streamStatus.state === 'Offline'">{{ 'STREAM_CONFIG.stream_health.state.N/A' | translate }}</span>
+      <span class="state" [class.colors_reverted]="colorsReverted" *ngIf="_dynamicInformation.streamStatus.state !== 'Offline'">
         {{ 'STREAM_CONFIG.stream_health.state.' + (_streamSeverity | severityToHealth) | translate }} {{_getSourceHeight()}}
       </span>
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">{{ 'STREAM_CONFIG.elapsed_time' | translate }}</label>
+    <label class="configuration-label" [class.colors_reverted]="colorsReverted">{{ 'STREAM_CONFIG.elapsed_time' | translate }}</label>
     <div class="configuration-status elapsed-time">
-      <span class="bullet"></span>
-      <span class="state">{{ _streamDuration | duration}}</span>
+      <span class="bullet bullet-grey"></span>
+      <span class="state" [class.colors_reverted]="colorsReverted">{{ _streamDuration | duration}}</span>
     </div>
   </div>
   <div class="property">
     <div class="label-icon-duo">
-      <label class="configuration-label">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
-      <i class="kIconinfo infoIcon"
+      <label class="configuration-label" [class.colors_reverted]="colorsReverted">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
+      <i class="kIconinfo infoIcon bullet-grey"
          [kTooltip]="((_dynamicInformation.streamStatus.state !== 'Offline') && (_allStreams.primary.length || _allStreams.secondary.length)) ? (_allStreams | transcodingInfo: _dynamicInformation.streamStatus.serverType) : ''"
          [maxWidth]="145" [placement]="'bottom'"></i>
     </div>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="_staticConfiguration.transcoding">•</span>
-      <span class="state">{{_staticConfiguration.transcoding | entryBooleanConfiguration}}</span>
+      <span class="bullet bullet-grey" [class.bullet-green]="_staticConfiguration.transcoding">•</span>
+      <span class="state" [class.colors_reverted]="colorsReverted">{{_staticConfiguration.transcoding | entryBooleanConfiguration}}</span>
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">{{ 'STREAM_CONFIG.recording' | translate }}</label>
+    <label class="configuration-label" [class.colors_reverted]="colorsReverted">{{ 'STREAM_CONFIG.recording' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_staticConfiguration.recording)">•</span>
-      <span class="state">{{_staticConfiguration.recording | entryBooleanConfiguration}}</span>
+      <span class="bullet bullet-grey" [class.bullet-green]="(_staticConfiguration.recording)">•</span>
+      <span class="state" [class.colors_reverted]="colorsReverted">{{_staticConfiguration.recording | entryBooleanConfiguration}}</span>
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">{{ 'STREAM_CONFIG.dvr' | translate }}</label>
+    <label class="configuration-label" [class.colors_reverted]="colorsReverted">{{ 'STREAM_CONFIG.dvr' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_staticConfiguration.dvr)">•</span>
-      <span class="state">{{_staticConfiguration.dvr | entryBooleanConfiguration}}</span>
+      <span class="bullet bullet-grey" [class.bullet-green]="(_staticConfiguration.dvr)">•</span>
+      <span class="state" [class.colors_reverted]="colorsReverted">{{_staticConfiguration.dvr | entryBooleanConfiguration}}</span>
     </div>
   </div>
   <div class="property">
-    <label class="configuration-label">{{ 'STREAM_CONFIG.redundancy' | translate }}</label>
+    <label class="configuration-label" [class.colors_reverted]="colorsReverted">{{ 'STREAM_CONFIG.redundancy' | translate }}</label>
     <div class="configuration-status">
-      <span class="bullet" [class.bullet-green]="(_dynamicInformation.redundancy)">•</span>
-      <span class="state">{{_dynamicInformation.redundancy | entryDynamicInformation: _dynamicInformation.streamStatus.state}}</span>
+      <span class="bullet bullet-grey" [class.bullet-green]="(_dynamicInformation.redundancy)">•</span>
+      <span class="state" [class.colors_reverted]="colorsReverted">{{_dynamicInformation.redundancy | entryDynamicInformation: _dynamicInformation.streamStatus.state}}</span>
     </div>
   </div>
 </div>

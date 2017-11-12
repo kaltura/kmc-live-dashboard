@@ -1,14 +1,25 @@
 @import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
 
-.stream-configuration-box {
+.compact-dashboard-box {
   flex:  1 0 100%;
-  color: #FFFFFF;
+  height: 96px;
+  padding-bottom: 6px;
   line-height: 16px;
-  font-size: 13px;
   text-align: center;
+  border-bottom: solid 2px rgba(170, 170, 170, 0.15);
 
-  div {
-    margin: 12px;
-    line-height: 18px;
+  .stream-information {
+    margin: 36px 24px;
+
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  details-and-preview {
+    flex: 0 1 50%;
+  }
+
+  further-information {
+    flex: 0 1 50%;
   }
 }

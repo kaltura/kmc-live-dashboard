@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Observable } from "rxjs";
 import { ISubscription } from "rxjs/Subscription";
 import * as moment from 'moment';
@@ -25,6 +25,10 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
   public  _streamHealthTooltip: string = "";
   public  _allStreams: NodeStreams;
   public  _streamSeverity: AlertSeverity;
+
+  @Input() compactMode = false;
+
+  @Input() colorsReverted = false;
 
   constructor(private _liveEntryService: LiveEntryService, private _appLocalization: AppLocalization) {
     // Static configuration

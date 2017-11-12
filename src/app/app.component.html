@@ -5,7 +5,7 @@
       <span class="beta-message">{{ "DASHBOARD.beta_message" | translate: _configuration }}</span>
     </footer>
   </div>
-  <div class="compact-window" *ngIf="_applicationLoaded && _configuration.mode === ApplicationMode.Webcast">
-    <compact-dashboard></compact-dashboard>
+  <div *ngIf="_applicationLoaded && _configuration.mode === ApplicationMode.Webcast" class="compact-window" [class.colors_reverted]="_configuration.mode === ApplicationMode.Webcast">
+    <compact-dashboard [colorsReverted]="true"></compact-dashboard>
   </div>
 </k-area-blocker>

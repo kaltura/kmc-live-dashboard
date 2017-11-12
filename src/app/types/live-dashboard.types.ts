@@ -135,3 +135,12 @@ export interface FlavorParams {
     time?: Date
   }
 }
+
+export interface PlayerConfig {
+  partnerId?: number,
+  entryId?: string,
+  ks?: string,
+  uiConfId?: string,
+  serviceUrl?: string
+  flashVars?: Object
+}

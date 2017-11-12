@@ -7,6 +7,11 @@
   border-radius: 3px;
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
 
+  &.compact-mode {
+    height: 157px;
+    min-height: 0;
+  }
+
   .preview-player {
     height: 157px;
     display: flex;
@@ -29,6 +34,7 @@
       font-size: 32px;
       left: 30px;
       top: 30px;
+      padding: 15px 11px;
       border: solid 3px $mainLinkColor;
       border-radius: 7px;
       z-index: 10000000001;

@@ -35,7 +35,7 @@ export class BootstrapService {
         this._liveDashboardConfiguration.entryId =                 window.top.webcast.vars.liveDashboard.entryId;
         this._liveDashboardConfiguration.uiConfId =                window.top.webcast.vars.liveDashboard.uiConfId;
         this._liveDashboardConfiguration.version =                 window.top.webcast.vars.liveDashboard.version;
-        this._liveDashboardConfiguration.lang =                    window.top.webcast.vars.liveDashboard.lang ? window.top.lang : 'en';
+        this._liveDashboardConfiguration.lang =                    window.top.webcast.vars.liveDashboard.lang ? window.top.webcast.vars.liveDashboard.lang : 'en';
       }
     }
 

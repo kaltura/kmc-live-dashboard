@@ -27,5 +27,9 @@
   width: 663px;
   height: 327px;
   border-radius: 6px;
-  background-color: rgba(64, 61, 61, 0.6);
+
+  &.colors_reverted {
+    background-color: rgba(64, 61, 61, 0.6);
+  }
+
 }
