@@ -1,7 +1,11 @@
-@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/variables';
 
 .component-text {
   color: $kGrayscale2;
+}
+
+.component-text-reverted {
+  color: #FFFFFF;
 }
 
 .learn-more-not-live {
@@ -31,5 +35,13 @@
 }
 
 .arrow-enabled {
+  color: $kGrayscale1;
+}
+
+.arrow-enabled-reverted {
+  color: $kGrayscale5;
+}
+
+.arrow-disabled-reverted {
   color: $kGrayscale1;
 }

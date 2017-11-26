@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { LiveEntryService } from "../services/live-entry.service";
 import { LiveDashboardConfiguration } from "../services/live-dashboard-configuration.service";
-import { LiveEntryDynamicStreamInfo, LoadingStatus } from "../types/live-dashboard.types";
+import { LiveEntryDynamicStreamInfo, LoadingStatus, PlayerConfig } from "../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
 import { KalturaViewMode } from "kaltura-typescript-client/types/KalturaViewMode";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
@@ -10,15 +10,6 @@ import { KalturaRecordingStatus } from "kaltura-typescript-client/types/KalturaR
 interface ExplicitLiveObject {
   enabled?: boolean,
   previewMode?: boolean
-}
-
-interface PlayerConfig {
-  partnerId?: number,
-  entryId?: string,
-  ks?: string,
-  uiConfId?: string,
-  serviceUrl?: string
-  flashVars?: Object
 }
 
 @Component({
@@ -42,8 +33,14 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   public _inFullScreen = false;
   private _kdp: any;
 
+  @Input() compactMode = false;
+
   constructor(private _liveEntryService : LiveEntryService,
-              public _liveDashboardConfiguration: LiveDashboardConfiguration) { }
+              private _liveDashboardConfiguration: LiveDashboardConfiguration) {
+    if (window.addEventListener) {
+      window.addEventListener('message', this._receivePostMessage.bind(this), false);
+    }
+  }
 
   ngOnInit() {
     this._listenToApplicationStatus();
@@ -101,14 +98,14 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
     this._liveEntry.viewMode = KalturaViewMode.allowAll;
     this._liveEntry.recordingStatus = KalturaRecordingStatus.active;
 
-    this._liveEntryService.updateLiveStreamEntry(['viewMode', 'recordingStatus']);
+    this._liveEntryService.updateLiveStreamEntryByApi(['viewMode', 'recordingStatus']);
   }
 
   public _onClickEndLive() {
     this._liveEntry.viewMode = KalturaViewMode.preview;
     this._liveEntry.recordingStatus = KalturaRecordingStatus.stopped;
 
-    this._liveEntryService.updateLiveStreamEntry(['viewMode', 'recordingStatus']);
+    this._liveEntryService.updateLiveStreamEntryByApi(['viewMode', 'recordingStatus']);
   }
 
   public _onPlayerReady(kdp: any) {
@@ -120,5 +117,20 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
       this._inFullScreen = false;
     });
 
+  }
+
+  private _receivePostMessage(event: any): void {
+    if (event.data.type) {
+      return this._parsePostMessage(event.data);
+    }
+  }
+
+  private _parsePostMessage(messageData: {type: string, data: any}): void {
+    switch (messageData.type) {
+      case 'onLiveEntryChange':
+        this._liveEntryService.updateLiveStreamEntryByPostMessage(messageData.data);
+      default:
+        console.log('Message type unknown!');
+    }
   }
 }

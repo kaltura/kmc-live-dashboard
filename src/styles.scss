@@ -21,6 +21,10 @@ $mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts
   margin: 0 !important;
 }
 
+.bullet-grey {
+  color: $kGrayscale2;
+}
+
 .bullet-green {
   color: $kSuccess;
 }
@@ -33,14 +37,14 @@ $mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts
   color: $kDandger;
 }
 
-.bullet-grey {
-  color: $kGrayscale2;
-}
-
 .alignLeft {
   text-align: left;
 }
 
 .flexIt{
   flex: 1 1 auto;
+}
+
+.background-reverted-color {
+  background: #131213;
 }
