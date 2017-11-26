@@ -1,5 +1,14 @@
 @import '../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/variables.scss';
 
+.app-window {
+  width: 100%;
+}
+
+.app-window-reverted-color {
+  background: #131213;
+  border-radius: 6px;
+}
+
 .default-mode {
   max-width: 1280px;
   min-width: 1035px;
@@ -12,7 +21,6 @@
   footer {
     text-align: right;
     margin-right: 60px;
-    margin-top: 25px;
 
     .beta-message {
       color: $kGrayscale2;
@@ -24,8 +32,9 @@
 }
 
 .compact-window {
-  width: 663px;
-  height: 327px;
+  width: 100%;
+  min-width: 683px;
+  height: 100%;
   border-radius: 6px;
 
   &.colors_reverted {

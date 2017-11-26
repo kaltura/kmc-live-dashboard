@@ -1,5 +1,5 @@
 import { environment } from "../../../environments/environment";
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { LiveEntryService } from "../../services/live-entry.service";
 import { LiveEntryDynamicStreamInfo, Alert, DiagnosticsErrorCodes } from "../../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
@@ -18,6 +18,8 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
   public  _alertsArray: Alert[] = [];
   public  _alertIndex: number = 0;
   private _alertsToIgnore: DiagnosticsErrorCodes[] = [DiagnosticsErrorCodes.EntryStarted, DiagnosticsErrorCodes.EntryStopped, DiagnosticsErrorCodes.BackupOnlyStreamNoRecording];
+
+  @Input() colorsReverted = false;
 
   constructor(private _liveEntryService: LiveEntryService) {
     this._dynamicInformation = {

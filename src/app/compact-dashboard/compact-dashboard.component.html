@@ -1,9 +1,12 @@
 <k-area-blocker [showLoader]="!_applicationLoaded">
   <div class="compact-dashboard-box">
-    <stream-configurations [compactMode]="true" [colorsReverted]="colorsReverted"></stream-configurations>
+    <div class="stream-indicators">
+      <stream-configurations [compactMode]="true" [colorsReverted]="colorsReverted"></stream-configurations>
+    </div>
+    <div class="vr"></div>
     <div class="stream-information">
       <details-and-preview [compactMode]="true"></details-and-preview>
-      <further-information></further-information>
+      <further-information [colorsReverted]="true"></further-information>
     </div>
   </div>
 </k-area-blocker>

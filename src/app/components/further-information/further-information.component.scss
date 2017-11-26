@@ -4,6 +4,10 @@
   color: $kGrayscale2;
 }
 
+.component-text-reverted {
+  color: #FFFFFF;
+}
+
 .learn-more-not-live {
   padding: 32px 0 22px 0;
 }
@@ -31,5 +35,13 @@
 }
 
 .arrow-enabled {
+  color: $kGrayscale1;
+}
+
+.arrow-enabled-reverted {
+  color: $kGrayscale5;
+}
+
+.arrow-disabled-reverted {
   color: $kGrayscale1;
 }

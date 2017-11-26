@@ -44,12 +44,14 @@ export class BootstrapService {
       this._kalturaClient.endpointUrl = this._liveDashboardConfiguration.service_url + environment.bootstrap.service_url_extension;
       this._kalturaClientConfiguration.clientTag = 'KalturaLiveDashboard';
 
+      console.log('Bootstrap service started successfully');
       // init i18n - Set english as default language and initialize localization service
       // use only prefix (e.g: all english begin with en-xx)
       let browserLang = this._liveDashboardConfiguration.lang.substr(0, 2);
       return this._appLocalization.load(browserLang, environment.bootstrap.default_lang);
     }
     else {
+      console.log('Bootstrap service failed to start');
       return Observable.throw(new Error('missing parameters'));
     }
   }
