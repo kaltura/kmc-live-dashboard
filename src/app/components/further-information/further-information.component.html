@@ -1,5 +1,5 @@
   <div *ngIf="_dynamicInformation.streamStatus.state === 'Offline'" class="learn-more-not-live">
-    <span class="component-text">{{ 'DASHBOARD.learn_more_not_live_text' | translate }}</span>
+    <span class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'DASHBOARD.learn_more_not_live_text' | translate }}</span>
     <div class="learn-more-link">
       <a [href]="_learnMoreLink" target="_blank">{{ 'DASHBOARD.learn_more_anchor' | translate }}</a>
     </div>

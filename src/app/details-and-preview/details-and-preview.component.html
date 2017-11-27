@@ -18,15 +18,21 @@
 
   <div *ngIf="!compactMode">
     <div class="go-live-div" *ngIf="_explicitLiveInformation.enabled">
-      <button *ngIf="_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonBranded go-live-button start" label="{{ 'DETAILS_AND_PREVIEW.preview_player.go_live_button' | translate }}"
+      <button *ngIf="_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonBranded go-live-button start" label="{{ 'DETAILS_AND_PREVIEW.explicit_live.go_live_button' | translate }}"
               [disabled]="_dynamicInfo.streamStatus.state === 'Initializing' || _dynamicInfo.streamStatus.state === 'Offline'"
               (click)="_onClickGoLive()"
       ></button>
-      <button *ngIf="!_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonDanger go-live-button stop" label="{{ 'DETAILS_AND_PREVIEW.preview_player.end_live_button' | translate }}"
+      <button *ngIf="!_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonDanger go-live-button stop" label="{{ 'DETAILS_AND_PREVIEW.explicit_live.end_live_button' | translate }}"
               [disabled]="_dynamicInfo.streamStatus.state === 'Initializing' || _dynamicInfo.streamStatus.state === 'Offline'"
               (click)="_onClickEndLive()"
       ></button>
     </div>
+    <p-confirmDialog [width]="385" [height]="257" [closable]="false" #explicitLiveConfirmationBox>
+      <p-footer>
+        <button type="button" pButton class="ui-button accept-button" label="{{'DETAILS_AND_PREVIEW.explicit_live.end_live_alert.accept_button' | translate}}" (click)="explicitLiveConfirmationBox.accept()"></button>
+        <button type="button" pButton class="ui-button reject-button" label="{{'DETAILS_AND_PREVIEW.explicit_live.end_live_alert.reject_button' | translate}}" (click)="explicitLiveConfirmationBox.reject()"></button>
+      </p-footer>
+    </p-confirmDialog>
   </div>
 
   <div *ngIf="!compactMode" class="details">

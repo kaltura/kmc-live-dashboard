@@ -141,3 +141,71 @@
     }
   }
 }
+
+/deep/ .ui-dialog {
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  &.ui-widget {
+    .ui-dialog-titlebar {
+      background: #ffffff;
+      font-size: 24px;
+      line-height: 29px;
+    }
+
+    .ui-widget {
+      padding: 0 20px;
+      margin-bottom: 1px;
+    }
+  }
+
+  &.ui-confirmdialog {
+    .ui-dialog-content.ui-widget-content {
+      line-height: 24px;
+      font-size: 15px;
+      color: $kGrayscale1;
+    }
+
+    .ui-dialog-footer {
+      border: none;
+      border-top: 1px solid #D5D5D5;
+      padding-top: 20px;
+
+      .ui-button-text {
+        padding: 0;
+      }
+
+      button {
+        height: 34px;
+        width: 100px;
+        margin: 0 10px;
+
+        &.accept-button{
+          color: #ffffff;
+          background: $kDandger;
+          border: 0px solid $kDandger;
+          &:hover {
+            background: darken($kDandger, 10%);
+            border: 0px solid darken($kDandger, 10%);
+          }
+          &:active:not(:disabled){
+            box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+          }
+        }
+
+        &.reject-button {
+          color: $kGrayscale1;
+          background: #ffffff;
+          border: 1px solid $kGrayscale4;
+          &:hover{
+            color: $kPrimary;
+            background: #ffffff;
+            border: 1px solid $kGrayscale4;
+          }
+          &:active:not(:disabled){
+            box-shadow: inset 0px 1px 3px 0 rgba(0,0,0,0.50);
+          }
+        }
+      }
+    }
+  }
+}
