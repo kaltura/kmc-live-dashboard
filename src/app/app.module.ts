@@ -7,7 +7,7 @@ import { TranslateModule } from "ng2-translate";
 import { TooltipModule } from '@kaltura-ng/kaltura-ui';
 
 // PrimeNG
-import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule } from 'primeng/primeng';
+import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule, ConfirmDialogModule } from 'primeng/primeng';
 
 // Services
 import { KalturaClient } from '@kaltura-ng/kaltura-client/kaltura-client.service';
@@ -16,6 +16,7 @@ import { LiveEntryService } from './services/live-entry.service';
 import { ConversionProfileService } from "./services/conversion-profile.service";
 import { LiveEntryTimerTaskService } from "./services/entry-timer-task.service";
 import { BootstrapService } from "./bootstrap.service";
+import { ConfirmationService } from "primeng/primeng"
 
 // Components
 import { AppComponent } from './app.component';
@@ -102,7 +103,8 @@ export function clientConfigurationFactory() {
     CheckboxModule,
     RadioButtonModule,
     GrowlModule,
-    TooltipModule
+    TooltipModule,
+    ConfirmDialogModule
   ],
   providers: [
     KalturaClient,
@@ -119,7 +121,8 @@ export function clientConfigurationFactory() {
     CodeToSeverityPipe,
     StreamStatusPipe,
     AppLocalization,
-    AppStorage
+    AppStorage,
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })

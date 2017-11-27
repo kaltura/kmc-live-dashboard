@@ -47,9 +47,17 @@
     "preview_player": {
       "not_broadcasting": "Currently not broadcasting",
       "video_no_available_explanation": "video will play once broadcasting start",
-      "preview_label": "PREVIEW",
+      "preview_label": "PREVIEW"
+    },
+    "explicit_live": {
       "go_live_button": "Go Live",
-      "end_live_button": "End Live"
+      "end_live_button": "End Live",
+      "end_live_alert": {
+        "message": "Are you sure you want to end the live broadcast? this action can not be undone",
+        "header": "Hold your horses!",
+        "reject_button": "Cancel",
+        "accept_button": "End Live"
+      }
     },
     "stream_details": {
       "details": "Details",

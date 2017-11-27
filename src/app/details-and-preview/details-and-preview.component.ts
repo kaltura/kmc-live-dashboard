@@ -6,6 +6,8 @@ import { ISubscription } from "rxjs/Subscription";
 import { KalturaViewMode } from "kaltura-typescript-client/types/KalturaViewMode";
 import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
 import { KalturaRecordingStatus } from "kaltura-typescript-client/types/KalturaRecordingStatus";
+import { ConfirmationService } from "primeng/primeng";
+import { AppLocalization } from "@kaltura-ng/kaltura-common";
 
 interface ExplicitLiveObject {
   enabled?: boolean,
@@ -36,7 +38,9 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   @Input() compactMode = false;
 
   constructor(private _liveEntryService : LiveEntryService,
-              private _liveDashboardConfiguration: LiveDashboardConfiguration) {
+              private _liveDashboardConfiguration: LiveDashboardConfiguration,
+              private _confirmationService: ConfirmationService,
+              private _appLocalization: AppLocalization) {
     if (window.addEventListener) {
       window.addEventListener('message', this._receivePostMessage.bind(this), false);
     }
@@ -102,10 +106,16 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   }
 
   public _onClickEndLive() {
-    this._liveEntry.viewMode = KalturaViewMode.preview;
-    this._liveEntry.recordingStatus = KalturaRecordingStatus.stopped;
+    this._confirmationService.confirm({
+      message: this._appLocalization.get('DETAILS_AND_PREVIEW.explicit_live.end_live_alert.message'),
+      header: this._appLocalization.get('DETAILS_AND_PREVIEW.explicit_live.end_live_alert.header'),
+      accept: () => {
+        this._liveEntry.viewMode = KalturaViewMode.preview;
+        this._liveEntry.recordingStatus = KalturaRecordingStatus.stopped;
 
-    this._liveEntryService.updateLiveStreamEntryByApi(['viewMode', 'recordingStatus']);
+        this._liveEntryService.updateLiveStreamEntryByApi(['viewMode', 'recordingStatus']);
+      },
+    });
   }
 
   public _onPlayerReady(kdp: any) {
