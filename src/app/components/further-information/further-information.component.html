@@ -1,0 +1,33 @@
+  <div *ngIf="_dynamicInformation.streamStatus.state === 'Offline'" class="learn-more-not-live">
+    <span class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'DASHBOARD.learn_more_not_live_text' | translate }}</span>
+    <div class="learn-more-link">
+      <a [href]="_learnMoreLink" target="_blank">{{ 'DASHBOARD.learn_more_anchor' | translate }}</a>
+    </div>
+  </div>
+  <div *ngIf="_dynamicInformation.streamStatus.state !== 'Offline'" class="further-information-box">
+    <div *ngIf="!_alertsArray.length">
+      <span class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'DASHBOARD.learn_more_is_live_text' | translate }}</span>
+    </div>
+    <div *ngIf="_alertsArray.length" class="grid-middle kOverrideFAIcons">
+      <div *ngIf="_alertsArray.length > 1" data-push-left="off" (click)="_onClickLeftArrow()">
+        <i class="kIcondropdown_arrow_left"
+           [class.arrow-disabled]="(_alertIndex === 0) && !colorsReverted"
+           [class.arrow-enabled]="(_alertIndex !== 0) && !colorsReverted"
+           [class.arrow-disabled-reverted]="(_alertIndex === 0) && colorsReverted"
+           [class.arrow-enabled-reverted]="(_alertIndex !== 0) && colorsReverted">
+        </i>
+      </div>
+      <div class="col no-padding alert-message">
+        <span class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'ALERTS.' + _alertsArray[_alertIndex].Code + '.message-text-box' | translate: _alertsArray[_alertIndex].Arguments }}</span>
+      </div>
+      <div *ngIf="_alertsArray.length > 1" (click)="_onClickRightArrow()">
+        <i class="kIcondropdown_arrow_right"
+           [class.arrow-disabled]="(_alertIndex === _alertsArray.length - 1) && !colorsReverted"
+           [class.arrow-enabled]="(_alertIndex !== _alertsArray.length - 1) && !colorsReverted"
+           [class.arrow-disabled-reverted]="(_alertIndex === _alertsArray.length - 1) && colorsReverted"
+           [class.arrow-enabled-reverted]="(_alertIndex !== _alertsArray.length - 1) && colorsReverted">
+        </i>
+      </div>
+    </div>
+  </div>
+

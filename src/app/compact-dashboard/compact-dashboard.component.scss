@@ -1,0 +1,48 @@
+@import '../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+
+.compact-dashboard-box {
+  flex:  1 0 100%;
+  min-height: 327px;
+  line-height: 16px;
+  text-align: center;
+  display: flex;
+  flex-flow: column nowrap;
+
+  .vr {
+    border-top: solid 1px rgba(255, 255, 255, 0.1);
+    border-bottom: solid 1px rgba(0, 0, 0, 0.75);
+  }
+
+  .stream-indicators{
+    flex: 1 0 25%;
+    min-width: 663px;
+    padding: 15px 9px 0 9px;
+    display: flex;
+    align-items: center;
+  }
+
+  stream-configurations {
+    width: 100%;
+  }
+  .stream-information {
+    flex: 1 0 75%;
+    padding: 0 20px;
+    display: flex;
+    flex-flow: row nowrap;
+  }
+
+  details-and-preview {
+    flex: 0 1 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 20px;
+  }
+
+  further-information {
+    flex: 0 1 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

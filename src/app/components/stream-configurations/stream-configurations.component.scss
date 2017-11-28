@@ -1,4 +1,4 @@
-@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/_variables.scss';
+@import '../../../../node_modules/@kaltura-ng/mc-theme/themes/default/scss/variables';
 
 .stream-configurations {
   display: flex;
@@ -8,6 +8,11 @@
   margin-top: 5px;
   margin-bottom: 22px;
 
+  &.compact {
+    font-size: 13px;
+    margin: 25px 16px;
+  }
+
   .property {
     display: flex;
     flex-flow: column nowrap;
@@ -16,7 +21,10 @@
     .configuration-label {
       font-size: 13px;
       font-weight: 600;
-      color: $kGrayscale3;
+
+      &.colors_reverted {
+        color: #FFFFFF;
+      }
     }
 
     .label-icon-duo {
@@ -39,12 +47,18 @@
       .bullet {
         font-size: 60px;
         margin-left: -4px;
+
+
       }
 
       .state {
         margin-left: 4px;
         vertical-align: top;
         font-weight: 400;
+
+        &.colors_reverted {
+          color: rgba(255, 255, 255, 0.7);
+        }
       }
 
       &.elapsed-time {

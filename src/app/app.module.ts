@@ -7,7 +7,7 @@ import { TranslateModule } from "ng2-translate";
 import { TooltipModule } from '@kaltura-ng/kaltura-ui';
 
 // PrimeNG
-import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule } from 'primeng/primeng';
+import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule, ConfirmDialogModule } from 'primeng/primeng';
 
 // Services
 import { KalturaClient } from '@kaltura-ng/kaltura-client/kaltura-client.service';
@@ -16,18 +16,21 @@ import { LiveEntryService } from './services/live-entry.service';
 import { ConversionProfileService } from "./services/conversion-profile.service";
 import { LiveEntryTimerTaskService } from "./services/entry-timer-task.service";
 import { BootstrapService } from "./bootstrap.service";
+import { ConfirmationService } from "primeng/primeng"
 
 // Components
 import { AppComponent } from './app.component';
+import { DefaultDashboardComponent } from './default-dashboard/default-dashboard.component';
+import { CompactDashboardComponent } from './compact-dashboard/compact-dashboard.component';
 import { DetailAndPreviewComponent } from './details-and-preview/details-and-preview.component';
 import { StreamInfoComponent } from './stream-info/stream-info.component';
 import { EncoderSettingsComponent } from './stream-info/encoder-settings/encoder-settings.component';
 import { BasicSettingsComponent } from './stream-info/basic-settings/basic-settings.component';
 import { AdditionalSettingsComponent } from './stream-info/additional-settings/additional-settings.component';
-import { StreamConfigurationsComponent } from './stream-info/stream-configurations/stream-configurations.component';
+import { StreamConfigurationsComponent } from './components/stream-configurations/stream-configurations.component';
 import { AreaBlockerComponent } from "@kaltura-ng/kaltura-ui/area-blocker";
 import { StreamHealthNotificationsComponent } from './stream-info/stream-health-notifications/stream-health-notifications.component';
-import { FurtherInformationComponent } from './stream-info/further-information/further-information.component';
+import { FurtherInformationComponent } from './components/further-information/further-information.component';
 // TODO: Remove!!!
 import { KalturaPlayerComponent } from './player/player.component';
 
@@ -81,7 +84,9 @@ export function clientConfigurationFactory() {
     CodeToSeverityPipe,
     StreamStatusPipe,
     FurtherInformationComponent,
-    KalturaPlayerComponent
+    KalturaPlayerComponent,
+    DefaultDashboardComponent,
+    CompactDashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -98,7 +103,8 @@ export function clientConfigurationFactory() {
     CheckboxModule,
     RadioButtonModule,
     GrowlModule,
-    TooltipModule
+    TooltipModule,
+    ConfirmDialogModule
   ],
   providers: [
     KalturaClient,
@@ -115,7 +121,8 @@ export function clientConfigurationFactory() {
     CodeToSeverityPipe,
     StreamStatusPipe,
     AppLocalization,
-    AppStorage
+    AppStorage,
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })

@@ -475,7 +475,7 @@ export class LiveEntryService implements OnDestroy {
         });
   }
 
-  public updateLiveStreamEntry(propertiesToUpdate: string[]) {
+  public updateLiveStreamEntryByApi(propertiesToUpdate: string[]) {
     let liveStreamEntryArg = new KalturaLiveStreamEntry();
 
     propertiesToUpdate.forEach(p => {
@@ -490,5 +490,9 @@ export class LiveEntryService implements OnDestroy {
         this._liveStream.next(response);
         liveStreamUpdateSubscription.unsubscribe();
       })
+  }
+
+  public updateLiveStreamEntryByPostMessage(newLiveEntry: KalturaLiveStreamEntry) {
+    this._liveStream.next(newLiveEntry);
   }
 }

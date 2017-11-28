@@ -8,12 +8,13 @@
   flex-flow: row wrap;
   align-self: flex-start;
 
-  .stream-health {
+  .stream-configuration-box {
     flex:  1 0 100%;
     color: $kGrayscale3;
     font-size: 13px;
     line-height: 16px;
     text-align: center;
+    color: $kGrayscale3;
 
     div {
       margin: 12px;
