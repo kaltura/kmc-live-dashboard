@@ -1,9 +1,9 @@
  <div class="streamInfo" [class.compact-mode]="compactMode">
   <div class="preview-player">
 
-    <div *ngIf="_dynamicInfo.streamStatus.state !== 'Live' && _dynamicInfo.streamStatus.state !== 'Preview' && !_dynamicInfo.streamSession.isInProgress" class="not-broadcasting-container">
-      <p id="firstRow">{{ 'DETAILS_AND_PREVIEW.preview_player.not_broadcasting' | translate }}</p>
-      <p id="secondRow">{{ 'DETAILS_AND_PREVIEW.preview_player.video_no_available_explanation' | translate }}</p>
+    <div *ngIf="_dynamicInfo.streamStatus.state !== 'Live' && _dynamicInfo.streamStatus.state !== 'Preview' && !_dynamicInfo.streamSession.isInProgress" class="not-broadcasting-container" [class.not-broadcasting-container-reverted]="colorsReverted">
+      <p class="firstRow" [class.firstRow-reverted]="colorsReverted">{{ 'DETAILS_AND_PREVIEW.preview_player.not_broadcasting' | translate }}</p>
+      <p class="secondRow" [class.secondRow-reverted]="colorsReverted">{{ 'DETAILS_AND_PREVIEW.preview_player.video_no_available_explanation' | translate }}</p>
     </div>
 
     <k-player *ngIf="(_dynamicInfo.streamStatus.state === 'Live' || _dynamicInfo.streamStatus.state === 'Preview') || _dynamicInfo.streamSession.isInProgress"
