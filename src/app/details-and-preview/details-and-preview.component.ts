@@ -36,6 +36,7 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   private _kdp: any;
 
   @Input() compactMode = false;
+  @Input() colorsReverted = false;
 
   constructor(private _liveEntryService : LiveEntryService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration,
