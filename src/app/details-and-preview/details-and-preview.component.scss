@@ -4,7 +4,7 @@
   min-height: 480px;
   width: 279px;
   background-color: $mainLinkHoverColor;
-  border-radius: 3px;
+  border-radius: 5px;
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
 
   &.compact-mode {
@@ -43,6 +43,7 @@
     .not-broadcasting-container {
       height: 100%;
       background-color: $kGrayscale6;
+      border-radius: 4px;
       display: flex;
       flex-flow: column nowrap;
       align-items: center;
@@ -51,13 +52,19 @@
         opacity: 0.5;
         margin: 0;
       }
-      #firstRow {
+      .firstRow {
         color: $kGrayscale1;
-        margin-bottom: 4px;
+        margin-bottom: 7px;
       }
-      #secondRow {
+      .secondRow {
         color: $kGrayscale3;
       }
+      .firstRow-reverted {
+        color: #FFFFFF;
+      }
+    }
+    .not-broadcasting-container-reverted {
+      background-color: #514f4f;
     }
     .goLive-div {
       text-align: center;
