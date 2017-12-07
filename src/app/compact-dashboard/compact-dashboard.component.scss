@@ -24,9 +24,11 @@
   stream-configurations {
     width: 100%;
   }
+
   .stream-information {
-    flex: 1 0 75%;
-    padding: 0 20px;
+    box-sizing: border-box;
+    flex: 1 0 70%;
+    padding: 25px 20px;
     display: flex;
     flex-flow: row nowrap;
   }
@@ -36,15 +38,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 20px 40px 40px;
+    padding: 20px 0 25px 15px;
   }
 
   further-information {
-    flex: 0 1 60%;
+    flex: 0 1 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0 45px 60px 55px;
+    padding: 0 25px 40px 40px;
     line-height: 22px;
   }
 }

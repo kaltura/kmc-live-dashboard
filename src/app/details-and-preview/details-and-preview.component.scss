@@ -8,17 +8,23 @@
   box-shadow: 0 0 2px 0 rgba(0,0,0,0.24);
 
   &.compact-mode {
-    height: 157px;
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    height: 85%;
     min-height: 0;
+    max-height: 200px;
+    min-width: 257px;
+    background: transparent;
   }
 
   .preview-player {
-    height: 157px;
+    height: 100%;
     display: flex;
     flex-flow: column nowrap;
     position: relative;
 
-    .preview_label{
+    .preview_label {
       color: $mainLinkColor;
       font-size: 14px;
       font-weight: bold;
@@ -30,7 +36,7 @@
       top: 15px;
     }
 
-    .preview_label_FS{
+    .preview_label_FS {
       font-size: 32px;
       left: 30px;
       top: 30px;
