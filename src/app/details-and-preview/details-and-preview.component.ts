@@ -32,7 +32,7 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   public  _explicitLiveInformation: ExplicitLiveObject = {};
   public  _liveEntry: KalturaLiveStreamEntry;
   public  _playerConfig: PlayerConfig = {};
-  public _inFullScreen = false;
+  public  _inFullScreen = false;
   private _kdp: any;
 
   @Input() compactMode = false;
