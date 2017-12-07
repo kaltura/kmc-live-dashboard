@@ -221,22 +221,24 @@ export class LiveEntryService implements OnDestroy {
     return false;
   }
 
+  // Possible scenarios for streamStatus:
+  // (1) If only primary -> StreamStatus equals primary status
+  // (2) If only secondary -> StreamStatus equals secondary status
+  // (3) If both -> StreamStatus equals the same as recent active
   private _getStreamStatus(serverNodeList: KalturaEntryServerNode[], currentInfo: LiveEntryDynamicStreamInfo): LiveStreamStates {
     let liveEntry = this._liveStream.getValue();
-    // Possible scenarios for streamStatus:
-    // (1) If only primary -> StreamStatus equals primary status
-    // (2) If only secondary -> StreamStatus equals secondary status
-    // (3) If both -> StreamStatus equals the same as recent active
+    let viewMode = liveEntry.explicitLive ? liveEntry.viewMode : null;
+
     if (currentInfo.redundancy) {
       if (!currentInfo.streamStatus.serverType || (KalturaEntryServerNodeType.livePrimary.equals(currentInfo.streamStatus.serverType))) {
         return {
-          state: this._streamStatusPipe.transform(serverNodeList[0].status, liveEntry.viewMode),
+          state: this._streamStatusPipe.transform(serverNodeList[0].status, viewMode),
           serverType: KalturaEntryServerNodeType.livePrimary
         };
       }
       else if (KalturaEntryServerNodeType.liveBackup.equals(currentInfo.streamStatus.serverType)) {
         return {
-          state: this._streamStatusPipe.transform(serverNodeList[1].status, liveEntry.viewMode),
+          state: this._streamStatusPipe.transform(serverNodeList[1].status, viewMode),
           serverType: KalturaEntryServerNodeType.liveBackup
         };
       }
@@ -246,7 +248,7 @@ export class LiveEntryService implements OnDestroy {
         let sn = serverNodeList.find(esn => { return esn.status !== KalturaEntryServerNodeStatus.markedForDeletion });
         if (sn) {
           return {
-            state: this._streamStatusPipe.transform(sn.status, liveEntry.viewMode),
+            state: this._streamStatusPipe.transform(sn.status, viewMode),
             serverType: sn.serverType
           };
         }
