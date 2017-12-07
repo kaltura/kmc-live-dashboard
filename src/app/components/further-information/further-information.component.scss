@@ -36,10 +36,12 @@
 
 .arrow-enabled {
   color: $kGrayscale1;
+  cursor: pointer;
 }
 
 .arrow-enabled-reverted {
   color: $kGrayscale5;
+  cursor: pointer;
 }
 
 .arrow-disabled-reverted {

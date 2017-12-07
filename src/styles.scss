@@ -48,3 +48,17 @@ $mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts
 .background-reverted-color {
   background: #131213;
 }
+
+::-webkit-scrollbar {
+  background-color: $kGrayscale7;
+  width: 0.75em;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #514f4f;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: $kGrayscale7;
+}

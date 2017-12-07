@@ -8,10 +8,10 @@ import { Component, Input, Output, OnInit, OnDestroy, AfterViewInit, EventEmitte
 export class KalturaPlayerComponent implements AfterViewInit, OnDestroy {
 
 	@Input()
-	width : number = 480;
+	width : number|string;
 
 	@Input()
-	height : number = 360;
+	height : number|string;
 
 	@Input()
 	pid : number;
@@ -37,9 +37,24 @@ export class KalturaPlayerComponent implements AfterViewInit, OnDestroy {
 	@Output()
 	kalturaPlayerReady = new EventEmitter<any>();
 
+
 	private kdp: any;
 
 	constructor() {}
+
+	public _setSize(parameter: number|string): string {
+	  if (typeof parameter === 'string') {
+      if (isNaN(parseInt(parameter))) {
+        console.log('Error loading player. Parameters are wrong');
+      }
+      else {
+        return `${parameter}%`;
+      }
+    }
+    else {
+      return `${parameter}px`;
+    }
+  }
 
 	ngAfterViewInit(){
 		if (!this.lazy){
