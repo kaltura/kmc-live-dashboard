@@ -58,3 +58,7 @@ $mc-theme-font-path : '../node_modules/@kaltura-ng/mc-theme/themes/default/fonts
   background-color: #514f4f;
   border-radius: 10px;
 }
+
+::-webkit-scrollbar-corner {
+  background-color: $kGrayscale7;
+}
