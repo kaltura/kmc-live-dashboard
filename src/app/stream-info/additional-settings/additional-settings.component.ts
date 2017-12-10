@@ -3,9 +3,9 @@ import { SelectItem } from 'primeng/primeng';
 import { LiveEntryService } from "../../services/live-entry.service";
 import { ConversionProfileService } from "../../services/conversion-profile.service";
 //types
-import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStatus";
-import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
-import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
+import { KalturaDVRStatus } from "kaltura-ngx-client/api/types/KalturaDVRStatus";
+import { KalturaRecordStatus } from "kaltura-ngx-client/api/types/KalturaRecordStatus";
+import { KalturaLiveStreamEntry } from "kaltura-ngx-client/api/types/KalturaLiveStreamEntry";
 
 @Component({
   selector: 'additional-settings',

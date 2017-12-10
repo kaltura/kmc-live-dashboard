@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KalturaClient, KalturaClientConfiguration } from "@kaltura-ng/kaltura-client";
+import { KalturaClient, KalturaClientConfiguration } from "kaltura-ngx-client";
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
 import { Observable } from "rxjs/Observable";
 import { environment } from "../environments/environment";

@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { LiveEntryService } from "../../services/live-entry.service";
 import { LiveEntryDynamicStreamInfo, Alert, DiagnosticsErrorCodes } from "../../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
-import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
+import { KalturaEntryServerNodeType } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeType";
 
 @Component({
   selector: 'further-information',
