@@ -38,9 +38,13 @@
   },
   "DASHBOARD": {
     "learn_more_anchor": "Learn more",
-    "learn_more_not_live_text": "To start broadcasting, configure your encoder and start streaming.",
-    "learn_more_is_live_text": "You are now live. To stop broadcasting, stop your encoder.",
-    "learn_more_preview": "You're in preview mode. To start broadcasting, click on \"Go Live\" button",
+    "stream_not_live_message": "To start broadcasting, configure your encoder and start streaming.",
+    "stream_is_initializing_message": "Initializing the stream. Your broadcast is about to begin.",
+    "stream_is_live_message": "You are now live. To stop broadcasting, stop your encoder.",
+    "explicit_live": {
+      "stream_is_preview_message": "You're in preview mode. To start broadcasting, click on \"Go Live\" button",
+      "stream_is_live_message": "You are now live. To stop broadcasting click on \"End Live\" button or stop your encoder"
+    },
     "save": "Save",
     "beta_message": "Live Dashboard {{version}} (Beta)"
   },

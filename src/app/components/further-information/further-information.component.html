@@ -1,13 +1,14 @@
 <div *ngIf="_dynamicInformation.streamStatus.state === 'Offline'" class="learn-more-not-live">
-  <span class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'DASHBOARD.learn_more_not_live_text' | translate }}</span>
+  <span class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'DASHBOARD.stream_not_live_message' | translate }}</span>
   <div class="learn-more-link">
     <span (click)="_onClickLearnMore()">{{ 'DASHBOARD.learn_more_anchor' | translate }}</span>
   </div>
 </div>
 <div *ngIf="_dynamicInformation.streamStatus.state !== 'Offline'" class="further-information-box">
   <div *ngIf="!_alertsArray.length">
-    <span *ngIf="_dynamicInformation.streamStatus.state !== 'Live'" class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'DASHBOARD.learn_more_is_live_text' | translate }}</span>
-    <span *ngIf="_dynamicInformation.streamStatus.state !== 'Preview'" class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'DASHBOARD.learn_more_preview' | translate }}</span>
+    <span *ngIf="_dynamicInformation.streamStatus.state === 'Initializing'" class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'DASHBOARD.stream_is_initializing_message' | translate }}</span>
+    <span *ngIf="_dynamicInformation.streamStatus.state === 'Preview'" class="component-text" [class.component-text-reverted]="colorsReverted">{{ 'DASHBOARD.explicit_live.stream_is_preview_message' | translate }}</span>
+    <span *ngIf="_dynamicInformation.streamStatus.state === 'Live'" class="component-text" [class.component-text-reverted]="colorsReverted">{{ _getStreamLiveMessage() | translate }}</span>
   </div>
   <div *ngIf="_alertsArray.length" class="grid-middle kOverrideFAIcons">
     <div *ngIf="_alertsArray.length > 1" data-push-left="off" (click)="_onClickLeftArrow()">
