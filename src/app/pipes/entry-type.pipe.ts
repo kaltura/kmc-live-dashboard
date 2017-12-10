@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaMediaType } from "kaltura-typescript-client/types/KalturaMediaType";
+import { KalturaMediaType } from "kaltura-ngx-client/api/types/KalturaMediaType";
 
 @Pipe({
   name: 'entryType'

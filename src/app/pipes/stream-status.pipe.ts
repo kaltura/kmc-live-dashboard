@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { KalturaEntryServerNodeStatus } from "kaltura-typescript-client/types/KalturaEntryServerNodeStatus";
-import { KalturaViewMode } from "kaltura-typescript-client/types/KalturaViewMode";
+import { KalturaEntryServerNodeStatus } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeStatus";
+import { KalturaViewMode } from "kaltura-ngx-client/api/types/KalturaViewMode";
 
 @Pipe({
   name: 'streamStatus'

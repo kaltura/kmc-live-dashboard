@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as _ from 'lodash';
 import { FlavorObject, NodeStreams } from "../types/live-dashboard.types";
-import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
+import { KalturaEntryServerNodeType } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeType";
 
 @Pipe({
   name: 'transcodingInfo'

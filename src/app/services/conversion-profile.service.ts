@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { KalturaClient } from "@kaltura-ng/kaltura-client";
+import { KalturaClient } from "kaltura-ngx-client";
 import { Observable } from "rxjs";
 
-import { ConversionProfileListAction } from "kaltura-typescript-client/types/ConversionProfileListAction";
-import { KalturaConversionProfileFilter } from "kaltura-typescript-client/types/KalturaConversionProfileFilter";
-import { KalturaConversionProfileType } from "kaltura-typescript-client/types/KalturaConversionProfileType";
-import { KalturaConversionProfileListResponse } from "kaltura-typescript-client/types/KalturaConversionProfileListResponse";
-import { ConversionProfileAssetParamsListAction } from "kaltura-typescript-client/types/ConversionProfileAssetParamsListAction";
-import { KalturaConversionProfileAssetParamsFilter } from "kaltura-typescript-client/types/KalturaConversionProfileAssetParamsFilter";
-import { KalturaConversionProfileAssetParamsListResponse } from "kaltura-typescript-client/types/KalturaConversionProfileAssetParamsListResponse";
+import { ConversionProfileListAction } from "kaltura-ngx-client/api/types/ConversionProfileListAction";
+import { KalturaConversionProfileFilter } from "kaltura-ngx-client/api/types/KalturaConversionProfileFilter";
+import { KalturaConversionProfileType } from "kaltura-ngx-client/api/types/KalturaConversionProfileType";
+import { KalturaConversionProfileListResponse } from "kaltura-ngx-client/api/types/KalturaConversionProfileListResponse";
+import { ConversionProfileAssetParamsListAction } from "kaltura-ngx-client/api/types/ConversionProfileAssetParamsListAction";
+import { KalturaConversionProfileAssetParamsFilter } from "kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsFilter";
+import { KalturaConversionProfileAssetParamsListResponse } from "kaltura-ngx-client/api/types/KalturaConversionProfileAssetParamsListResponse";
 
 @Injectable()
 export class ConversionProfileService {
