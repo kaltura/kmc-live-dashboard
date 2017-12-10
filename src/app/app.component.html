@@ -7,7 +7,7 @@
       </footer>
     </div>
     <div *ngIf="_applicationLoaded && _configuration.mode === ApplicationMode.Webcast" class="compact-window" [class.colors_reverted]="_configuration.mode === ApplicationMode.Webcast">
-      <compact-dashboard [colorsReverted]="true"></compact-dashboard>
+      <compact-dashboard [colorsReverted]="true" [electronMode]="_configuration.mode === ApplicationMode.Webcast"></compact-dashboard>
     </div>
   </div>
 </k-area-blocker>
