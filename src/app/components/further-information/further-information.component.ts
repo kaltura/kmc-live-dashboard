@@ -21,6 +21,8 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
 
   @Input() colorsReverted = false;
 
+  @Input() electronMode = false;
+
   constructor(private _liveEntryService: LiveEntryService) {
     this._dynamicInformation = {
       streamStatus: {
@@ -64,6 +66,15 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
         }
       }
     })
+  }
+
+  public _onClickLearnMore(): void {
+    if (this.electronMode) {
+      window.parent.postMessage({ type: 'onUrlOpen', content: this._learnMoreLink }, '*');
+    }
+    else {
+      window.open(this._learnMoreLink, '_blank');
+    }
   }
 
   public _onClickLeftArrow(): void {

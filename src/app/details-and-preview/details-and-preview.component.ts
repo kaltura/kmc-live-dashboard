@@ -131,16 +131,16 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
 
   }
 
-  private _receivePostMessage(event: any): void {
-    if (event.data.type) {
-      return this._parsePostMessage(event.data);
+  private _receivePostMessage(message: any): void {
+    if (message.data.type) {
+      return this._parsePostMessage(message.data);
     }
   }
 
-  private _parsePostMessage(messageData: {type: string, data: any}): void {
-    switch (messageData.type) {
+  private _parsePostMessage(message: { type: string, content: any }): void {
+    switch (message.type) {
       case 'onLiveEntryChange':
-        this._liveEntryService.updateLiveStreamEntryByPostMessage(messageData.data);
+        this._liveEntryService.updateLiveStreamEntryByPostMessage(message.content);
       default:
         console.log('Message type unknown!');
     }

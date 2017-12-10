@@ -40,6 +40,7 @@
     "learn_more_anchor": "Learn more",
     "learn_more_not_live_text": "To start broadcasting, configure your encoder and start streaming.",
     "learn_more_is_live_text": "You are now live. To stop broadcasting, stop your encoder.",
+    "learn_more_preview": "You're in preview mode. To start broadcasting, click on \"Go Live\" button",
     "save": "Save",
     "beta_message": "Live Dashboard {{version}} (Beta)"
   },
