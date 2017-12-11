@@ -365,23 +365,28 @@ export class LiveEntryService implements OnDestroy {
     }
     // Iterate through beacons list from oldest report to most recent
     _.eachRight(beaconsArray, b => {
-      let privateData = JSON.parse(b.privateData);
-      let eventType = b.eventType.substring(2);
-      let isPrimary = (b.eventType[0] === '0');
-      let beaconUpdateTime = b.updatedAt.valueOf();
+      try {
+        let privateData = JSON.parse(b.privateData);
+        let eventType = b.eventType.substring(2);
+        let isPrimary = (b.eventType[0] === '0');
+        let beaconUpdateTime = b.updatedAt.valueOf();
 
-      let objectToUpdate = this._getDiagnosticsObjToUpdate(entryDiagnosticsObject, eventType, isPrimary);
-      if (objectToUpdate && (beaconUpdateTime !== objectToUpdate.updatedTime)) {
-        if (eventType === 'healthData') {
-          this._handleHealthBeacon(beaconUpdateTime, isPrimary, privateData, objectToUpdate);
+        let objectToUpdate = this._getDiagnosticsObjToUpdate(entryDiagnosticsObject, eventType, isPrimary);
+        if (objectToUpdate && (beaconUpdateTime !== objectToUpdate.updatedTime)) {
+          if (eventType === 'healthData') {
+            this._handleHealthBeacon(beaconUpdateTime, isPrimary, privateData, objectToUpdate);
+          }
+          else {
+            objectToUpdate.data = privateData;
+          }
         }
-        else {
-          objectToUpdate.data = privateData;
+        // Only if beacon report time is higher (meaning more recent) than last one saved, replace it
+        if (beaconUpdateTime > objectToUpdate.updatedTime) {
+          objectToUpdate.updatedTime = beaconUpdateTime;
         }
       }
-      // Only if beacon report time is higher (meaning more recent) than last one saved, replace it
-      if (beaconUpdateTime > objectToUpdate.updatedTime) {
-        objectToUpdate.updatedTime = beaconUpdateTime;
+      catch (error) {
+        console.log(`Error parsing beacon: ${error}`);
       }
     });
 
