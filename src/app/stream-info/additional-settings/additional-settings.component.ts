@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/primeng';
 import { LiveEntryService } from "../../services/live-entry.service";
-import { ConversionProfileService } from "../../services/conversion-profile.service";
+import { PartnerInformationService } from "../../services/partner-information.service";
 //types
 import { KalturaDVRStatus } from "kaltura-ngx-client/api/types/KalturaDVRStatus";
 import { KalturaRecordStatus } from "kaltura-ngx-client/api/types/KalturaRecordStatus";
@@ -19,7 +19,7 @@ export class AdditionalSettingsComponent implements OnInit {
   public _recording: boolean;
   public _previewMode: boolean;
 
-  constructor(private _liveEntryService: LiveEntryService, private _conversionProfilesService: ConversionProfileService) { }
+  constructor(private _liveEntryService: LiveEntryService, private _partnerInformationService: PartnerInformationService) { }
 
   ngOnInit() {
     this._conversionProfilesList = [];
@@ -34,7 +34,7 @@ export class AdditionalSettingsComponent implements OnInit {
   }
 
   private _getConversionProfilesList(): void {
-    this._conversionProfilesService.getConversionProfiles()
+    this._partnerInformationService.getConversionProfiles()
       .subscribe(result => {
         this._conversionProfilesList = result.objects.map(cp=> {
           return { label: cp.name, value: cp.id };
