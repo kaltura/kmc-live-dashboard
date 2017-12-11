@@ -3,11 +3,12 @@ import { LiveEntryService } from "../services/live-entry.service";
 import { LiveDashboardConfiguration } from "../services/live-dashboard-configuration.service";
 import { LiveEntryDynamicStreamInfo, LoadingStatus, PlayerConfig } from "../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
-import { KalturaViewMode } from "kaltura-typescript-client/types/KalturaViewMode";
-import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
-import { KalturaRecordingStatus } from "kaltura-typescript-client/types/KalturaRecordingStatus";
+import { KalturaViewMode } from "kaltura-ngx-client/api/types/KalturaViewMode";
+import { KalturaLiveStreamEntry } from "kaltura-ngx-client/api/types/KalturaLiveStreamEntry";
+import { KalturaRecordingStatus } from "kaltura-ngx-client/api/types/KalturaRecordingStatus";
 import { ConfirmationService } from "primeng/primeng";
 import { AppLocalization } from "@kaltura-ng/kaltura-common";
+import { KalturaNullableBoolean } from "kaltura-ngx-client/api/types/KalturaNullableBoolean";
 
 interface ExplicitLiveObject {
   enabled?: boolean,
@@ -85,7 +86,7 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
           ks: this._playerConfig.ks
         };
 
-        this._explicitLiveInformation.enabled = response.explicitLive;
+        this._explicitLiveInformation.enabled = response.explicitLive === KalturaNullableBoolean.trueValue;
         this._explicitLiveInformation.previewMode = response.viewMode === KalturaViewMode.preview;
       }
     });
@@ -130,16 +131,16 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
 
   }
 
-  private _receivePostMessage(event: any): void {
-    if (event.data.type) {
-      return this._parsePostMessage(event.data);
+  private _receivePostMessage(message: any): void {
+    if (message.data.type) {
+      return this._parsePostMessage(message.data);
     }
   }
 
-  private _parsePostMessage(messageData: {type: string, data: any}): void {
-    switch (messageData.type) {
+  private _parsePostMessage(message: { type: string, content: any }): void {
+    switch (message.type) {
       case 'onLiveEntryChange':
-        this._liveEntryService.updateLiveStreamEntryByPostMessage(messageData.data);
+        this._liveEntryService.updateLiveStreamEntryByPostMessage(message.content);
       default:
         console.log('Message type unknown!');
     }

@@ -22,6 +22,8 @@ export class CompactDashboardComponent implements OnInit, OnDestroy {
 
   @Input() colorsReverted = false;
 
+  @Input() electronMode = false;
+
   constructor(private _liveEntryService: LiveEntryService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration) { }
 

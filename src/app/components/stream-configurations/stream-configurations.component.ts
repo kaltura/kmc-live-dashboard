@@ -9,7 +9,7 @@ import {
   AlertSeverity, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration, LiveEntryDiagnosticsInfo,
   FlavorObject, NodeStreams
 } from "../../types/live-dashboard.types";
-import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
+import { KalturaEntryServerNodeType } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeType";
 import { AppLocalization } from "@kaltura-ng/kaltura-common";
 
 @Component({

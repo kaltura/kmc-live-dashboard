@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
-import { KalturaAPIException } from "kaltura-typescript-client";
+import { KalturaAPIException } from "kaltura-ngx-client";
 
 @Injectable()
 export class LiveEntryTimerTaskService {

@@ -10,8 +10,8 @@ import { TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule, ConfirmDialogModule } from 'primeng/primeng';
 
 // Services
-import { KalturaClient } from '@kaltura-ng/kaltura-client/kaltura-client.service';
-import { KalturaClientConfiguration } from '@kaltura-ng/kaltura-client/kaltura-client-configuration.service';
+import { KalturaClient } from 'kaltura-ngx-client';
+import { KalturaClientConfiguration } from 'kaltura-ngx-client';
 import { LiveEntryService } from './services/live-entry.service';
 import { ConversionProfileService } from "./services/conversion-profile.service";
 import { LiveEntryTimerTaskService } from "./services/entry-timer-task.service";

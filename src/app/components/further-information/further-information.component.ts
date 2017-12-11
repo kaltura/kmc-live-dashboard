@@ -3,7 +3,9 @@ import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { LiveEntryService } from "../../services/live-entry.service";
 import { LiveEntryDynamicStreamInfo, Alert, DiagnosticsErrorCodes } from "../../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
-import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
+import { KalturaEntryServerNodeType } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeType";
+import { AppLocalization } from "@kaltura-ng/kaltura-common";
+import { KalturaNullableBoolean } from "kaltura-ngx-client/api/types/KalturaNullableBoolean";
 
 @Component({
   selector: 'further-information',
@@ -11,8 +13,10 @@ import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/Kalt
   styleUrls: ['./further-information.component.scss']
 })
 export class FurtherInformationComponent implements OnInit, OnDestroy {
+  private _liveStreamSubscription: ISubscription;
   public  _dynamicInformation: LiveEntryDynamicStreamInfo;
   private _dynamicInformationSubscription: ISubscription;
+  public  _explicitLive = false;
   public  _learnMoreLink = environment.externalLinks.LEARN_MORE;
   private _diagnosticsSubscription: ISubscription;
   public  _alertsArray: Alert[] = [];
@@ -21,7 +25,9 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
 
   @Input() colorsReverted = false;
 
-  constructor(private _liveEntryService: LiveEntryService) {
+  @Input() electronMode = false;
+
+  constructor(private _liveEntryService: LiveEntryService, private _appLocalization: AppLocalization) {
     this._dynamicInformation = {
       streamStatus: {
         state: 'Offline'
@@ -30,13 +36,21 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this._listenToLiveStream();
     this._listenToDynamicStreamInfo();
     this._listenToHealthDiagnostics();
   }
 
   ngOnDestroy() {
+    this._liveStreamSubscription.unsubscribe();
     this._dynamicInformationSubscription.unsubscribe();
     this._diagnosticsSubscription.unsubscribe();
+  }
+
+  private _listenToLiveStream(): void {
+    this._liveStreamSubscription = this._liveEntryService.liveStream$.subscribe(response => {
+      this._explicitLive = response.explicitLive === KalturaNullableBoolean.trueValue;
+    });
   }
 
   private _listenToDynamicStreamInfo(): void {
@@ -66,6 +80,15 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
     })
   }
 
+  public _onClickLearnMore(): void {
+    if (this.electronMode) {
+      window.parent.postMessage({ type: 'onUrlOpen', content: this._learnMoreLink }, '*');
+    }
+    else {
+      window.open(this._learnMoreLink, '_blank');
+    }
+  }
+
   public _onClickLeftArrow(): void {
     if (this._alertIndex > 0) {
       this._alertIndex--;
@@ -76,5 +99,9 @@ export class FurtherInformationComponent implements OnInit, OnDestroy {
     if (this._alertIndex < this._alertsArray.length - 1) {
       this._alertIndex++;
     }
+  }
+
+  public _getStreamLiveMessage(): string {
+    return this._explicitLive ? this._appLocalization.get('DASHBOARD.explicit_live.stream_is_live_message') : this._appLocalization.get('DASHBOARD.stream_is_live_message');
   }
 }

@@ -16,9 +16,12 @@
   margin-top: 5px;
   text-decoration: underline;
   color: $kTertiary;
+  span {
+    cursor: pointer;
 
-  &:hover {
-    color: darken($kTertiary, 20%);
+    &:hover {
+      color: darken($kTertiary, 20%);
+    }
   }
 }
 

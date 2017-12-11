@@ -6,37 +6,37 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 
 // Services and Configuration
-import { KalturaClient } from "@kaltura-ng/kaltura-client";
+import { KalturaClient } from "kaltura-ngx-client";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
 import { ConversionProfileService } from "./conversion-profile.service";
 import { LiveDashboardConfiguration } from "./live-dashboard-configuration.service";
 import { environment } from "../../environments/environment";
 
 // Kaltura objects and types
-import { KalturaAPIException } from "kaltura-typescript-client";
-import { LiveStreamGetAction } from "kaltura-typescript-client/types/LiveStreamGetAction";
-import { LiveStreamUpdateAction } from "kaltura-typescript-client/types/LiveStreamUpdateAction";
-import { KalturaLiveStreamEntry } from "kaltura-typescript-client/types/KalturaLiveStreamEntry";
-import { EntryServerNodeListAction } from "kaltura-typescript-client/types/EntryServerNodeListAction";
-import { KalturaEntryServerNodeFilter } from "kaltura-typescript-client/types/KalturaEntryServerNodeFilter";
-import { KalturaEntryServerNode } from "kaltura-typescript-client/types/KalturaEntryServerNode";
-import { KalturaAssetParamsOrigin } from "kaltura-typescript-client/types/KalturaAssetParamsOrigin";
-import { KalturaDVRStatus } from "kaltura-typescript-client/types/KalturaDVRStatus";
-import { KalturaRecordStatus } from "kaltura-typescript-client/types/KalturaRecordStatus";
-import { KalturaEntryServerNodeStatus } from "kaltura-typescript-client/types/KalturaEntryServerNodeStatus";
-import { KalturaLiveStreamAdminEntry } from "kaltura-typescript-client/types/KalturaLiveStreamAdminEntry";
-import { KalturaLiveEntryServerNode } from "kaltura-typescript-client/types/KalturaLiveEntryServerNode";
-import { KalturaEntryServerNodeType } from "kaltura-typescript-client/types/KalturaEntryServerNodeType";
-import { BeaconListAction } from "kaltura-typescript-client/types/BeaconListAction";
-import { KalturaBeaconFilter } from "kaltura-typescript-client/types/KalturaBeaconFilter";
-import { KalturaFilterPager } from "kaltura-typescript-client/types/KalturaFilterPager";
-import { KalturaBeaconIndexType } from "kaltura-typescript-client/types/KalturaBeaconIndexType";
-import { KalturaBeacon } from "kaltura-typescript-client/types/KalturaBeacon";
-import { LiveReportsGetEventsAction } from "kaltura-typescript-client/types/LiveReportsGetEventsAction";
-import { KalturaLiveReportType } from "kaltura-typescript-client/types/KalturaLiveReportType";
-import { KalturaLiveReportInputFilter } from "kaltura-typescript-client/types/KalturaLiveReportInputFilter";
-import { KalturaReportGraph } from "kaltura-typescript-client/types/KalturaReportGraph";
-import { KalturaNullableBoolean } from "kaltura-typescript-client/types/KalturaNullableBoolean";
+import { KalturaAPIException } from "kaltura-ngx-client";
+import { LiveStreamGetAction } from "kaltura-ngx-client/api/types/LiveStreamGetAction";
+import { LiveStreamUpdateAction } from "kaltura-ngx-client/api/types/LiveStreamUpdateAction";
+import { KalturaLiveStreamEntry } from "kaltura-ngx-client/api/types/KalturaLiveStreamEntry";
+import { EntryServerNodeListAction } from "kaltura-ngx-client/api/types/EntryServerNodeListAction";
+import { KalturaEntryServerNodeFilter } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeFilter";
+import { KalturaEntryServerNode } from "kaltura-ngx-client/api/types/KalturaEntryServerNode";
+import { KalturaAssetParamsOrigin } from "kaltura-ngx-client/api/types/KalturaAssetParamsOrigin";
+import { KalturaDVRStatus } from "kaltura-ngx-client/api/types/KalturaDVRStatus";
+import { KalturaRecordStatus } from "kaltura-ngx-client/api/types/KalturaRecordStatus";
+import { KalturaEntryServerNodeStatus } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeStatus";
+import { KalturaLiveStreamAdminEntry } from "kaltura-ngx-client/api/types/KalturaLiveStreamAdminEntry";
+import { KalturaLiveEntryServerNode } from "kaltura-ngx-client/api/types/KalturaLiveEntryServerNode";
+import { KalturaEntryServerNodeType } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeType";
+import { BeaconListAction } from "kaltura-ngx-client/api/types/BeaconListAction";
+import { KalturaBeaconFilter } from "kaltura-ngx-client/api/types/KalturaBeaconFilter";
+import { KalturaFilterPager } from "kaltura-ngx-client/api/types/KalturaFilterPager";
+import { KalturaBeaconIndexType } from "kaltura-ngx-client/api/types/KalturaBeaconIndexType";
+import { KalturaBeacon } from "kaltura-ngx-client/api/types/KalturaBeacon";
+import { LiveReportsGetEventsAction } from "kaltura-ngx-client/api/types/LiveReportsGetEventsAction";
+import { KalturaLiveReportType } from "kaltura-ngx-client/api/types/KalturaLiveReportType";
+import { KalturaLiveReportInputFilter } from "kaltura-ngx-client/api/types/KalturaLiveReportInputFilter";
+import { KalturaReportGraph } from "kaltura-ngx-client/api/types/KalturaReportGraph";
+import { KalturaNullableBoolean } from "kaltura-ngx-client/api/types/KalturaNullableBoolean";
 // Types
 import {
   LiveStreamStates, LiveStreamSession, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
@@ -365,23 +365,28 @@ export class LiveEntryService implements OnDestroy {
     }
     // Iterate through beacons list from oldest report to most recent
     _.eachRight(beaconsArray, b => {
-      let privateData = JSON.parse(b.privateData);
-      let eventType = b.eventType.substring(2);
-      let isPrimary = (b.eventType[0] === '0');
-      let beaconUpdateTime = b.updatedAt.valueOf();
+      try {
+        let privateData = JSON.parse(b.privateData);
+        let eventType = b.eventType.substring(2);
+        let isPrimary = (b.eventType[0] === '0');
+        let beaconUpdateTime = b.updatedAt.valueOf();
 
-      let objectToUpdate = this._getDiagnosticsObjToUpdate(entryDiagnosticsObject, eventType, isPrimary);
-      if (objectToUpdate && (beaconUpdateTime !== objectToUpdate.updatedTime)) {
-        if (eventType === 'healthData') {
-          this._handleHealthBeacon(beaconUpdateTime, isPrimary, privateData, objectToUpdate);
+        let objectToUpdate = this._getDiagnosticsObjToUpdate(entryDiagnosticsObject, eventType, isPrimary);
+        if (objectToUpdate && (beaconUpdateTime !== objectToUpdate.updatedTime)) {
+          if (eventType === 'healthData') {
+            this._handleHealthBeacon(beaconUpdateTime, isPrimary, privateData, objectToUpdate);
+          }
+          else {
+            objectToUpdate.data = privateData;
+          }
         }
-        else {
-          objectToUpdate.data = privateData;
+        // Only if beacon report time is higher (meaning more recent) than last one saved, replace it
+        if (beaconUpdateTime > objectToUpdate.updatedTime) {
+          objectToUpdate.updatedTime = beaconUpdateTime;
         }
       }
-      // Only if beacon report time is higher (meaning more recent) than last one saved, replace it
-      if (beaconUpdateTime > objectToUpdate.updatedTime) {
-        objectToUpdate.updatedTime = beaconUpdateTime;
+      catch (error) {
+        console.log(`Error parsing beacon: ${error}`);
       }
     });
 
