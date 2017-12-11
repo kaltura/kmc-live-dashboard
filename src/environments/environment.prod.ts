@@ -3,6 +3,7 @@ export const environment = {
   "bootstrap": {
     "service_url_extension": "/api_v3/index.php",
     "default_lang": "en",
+    "uiConf_id_tag": "lived_player",
     "parameters_error": "Invalid Application Parameters! Please restart application"
   },
   "liveEntryService": {

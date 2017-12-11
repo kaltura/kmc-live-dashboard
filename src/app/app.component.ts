@@ -31,7 +31,8 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this._bootstrapService.initialize().subscribe(() => {
         const appStatusSubscription = this._liveEntryService.applicationStatus$.subscribe(status => {
-            if ((status.liveEntry === LoadingStatus.succeeded) &&
+            if ((status.uiConf === LoadingStatus.succeeded) &&
+                (status.liveEntry === LoadingStatus.succeeded) &&
                 (status.streamHealth === LoadingStatus.succeeded)) {
               this._applicationLoading = false;
               this._applicationLoaded = true;
