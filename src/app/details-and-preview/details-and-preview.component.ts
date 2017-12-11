@@ -86,7 +86,12 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
           ks: this._playerConfig.ks
         };
 
-        this._explicitLiveInformation.enabled = response.explicitLive === KalturaNullableBoolean.trueValue;
+        if (typeof response.explicitLive === 'boolean') {
+          this._explicitLiveInformation.enabled = <boolean>response.explicitLive;
+        }
+        else {
+          this._explicitLiveInformation.enabled = response.explicitLive === KalturaNullableBoolean.trueValue;
+        }
         this._explicitLiveInformation.previewMode = response.viewMode === KalturaViewMode.preview;
       }
     });
