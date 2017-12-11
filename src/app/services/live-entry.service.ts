@@ -123,7 +123,7 @@ export class LiveEntryService implements OnDestroy {
 
   public InitializeLiveEntryService(): void {
     const uiConfListSubscription = this._partnerInformationService.getUiconfIdByTag().subscribe(response => {
-      if (response && response.objects.length) {
+      if (response && response.objects && response.objects.length) {
         this._liveDashboardConfiguration.uiConfId = response.objects[0].id;
         this._updatedApplicationStatus('uiConf', LoadingStatus.succeeded);
         console.log(`[uiConfListTemplates] Finished successfully`);
