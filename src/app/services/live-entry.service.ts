@@ -8,7 +8,7 @@ import * as moment from 'moment';
 // Services and Configuration
 import { KalturaClient } from "kaltura-ngx-client";
 import { LiveEntryTimerTaskService } from "./entry-timer-task.service";
-import { ConversionProfileService } from "./conversion-profile.service";
+import { PartnerInformationService } from "./partner-information.service";
 import { LiveDashboardConfiguration } from "./live-dashboard-configuration.service";
 import { environment } from "../../environments/environment";
 
@@ -54,7 +54,8 @@ export class LiveEntryService implements OnDestroy {
   private _applicationStatus = new BehaviorSubject<ApplicationStatus>({
     streamStatus: LoadingStatus.initializing,
     streamHealth: LoadingStatus.initializing,
-    liveEntry: LoadingStatus.initializing
+    liveEntry: LoadingStatus.initializing,
+    uiConf: LoadingStatus.initializing
   });
   public  applicationStatus$ = this._applicationStatus.asObservable();
   private _liveStreamGetSubscription: ISubscription;
@@ -98,7 +99,7 @@ export class LiveEntryService implements OnDestroy {
 
   constructor(private _kalturaClient: KalturaClient,
               private _entryTimerTask: LiveEntryTimerTaskService,
-              private _conversionProfilesService: ConversionProfileService,
+              private _partnerInformationService: PartnerInformationService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration,
               private _codeToSeverityPipe: CodeToSeverityPipe,
               private _streamStatusPipe: StreamStatusPipe) {
@@ -121,11 +122,29 @@ export class LiveEntryService implements OnDestroy {
   }
 
   public InitializeLiveEntryService(): void {
-    this._getLiveStream();
-    this._runEntryStatusMonitoring();
-    this._runDiagnosticsDataMonitoring();
-    this._streamHealthInitialization();
-    this._listenToNumOfWatcherWhenLive();
+    const uiConfListSubscription = this._partnerInformationService.getUiconfIdByTag().subscribe(response => {
+      if (response && response.objects.length) {
+        this._liveDashboardConfiguration.uiConfId = response.objects[0].id;
+        this._updatedApplicationStatus('uiConf', LoadingStatus.succeeded);
+        console.log(`[uiConfListTemplates] Finished successfully`);
+      }
+      else {
+        console.log('No uiConf matching the desired tag exists');
+      }
+
+      this._getLiveStream();
+      this._runEntryStatusMonitoring();
+      this._runDiagnosticsDataMonitoring();
+      this._streamHealthInitialization();
+      this._listenToNumOfWatcherWhenLive();
+
+      uiConfListSubscription.unsubscribe();
+    },
+    (error) => {
+      console.log(`Error retrieving uiConf from server: ${error}`);
+      this._updatedApplicationStatus('uiConf', LoadingStatus.failed);
+    });
+
   }
 
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
@@ -141,6 +160,8 @@ export class LiveEntryService implements OnDestroy {
       case 'liveEntry':
         newAppStatus.liveEntry = value;
         break;
+      case 'uiConf':
+        newAppStatus.uiConf = value;
     }
 
     this._applicationStatus.next(newAppStatus);
@@ -169,7 +190,7 @@ export class LiveEntryService implements OnDestroy {
 
   private _parseEntryConfiguration(liveEntryObj: KalturaLiveStreamEntry): void {
     let entryConfig: LiveEntryStaticConfiguration = {};
-    this._conversionProfilesService.getConversionProfileFlavors(liveEntryObj.conversionProfileId)
+    this._partnerInformationService.getConversionProfileFlavors(liveEntryObj.conversionProfileId)
       .subscribe(response => {
         entryConfig.dvr = (liveEntryObj.dvrStatus === KalturaDVRStatus.enabled);
         entryConfig.recording = (liveEntryObj.recordStatus !== KalturaRecordStatus.disabled);

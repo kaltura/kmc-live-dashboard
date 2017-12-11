@@ -79,7 +79,8 @@ export interface LiveEntryStaticConfiguration {
 export interface ApplicationStatus {
   streamStatus: LoadingStatus,
   streamHealth: LoadingStatus,
-  liveEntry: LoadingStatus
+  liveEntry: LoadingStatus,
+  uiConf: LoadingStatus
 }
 
 export enum LoadingStatus {
@@ -140,7 +141,7 @@ export interface PlayerConfig {
   partnerId?: number,
   entryId?: string,
   ks?: string,
-  uiConfId?: string,
+  uiConfId?: number,
   serviceUrl?: string
   flashVars?: Object
 }

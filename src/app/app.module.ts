@@ -13,7 +13,7 @@ import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, But
 import { KalturaClient } from 'kaltura-ngx-client';
 import { KalturaClientConfiguration } from 'kaltura-ngx-client';
 import { LiveEntryService } from './services/live-entry.service';
-import { ConversionProfileService } from "./services/conversion-profile.service";
+import { PartnerInformationService } from "./services/partner-information.service";
 import { LiveEntryTimerTaskService } from "./services/entry-timer-task.service";
 import { BootstrapService } from "./bootstrap.service";
 import { ConfirmationService } from "primeng/primeng"
@@ -114,7 +114,7 @@ export function clientConfigurationFactory() {
 
     },
     LiveEntryService,
-    ConversionProfileService,
+    PartnerInformationService,
     LiveEntryTimerTaskService,
     BootstrapService,
     LiveDashboardConfiguration,
