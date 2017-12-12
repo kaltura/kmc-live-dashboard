@@ -86,6 +86,8 @@ export class LiveEntryService implements OnDestroy {
     streamHealth: { updatedTime: Date.now(), data: { primary: [], secondary: [] } }
   });
   public  entryDiagnostics$ = this._entryDiagnostics.asObservable();
+  private _explicitLiveWait = new BehaviorSubject<boolean>(false);
+  public explicitLiveWait$ = this._explicitLiveWait.asObservable();
 
   private _subscriptionEntryStatusMonitoring: ISubscription;
   private _subscriptionStreamHealthInitialization: ISubscription;
@@ -233,6 +235,8 @@ export class LiveEntryService implements OnDestroy {
     this._updateStreamCreationTime(snList, dynamicConfigObj);
 
     this._entryDynamicInformation.next(dynamicConfigObj);
+    // Release explicitLiveWait lock only after new state has been calculated
+    this._explicitLiveWait.next(false);
   }
 
   private _getRedundancyStatus(serverNodeList: KalturaEntryServerNode[]): boolean {
@@ -504,6 +508,7 @@ export class LiveEntryService implements OnDestroy {
   }
 
   public updateLiveStreamEntryByApi(propertiesToUpdate: string[]) {
+    this._explicitLiveWait.next(true);
     let liveStreamEntryArg = new KalturaLiveStreamEntry();
 
     propertiesToUpdate.forEach(p => {

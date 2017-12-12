@@ -25,13 +25,16 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   private _applicationStatusSubscription: ISubscription;
   private _liveStreamSubscription: ISubscription;
   private _dynamicInformationSubscription: ISubscription;
+  private _explicitLiveWaitFlagSubscription: ISubscription;
 
   public  _dynamicInfo: LiveEntryDynamicStreamInfo = {
     redundancy: false,
     streamStatus: 'Offline'
   };
-  public  _explicitLiveInformation: ExplicitLiveObject = {};
+  private _tempExplicitLiveInformation: ExplicitLiveObject = {};
+  public  _explicitLiveInformation: ExplicitLiveObject;
   public  _liveEntry: KalturaLiveStreamEntry;
+  public  _explicitLiveWaitFlag = false;
   public  _playerConfig: PlayerConfig = {};
   public  _inFullScreen = false;
   private _kdp: any;
@@ -49,7 +52,8 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._listenToApplicationStatus();
+    this._subscribeToApplicationStatus();
+    this._subscribeToExplicitLiveWaitFlag();
     this._subscribeToLiveStream();
     this._subscribeToDynamicInformation();
   }
@@ -57,11 +61,12 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this._applicationStatusSubscription.unsubscribe();
     this._liveStreamSubscription.unsubscribe();
+    this._explicitLiveWaitFlagSubscription.unsubscribe();
     this._dynamicInformationSubscription.unsubscribe();
     this._kdp.kUnbind('.liveDashboard');
   }
 
-  private _listenToApplicationStatus(): void {
+  private _subscribeToApplicationStatus(): void {
     this._applicationStatusSubscription = this._liveEntryService.applicationStatus$
       .subscribe(response => {
         if (response) {
@@ -87,12 +92,31 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
         };
 
         if (typeof response.explicitLive === 'boolean') {
-          this._explicitLiveInformation.enabled = <boolean>response.explicitLive;
+          this._tempExplicitLiveInformation.enabled = <boolean>response.explicitLive;
         }
         else {
-          this._explicitLiveInformation.enabled = response.explicitLive === KalturaNullableBoolean.trueValue;
+          this._tempExplicitLiveInformation.enabled = response.explicitLive === KalturaNullableBoolean.trueValue;
         }
-        this._explicitLiveInformation.previewMode = response.viewMode === KalturaViewMode.preview;
+        this._tempExplicitLiveInformation.previewMode = response.viewMode === KalturaViewMode.preview;
+        if (!this._explicitLiveInformation) {
+          this._initializeExplicitLive();
+        }
+      }
+    });
+  }
+
+  private _initializeExplicitLive(): void {
+    this._explicitLiveInformation = {};
+    this._explicitLiveInformation.enabled = this._tempExplicitLiveInformation.enabled;
+    this._explicitLiveInformation.previewMode = this._tempExplicitLiveInformation.previewMode;
+  }
+
+  private _subscribeToExplicitLiveWaitFlag(): void {
+    this._explicitLiveWaitFlagSubscription = this._liveEntryService.explicitLiveWait$.subscribe(response => {
+      this._explicitLiveWaitFlag = response;
+      if (this._explicitLiveInformation && !this._explicitLiveWaitFlag) {
+        this._explicitLiveInformation.enabled = this._tempExplicitLiveInformation.enabled;
+        this._explicitLiveInformation.previewMode = this._tempExplicitLiveInformation.previewMode;
       }
     });
   }

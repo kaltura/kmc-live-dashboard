@@ -18,11 +18,15 @@
 
   <div *ngIf="!compactMode">
     <div class="go-live-div" *ngIf="_explicitLiveInformation.enabled">
-      <button *ngIf="_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonBranded go-live-button start" label="{{ 'DETAILS_AND_PREVIEW.explicit_live.go_live_button' | translate }}"
+      <button *ngIf="_explicitLiveInformation.previewMode" pButton type="button"
+              class="ui-button kButtonBranded go-live-button start" [class.start-live-wait]="_explicitLiveWaitFlag"
+              label="{{ 'DETAILS_AND_PREVIEW.explicit_live.go_live_button' | translate }}"
               [disabled]="_dynamicInfo.streamStatus.state === 'Initializing' || _dynamicInfo.streamStatus.state === 'Offline'"
               (click)="_onClickGoLive()"
       ></button>
-      <button *ngIf="!_explicitLiveInformation.previewMode" pButton type="button" class="ui-button kButtonDanger go-live-button stop" label="{{ 'DETAILS_AND_PREVIEW.explicit_live.end_live_button' | translate }}"
+      <button *ngIf="!_explicitLiveInformation.previewMode" pButton type="button"
+              class="ui-button kButtonDanger go-live-button stop" [class.stop-live-wait]="_explicitLiveWaitFlag"
+              label="{{ 'DETAILS_AND_PREVIEW.explicit_live.end_live_button' | translate }}"
               [disabled]="_dynamicInfo.streamStatus.state === 'Initializing' || _dynamicInfo.streamStatus.state === 'Offline'"
               (click)="_onClickEndLive()"
       ></button>
