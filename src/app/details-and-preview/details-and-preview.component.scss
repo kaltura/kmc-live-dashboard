@@ -102,6 +102,15 @@
         }
       }
 
+      &.start-live-wait {
+        background: $kPrimary;
+        animation: stripes-move 1s linear infinite;
+        background-image: repeating-linear-gradient(-60deg, $kPrimary, $kPrimary 16px, rgba(255,255,255,0.2) 16px, rgba(255,255,255,0.1) 36px);
+        background-size: 200% 200%;
+        cursor: not-allowed;
+        opacity: 0.65;
+      }
+
       &.stop {
         &:hover{
           background: darken($kDandger, 10%);
@@ -113,6 +122,15 @@
         //&:disabled{
         //  @extend .disabled;
         //}
+      }
+
+      &.stop-live-wait {
+        background: $kDandger;
+        animation: stripes-move 1s linear infinite;
+        background-image: repeating-linear-gradient(-60deg, $kDandger, $kDandger 16px, rgba(255,255,255,0.2) 16px, rgba(255,255,255,0.2) 36px);
+        background-size: 200% 200%;
+        cursor: not-allowed;
+        opacity: 0.65;
       }
     }
   }
@@ -222,5 +240,11 @@
         }
       }
     }
+  }
+}
+
+@keyframes stripes-move {
+  100% {
+    background-position: 100% 100%;
   }
 }
