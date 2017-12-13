@@ -526,6 +526,7 @@ export class LiveEntryService implements OnDestroy {
   }
 
   public updateLiveStreamEntryByPostMessage(newLiveEntry: KalturaLiveStreamEntry) {
+    this._explicitLiveWait.next(true);
     this._liveStream.next(newLiveEntry);
   }
 }

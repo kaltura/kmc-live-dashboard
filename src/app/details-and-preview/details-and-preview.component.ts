@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { LiveEntryService } from "../services/live-entry.service";
 import { LiveDashboardConfiguration } from "../services/live-dashboard-configuration.service";
-import { LiveEntryDynamicStreamInfo, LoadingStatus, PlayerConfig } from "../types/live-dashboard.types";
+import { ApplicationMode, LiveEntryDynamicStreamInfo, LoadingStatus, PlayerConfig } from "../types/live-dashboard.types";
 import { ISubscription } from "rxjs/Subscription";
 import { KalturaViewMode } from "kaltura-ngx-client/api/types/KalturaViewMode";
 import { KalturaLiveStreamEntry } from "kaltura-ngx-client/api/types/KalturaLiveStreamEntry";
@@ -117,6 +117,10 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
       if (this._explicitLiveInformation && !this._explicitLiveWaitFlag) {
         this._explicitLiveInformation.enabled = this._tempExplicitLiveInformation.enabled;
         this._explicitLiveInformation.previewMode = this._tempExplicitLiveInformation.previewMode;
+        // If dashboard is open in webcast send post message update is complete
+        if (this._liveDashboardConfiguration.mode === ApplicationMode.Webcast) {
+          window.parent.postMessage({ type: 'explicitLiveUpdateFinished', content: true }, '*');
+        }
       }
     });
   }
