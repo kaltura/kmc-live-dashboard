@@ -77,7 +77,7 @@ export class LiveEntryService implements OnDestroy {
     }
   });
   public  entryDynamicInformation$ = this._entryDynamicInformation.asObservable();
-  private _lastEntryServerNodesListStatus: KalturaEntryServerNode[] = [];
+  private _lastEntryServerNodesList: KalturaEntryServerNode[] = [];
   // BehaviorSubjects subscribed by configuration display component for diagnostics and health monitoring
   private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>({
     staticInfoPrimary: { updatedTime: 0 },
@@ -214,7 +214,7 @@ export class LiveEntryService implements OnDestroy {
         .do(response => {
           // Make sure primary entryServerNode is first in array
           this._parseEntryServeNodeList(_.sortBy(response.objects, 'serverType'));
-          this._lastEntryServerNodesListStatus = response.objects;
+          this._lastEntryServerNodesList = response.objects;
           this._updatedApplicationStatus('streamStatus', LoadingStatus.succeeded);
           return;
         })
@@ -523,7 +523,7 @@ export class LiveEntryService implements OnDestroy {
     }))
       .subscribe(response => {
         this._liveStream.next(response);
-        this._parseEntryServeNodeList(this._lastEntryServerNodesListStatus);
+        this._parseEntryServeNodeList(this._lastEntryServerNodesList);
         liveStreamUpdateSubscription.unsubscribe();
       })
   }
@@ -531,6 +531,6 @@ export class LiveEntryService implements OnDestroy {
   public updateLiveStreamEntryByPostMessage(newLiveEntry: KalturaLiveStreamEntry) {
     this._explicitLiveWait.next(true);
     this._liveStream.next(newLiveEntry);
-    this._parseEntryServeNodeList(this._lastEntryServerNodesListStatus);
+    this._parseEntryServeNodeList(this._lastEntryServerNodesList);
   }
 }
