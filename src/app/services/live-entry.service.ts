@@ -18,7 +18,7 @@ import { LiveStreamGetAction } from "kaltura-ngx-client/api/types/LiveStreamGetA
 import { LiveStreamUpdateAction } from "kaltura-ngx-client/api/types/LiveStreamUpdateAction";
 import { KalturaLiveStreamEntry } from "kaltura-ngx-client/api/types/KalturaLiveStreamEntry";
 import { EntryServerNodeListAction } from "kaltura-ngx-client/api/types/EntryServerNodeListAction";
-import { KalturaEntryServerNodeFilter } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeFilter";
+import { KalturaLiveEntryServerNodeBaseFilter } from "kaltura-ngx-client/api/types/KalturaLiveEntryServerNodeBaseFilter";
 import { KalturaEntryServerNode } from "kaltura-ngx-client/api/types/KalturaEntryServerNode";
 import { KalturaAssetParamsOrigin } from "kaltura-ngx-client/api/types/KalturaAssetParamsOrigin";
 import { KalturaDVRStatus } from "kaltura-ngx-client/api/types/KalturaDVRStatus";
@@ -77,6 +77,7 @@ export class LiveEntryService implements OnDestroy {
     }
   });
   public  entryDynamicInformation$ = this._entryDynamicInformation.asObservable();
+  private _lastEntryServerNodesListStatus: KalturaEntryServerNode[] = [];
   // BehaviorSubjects subscribed by configuration display component for diagnostics and health monitoring
   private _entryDiagnostics = new BehaviorSubject<LiveEntryDiagnosticsInfo>({
     staticInfoPrimary: { updatedTime: 0 },
@@ -208,11 +209,12 @@ export class LiveEntryService implements OnDestroy {
   private _runEntryStatusMonitoring(): void {
     this._subscriptionEntryStatusMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new EntryServerNodeListAction({
-        filter: new KalturaEntryServerNodeFilter({entryIdEqual: this._liveDashboardConfiguration.entryId})
+        filter: new KalturaLiveEntryServerNodeBaseFilter({ entryIdEqual: this._liveDashboardConfiguration.entryId})
       }))
         .do(response => {
           // Make sure primary entryServerNode is first in array
           this._parseEntryServeNodeList(_.sortBy(response.objects, 'serverType'));
+          this._lastEntryServerNodesListStatus = response.objects;
           this._updatedApplicationStatus('streamStatus', LoadingStatus.succeeded);
           return;
         })
@@ -521,6 +523,7 @@ export class LiveEntryService implements OnDestroy {
     }))
       .subscribe(response => {
         this._liveStream.next(response);
+        this._parseEntryServeNodeList(this._lastEntryServerNodesListStatus);
         liveStreamUpdateSubscription.unsubscribe();
       })
   }
@@ -528,5 +531,6 @@ export class LiveEntryService implements OnDestroy {
   public updateLiveStreamEntryByPostMessage(newLiveEntry: KalturaLiveStreamEntry) {
     this._explicitLiveWait.next(true);
     this._liveStream.next(newLiveEntry);
+    this._parseEntryServeNodeList(this._lastEntryServerNodesListStatus);
   }
 }
