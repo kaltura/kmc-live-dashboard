@@ -176,7 +176,7 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
           if (message.content === 'play') {
             this._kdp.sendNotification("doPlay");
           }
-          else {
+          else if (message.content === 'pause') {
             this._kdp.sendNotification("doPause");
           }
         }
