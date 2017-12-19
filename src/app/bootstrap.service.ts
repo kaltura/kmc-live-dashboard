@@ -19,21 +19,25 @@ export class BootstrapService {
 
   public initialize(): Observable<any> {
     if (window && window.top) {
+      this._liveDashboardConfiguration.player = {};
+
       if (window.top.kmc && window.top.kmc.vars && window.top.kmc.vars.liveDashboard) {
-        this._liveDashboardConfiguration.mode =         ApplicationMode.Default;
-        this._liveDashboardConfiguration.ks =           window.top.kmc.vars.ks;
-        this._liveDashboardConfiguration.service_url =  window.top.kmc.vars.service_url;
-        this._liveDashboardConfiguration.entryId =      window.top.kmc.vars.liveDashboard.entryId;
-        this._liveDashboardConfiguration.version =      window.top.kmc.vars.liveDashboard.version;
-        this._liveDashboardConfiguration.lang =         window.top.lang ? window.top.lang : 'en';
+        this._liveDashboardConfiguration.mode =             ApplicationMode.Default;
+        this._liveDashboardConfiguration.ks =               window.top.kmc.vars.ks;
+        this._liveDashboardConfiguration.service_url =      window.top.kmc.vars.service_url;
+        this._liveDashboardConfiguration.entryId =          window.top.kmc.vars.liveDashboard.entryId;
+        this._liveDashboardConfiguration.version =          window.top.kmc.vars.liveDashboard.version;
+        this._liveDashboardConfiguration.player.autoPlay =  window.top.kmc.vars.liveDashboard.player ? window.top.kmc.vars.liveDashboard.player.autoPlay : true;
+        this._liveDashboardConfiguration.lang =             window.top.lang ? window.top.lang : 'en';
       }
       else if (window.top.webcast && window.top.webcast.vars && window.top.webcast.vars.liveDashboard) {
-        this._liveDashboardConfiguration.mode =         window.top.webcast.vars.liveDashboard.mode === 'webcast' ? ApplicationMode.Webcast : ApplicationMode.Default;
-        this._liveDashboardConfiguration.ks =           window.top.webcast.vars.liveDashboard.ks;
-        this._liveDashboardConfiguration.service_url =  window.top.webcast.vars.liveDashboard.service_url;
-        this._liveDashboardConfiguration.entryId =      window.top.webcast.vars.liveDashboard.entryId;
-        this._liveDashboardConfiguration.version =      window.top.webcast.vars.liveDashboard.version;
-        this._liveDashboardConfiguration.lang =         window.top.webcast.vars.liveDashboard.lang ? window.top.webcast.vars.liveDashboard.lang : 'en';
+        this._liveDashboardConfiguration.mode =             window.top.webcast.vars.liveDashboard.mode === 'webcast' ? ApplicationMode.Webcast : ApplicationMode.Default;
+        this._liveDashboardConfiguration.ks =               window.top.webcast.vars.liveDashboard.ks;
+        this._liveDashboardConfiguration.service_url =      window.top.webcast.vars.liveDashboard.service_url;
+        this._liveDashboardConfiguration.entryId =          window.top.webcast.vars.liveDashboard.entryId;
+        this._liveDashboardConfiguration.version =          window.top.webcast.vars.liveDashboard.version;
+        this._liveDashboardConfiguration.player.autoPlay =  window.top.webcast.vars.liveDashboard.player ? window.top.webcast.vars.liveDashboard.player.autoPlay : true;
+        this._liveDashboardConfiguration.lang =             window.top.webcast.vars.liveDashboard.lang ? window.top.webcast.vars.liveDashboard.lang : 'en';
       }
     }
 

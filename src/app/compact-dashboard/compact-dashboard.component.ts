@@ -64,11 +64,12 @@ export class CompactDashboardComponent implements OnInit, OnDestroy {
         this._playerConfig.partnerId = response.partnerId;
         this._playerConfig.entryId = response.id;
         this._playerConfig.ks = this._liveDashboardConfiguration.ks;
-        this._playerConfig.uiConfId = this._liveDashboardConfiguration.uiConfId;
+        this._playerConfig.uiConfId = this._liveDashboardConfiguration.player.uiConfId;
         this._playerConfig.serviceUrl = this._liveDashboardConfiguration.service_url;
         this._playerConfig.flashVars = {
           SkipKSOnIsLiveRequest: false,
-          ks: this._playerConfig.ks
+          ks: this._playerConfig.ks,
+          autoPlay: this._liveDashboardConfiguration.player.autoPlay
         };
       }
     });

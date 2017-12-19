@@ -84,11 +84,12 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
         this._playerConfig.partnerId = response.partnerId;
         this._playerConfig.entryId = response.id;
         this._playerConfig.ks = this._liveDashboardConfiguration.ks;
-        this._playerConfig.uiConfId = this._liveDashboardConfiguration.uiConfId;
+        this._playerConfig.uiConfId = this._liveDashboardConfiguration.player.uiConfId;
         this._playerConfig.serviceUrl = this._liveDashboardConfiguration.service_url;
         this._playerConfig.flashVars = {
           SkipKSOnIsLiveRequest: false,
-          ks: this._playerConfig.ks
+          ks: this._playerConfig.ks,
+          autoPlay: this._liveDashboardConfiguration.player.autoPlay
         };
 
         if (typeof response.explicitLive === 'boolean') {
@@ -157,7 +158,6 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
     kdp.kBind( "closeFullScreen.liveDashboard", () => {
       this._inFullScreen = false;
     });
-
   }
 
   private _receivePostMessage(message: any): void {
@@ -170,6 +170,17 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
     switch (message.type) {
       case 'onLiveEntryChange':
         this._liveEntryService.updateLiveStreamEntryByPostMessage(message.content);
+        break;
+      case 'playerVisible':
+        if (this._kdp) {
+          if (message.content === 'play') {
+            this._kdp.sendNotification("doPlay");
+          }
+          else {
+            this._kdp.sendNotification("doPause");
+          }
+        }
+        break;
       default:
         console.log('Message type unknown!');
     }
