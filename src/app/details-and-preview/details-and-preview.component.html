@@ -7,8 +7,8 @@
     </div>
 
     <k-player *ngIf="(_dynamicInfo.streamStatus.state === 'Live' || _dynamicInfo.streamStatus.state === 'Preview') || _dynamicInfo.streamSession.isInProgress"
-              [cdnUrl]="_playerConfig.serviceUrl" [pid]="_playerConfig.partnerId" [uiconfid]="_playerConfig.uiConfId"
-              [entryid]="_playerConfig.entryId" [width]="'100%'" [height]="'100%'" [flashvars]="_playerConfig.flashVars"
+              [cdnUrl]="_player.configuration.serviceUrl" [pid]="_player.configuration.partnerId" [uiconfid]="_player.configuration.uiConfId"
+              [entryid]="_player.configuration.entryId" [width]="'100%'" [height]="'100%'" [flashvars]="_player.configuration.flashVars"
               (kalturaPlayerReady)="_onPlayerReady($event)"></k-player>
 
     <div *ngIf="_explicitLiveInformation.enabled && (_dynamicInfo.streamStatus.state === 'Preview')">
