@@ -179,6 +179,7 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
         if (message.content === 'play') {
           if (this._kdp) {
             this._kdp.sendNotification("doPlay");
+            // When player resumes playing push seek bar to live mode
             this._kdp.sendNotification("backToLive");
           }
           this._player.visible = true;
