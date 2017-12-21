@@ -35,12 +35,15 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   public  _explicitLiveInformation: ExplicitLiveObject;
   public  _liveEntry: KalturaLiveStreamEntry;
   public  _explicitLiveWaitFlag = false;
-  public  _playerConfig: PlayerConfig = {};
+  public  _player: { configuration: PlayerConfig, visible: boolean };
   public  _inFullScreen = false;
   private _kdp: any;
 
   @Input() compactMode = false;
+
   @Input() colorsReverted = false;
+
+  @Input() electronMode = false;
 
   constructor(private _liveEntryService : LiveEntryService,
               private _liveDashboardConfiguration: LiveDashboardConfiguration,
@@ -52,6 +55,7 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this._player = { configuration: {}, visible: !this.electronMode };
     this._subscribeToApplicationStatus();
     this._subscribeToExplicitLiveWaitFlag();
     this._subscribeToLiveStream();
@@ -81,14 +85,15 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
       if (response) {
         this._liveEntry = response;
 
-        this._playerConfig.partnerId = response.partnerId;
-        this._playerConfig.entryId = response.id;
-        this._playerConfig.ks = this._liveDashboardConfiguration.ks;
-        this._playerConfig.uiConfId = this._liveDashboardConfiguration.uiConfId;
-        this._playerConfig.serviceUrl = this._liveDashboardConfiguration.service_url;
-        this._playerConfig.flashVars = {
+        this._player.configuration.partnerId = response.partnerId;
+        this._player.configuration.entryId = response.id;
+        this._player.configuration.ks = this._liveDashboardConfiguration.ks;
+        this._player.configuration.uiConfId = this._liveDashboardConfiguration.player.uiConfId;
+        this._player.configuration.serviceUrl = this._liveDashboardConfiguration.service_url;
+        this._player.configuration.flashVars = {
+          autoPlay: this._player.visible,
           SkipKSOnIsLiveRequest: false,
-          ks: this._playerConfig.ks
+          ks: this._player.configuration.ks
         };
 
         if (typeof response.explicitLive === 'boolean') {
@@ -157,7 +162,6 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
     kdp.kBind( "closeFullScreen.liveDashboard", () => {
       this._inFullScreen = false;
     });
-
   }
 
   private _receivePostMessage(message: any): void {
@@ -170,6 +174,23 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
     switch (message.type) {
       case 'onLiveEntryChange':
         this._liveEntryService.updateLiveStreamEntryByPostMessage(message.content);
+        break;
+      case 'playerAction':
+        if (message.content === 'play') {
+          if (this._kdp) {
+            this._kdp.sendNotification("doPlay");
+            // When player resumes playing push seek bar to live mode
+            this._kdp.sendNotification("backToLive");
+          }
+          this._player.visible = true;
+        }
+        else if (message.content === 'pause') {
+          this._player.visible = false;
+          if (this._kdp) {
+            this._kdp.sendNotification("doPause");
+          }
+        }
+        break;
       default:
         console.log('Message type unknown!');
     }
