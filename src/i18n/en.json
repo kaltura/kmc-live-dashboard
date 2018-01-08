@@ -146,16 +146,16 @@
       "message-text-box": "No data is received on the primary endpoint. Broadcasting to the primary endpoint is mandatory for recording to operate."
     },
     "111": {
-      "message-log": "Authentication failed: wrong token {{Parameter}}",
-      "message-text-box": "Authentication failed: wrong token {{Parameter}}. Please check your encoder settings and try again"
+      "message-log": "Authentication failed: wrong token {{parameter}}",
+      "message-text-box": "Authentication failed: wrong token {{parameter}}. Please check your encoder settings and try again"
     },
     "112": {
       "message-log": "Authentication failed: Incorrect stream name/key",
       "message-text-box": "Authentication failed: Incorrect stream name/key. Please check your encoder settings and try again."
     },
     "113": {
-      "message-log": "Authentication failed: entry {{EntryId}} does not exist",
-      "message-text-box": "Authentication failed: entry {{EntryId}} does not exist. Please check your settings and try again"
+      "message-log": "Authentication failed: entry {{entryId}} does not exist",
+      "message-text-box": "Authentication failed: entry {{entryId}} does not exist. Please check your settings and try again"
     },
     "114": {
       "message-log": "Live streaming is disabled on your account",
