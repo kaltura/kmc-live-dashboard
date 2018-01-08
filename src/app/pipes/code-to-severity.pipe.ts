@@ -26,6 +26,12 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.NoVideoSignal:
       case DiagnosticsErrorCodes.PtsDrift:
         return AlertSeverity.error;
+      case DiagnosticsErrorCodes.AuthenticationInvalidToken:
+      case DiagnosticsErrorCodes.AuthenticationIncorrectStream:
+      case DiagnosticsErrorCodes.AuthenticationEntryNotFound:
+      case DiagnosticsErrorCodes.AuthenticationNoLivePermission:
+      case DiagnosticsErrorCodes.AuthenticationTooManyStreams:
+        return AlertSeverity.critical;
 
       default:
         return AlertSeverity.info;

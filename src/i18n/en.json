@@ -144,6 +144,26 @@
     "110": {
       "message-log": "No Data is received on the primary endpoint",
       "message-text-box": "No data is received on the primary endpoint. Broadcasting to the primary endpoint is mandatory for recording to operate."
+    },
+    "111": {
+      "message-log": "Authentication failed: wrong token {{Parameter}}",
+      "message-text-box": "Authentication failed: wrong token {{Parameter}}. Please check your encoder settings and try again"
+    },
+    "112": {
+      "message-log": "Authentication failed: Incorrect stream name/key",
+      "message-text-box": "Authentication failed: Incorrect stream name/key. Please check your encoder settings and try again."
+    },
+    "113": {
+      "message-log": "Authentication failed: entry {{EntryId}} does not exist",
+      "message-text-box": "Authentication failed: entry {{EntryId}} does not exist. Please check your settings and try again"
+    },
+    "114": {
+      "message-log": "Live streaming is disabled on your account",
+      "message-text-box": "Live streaming is disabled on your account. please contact Kaltura for more details"
+    },
+    "115": {
+      "message-log": "Live stream quota has been exceeded",
+      "message-text-box": "Live stream quota has been exceeded. please contact Kaltura for more details."
     }
   },
   "ERRORS": {
