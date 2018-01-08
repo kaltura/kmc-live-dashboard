@@ -18,7 +18,7 @@ import { LiveStreamGetAction } from "kaltura-ngx-client/api/types/LiveStreamGetA
 import { LiveStreamUpdateAction } from "kaltura-ngx-client/api/types/LiveStreamUpdateAction";
 import { KalturaLiveStreamEntry } from "kaltura-ngx-client/api/types/KalturaLiveStreamEntry";
 import { EntryServerNodeListAction } from "kaltura-ngx-client/api/types/EntryServerNodeListAction";
-import { KalturaLiveEntryServerNodeBaseFilter } from "kaltura-ngx-client/api/types/KalturaLiveEntryServerNodeBaseFilter";
+import { KalturaEntryServerNodeFilter } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeFilter";
 import { KalturaEntryServerNode } from "kaltura-ngx-client/api/types/KalturaEntryServerNode";
 import { KalturaAssetParamsOrigin } from "kaltura-ngx-client/api/types/KalturaAssetParamsOrigin";
 import { KalturaDVRStatus } from "kaltura-ngx-client/api/types/KalturaDVRStatus";
@@ -165,6 +165,11 @@ export class LiveEntryService implements OnDestroy {
         break;
       case 'uiConf':
         newAppStatus.uiConf = value;
+        break;
+    }
+
+    if (value === LoadingStatus.succeeded) {
+      console.log(`${key} is Ready`);
     }
 
     this._applicationStatus.next(newAppStatus);
@@ -209,7 +214,7 @@ export class LiveEntryService implements OnDestroy {
   private _runEntryStatusMonitoring(): void {
     this._subscriptionEntryStatusMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new EntryServerNodeListAction({
-        filter: new KalturaLiveEntryServerNodeBaseFilter({ entryIdEqual: this._liveDashboardConfiguration.entryId})
+        filter: new KalturaEntryServerNodeFilter({ entryIdEqual: this._liveDashboardConfiguration.entryId })
       }))
         .do(response => {
           // Make sure primary entryServerNode is first in array
@@ -332,6 +337,7 @@ export class LiveEntryService implements OnDestroy {
       this._parseBeacons(response.objects, true);
       this._updatedApplicationStatus('streamHealth', LoadingStatus.succeeded);
       this._runStreamHealthMonitoring();
+      console.log(`[streamHealthInitialization] Finished successfully`);
     })
   }
 
