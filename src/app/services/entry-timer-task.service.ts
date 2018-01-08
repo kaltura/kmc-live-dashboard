@@ -29,7 +29,7 @@ export class LiveEntryTimerTaskService {
 
       function run(){
         let result = func();
-        if (result instanceof Observable) {
+        if (result && typeof result.subscribe === 'function') {
           subscription = result.subscribe(
             response => {
               subscription = null;
