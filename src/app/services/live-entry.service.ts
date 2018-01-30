@@ -41,7 +41,7 @@ import { KalturaNullableBoolean } from "kaltura-ngx-client/api/types/KalturaNull
 import {
   LiveStreamStates, LiveStreamSession, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
   ApplicationStatus, LoadingStatus, LiveEntryDiagnosticsInfo, StreamHealth, DiagnosticsHealthInfo,
-  DiagnosticsDynamicInfo
+  DiagnosticsDynamicInfo, BeaconObjectTypes
 } from "../types/live-dashboard.types";
 // Pipes
 import { CodeToSeverityPipe } from "../pipes/code-to-severity.pipe";
@@ -325,6 +325,7 @@ export class LiveEntryService implements OnDestroy {
     this._subscriptionStreamHealthInitialization = this._kalturaClient.request(new BeaconListAction({
       filter: new KalturaBeaconFilter({
         orderBy: '-updatedAt',
+        relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON.toString(),
         eventTypeIn: '0_healthData,1_healthData',
         objectIdIn: this._liveDashboardConfiguration.entryId,
         indexTypeEqual: KalturaBeaconIndexType.log
@@ -348,6 +349,7 @@ export class LiveEntryService implements OnDestroy {
         filter: new KalturaBeaconFilter({
           orderBy: '-updatedAt',
           updatedAtGreaterThanOrEqual: new Date(lastUpdateTime),
+          relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON.toString(),
           eventTypeIn: '0_healthData,1_healthData',
           objectIdIn: this._liveDashboardConfiguration.entryId,
           indexTypeEqual: KalturaBeaconIndexType.log
