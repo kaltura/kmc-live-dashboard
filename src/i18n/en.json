@@ -166,8 +166,8 @@
       "message-text-box": "Live stream quota has been exceeded. please contact Kaltura for more details."
     },
     "116": {
-      "message-log": "Frame rate is fluctuating. Last: {{lastFrameRate}}, Average: {{meanFrameRate}}",
-      "message-text-box": "Frame rate is fluctuating. Please check your encoder CPU and reduce FPS (frame per second) and resolution accordingly."
+      "message-log": "Frame rate is fluctuating on flavor ({{Flavor}}). Last: {{lastFrameRate}}, Average: {{meanFrameRate}}",
+      "message-text-box": "Frame rate is fluctuating on flavor ({{Flavor}}). Please check your encoder CPU and reduce FPS (frame per second) and resolution accordingly."
     },
     "117": {
       "message-log": "Frame rate of {{actualFrameRate}} is different than configured {{configuredFrameRate}} on flavor ({{Flavor}})",
