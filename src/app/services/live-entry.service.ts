@@ -153,6 +153,10 @@ export class LiveEntryService implements OnDestroy {
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
     const newAppStatus = this._applicationStatus.getValue();
 
+    if (value === LoadingStatus.succeeded && newAppStatus[key] !== LoadingStatus.succeeded) {
+      console.log(`${key} is Ready`);
+    }
+
     switch (key) {
       case 'streamStatus':
         newAppStatus.streamStatus = value;
@@ -166,10 +170,6 @@ export class LiveEntryService implements OnDestroy {
       case 'uiConf':
         newAppStatus.uiConf = value;
         break;
-    }
-
-    if (value === LoadingStatus.succeeded) {
-      console.log(`${key} is Ready`);
     }
 
     this._applicationStatus.next(newAppStatus);
