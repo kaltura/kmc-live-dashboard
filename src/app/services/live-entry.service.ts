@@ -41,7 +41,7 @@ import { KalturaNullableBoolean } from "kaltura-ngx-client/api/types/KalturaNull
 import {
   LiveStreamStates, LiveStreamSession, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
   ApplicationStatus, LoadingStatus, LiveEntryDiagnosticsInfo, StreamHealth, DiagnosticsHealthInfo,
-  DiagnosticsDynamicInfo
+  DiagnosticsDynamicInfo, BeaconObjectTypes
 } from "../types/live-dashboard.types";
 // Pipes
 import { CodeToSeverityPipe } from "../pipes/code-to-severity.pipe";
@@ -153,6 +153,10 @@ export class LiveEntryService implements OnDestroy {
   private _updatedApplicationStatus(key: string, value: LoadingStatus): void {
     const newAppStatus = this._applicationStatus.getValue();
 
+    if (value === LoadingStatus.succeeded && newAppStatus[key] !== LoadingStatus.succeeded) {
+      console.log(`${key} is Ready`);
+    }
+
     switch (key) {
       case 'streamStatus':
         newAppStatus.streamStatus = value;
@@ -166,10 +170,6 @@ export class LiveEntryService implements OnDestroy {
       case 'uiConf':
         newAppStatus.uiConf = value;
         break;
-    }
-
-    if (value === LoadingStatus.succeeded) {
-      console.log(`${key} is Ready`);
     }
 
     this._applicationStatus.next(newAppStatus);
@@ -325,6 +325,7 @@ export class LiveEntryService implements OnDestroy {
     this._subscriptionStreamHealthInitialization = this._kalturaClient.request(new BeaconListAction({
       filter: new KalturaBeaconFilter({
         orderBy: '-updatedAt',
+        relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON.toString(),
         eventTypeIn: '0_healthData,1_healthData',
         objectIdIn: this._liveDashboardConfiguration.entryId,
         indexTypeEqual: KalturaBeaconIndexType.log
@@ -348,6 +349,7 @@ export class LiveEntryService implements OnDestroy {
         filter: new KalturaBeaconFilter({
           orderBy: '-updatedAt',
           updatedAtGreaterThanOrEqual: new Date(lastUpdateTime),
+          relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON.toString(),
           eventTypeIn: '0_healthData,1_healthData',
           objectIdIn: this._liveDashboardConfiguration.entryId,
           indexTypeEqual: KalturaBeaconIndexType.log

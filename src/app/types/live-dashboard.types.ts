@@ -23,6 +23,13 @@ export declare type LiveStreamSession = {
   timerStartTime?: number
 }
 
+export enum BeaconObjectTypes {
+  SCHEDULE_RESOURCE_BEACON = 1,
+  ENTRY_SERVER_NODE_BEACON = 2,
+  SERVER_NODE_BEACON = 3,
+  ENTRY_BEACON = 4
+}
+
 export class NodeStreams {
   primary: FlavorObject[];
   secondary: FlavorObject[];
