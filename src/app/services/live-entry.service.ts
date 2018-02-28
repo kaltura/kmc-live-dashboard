@@ -306,6 +306,10 @@ export class LiveEntryService implements OnDestroy {
     if (session.shouldTimerRun && (Date.now() - session.timerStartTime > environment.liveEntryService.stream_session_grace_period_in_ms)) {
       session.isInProgress = false;
     }
+
+    if (currentState !== nextState) {
+      this._getLiveStream();
+    }
   }
 
   private _updateStreamCreationTime(serverNodeList: KalturaEntryServerNode[], dynamicInfoObj: LiveEntryDynamicStreamInfo): void {
