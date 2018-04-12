@@ -177,9 +177,10 @@ export class LiveEntryService implements OnDestroy {
 
   private _getLiveStream(): void {
     this._liveStreamGetSubscription = this._kalturaClient.request(new LiveStreamGetAction({
-        entryId : this._liveDashboardConfiguration.entryId,
+        entryId : this._liveDashboardConfiguration.entryId
+      }).setRequestOptions({
         acceptedTypes : [KalturaLiveStreamAdminEntry, KalturaLiveEntryServerNode]
-      }))
+    }))
       .subscribe(response => {
         this._liveStreamGetSubscription = null;
         this._cachedLiveStream = JSON.parse(JSON.stringify(response));
@@ -262,13 +263,13 @@ export class LiveEntryService implements OnDestroy {
     let viewMode = liveEntry.explicitLive ? liveEntry.viewMode : null;
 
     if (currentInfo.redundancy) {
-      if (!currentInfo.streamStatus.serverType || (KalturaEntryServerNodeType.livePrimary.equals(currentInfo.streamStatus.serverType))) {
+      if (!currentInfo.streamStatus.serverType || (KalturaEntryServerNodeType.livePrimary === currentInfo.streamStatus.serverType)) {
         return {
           state: this._streamStatusPipe.transform(serverNodeList[0].status, viewMode),
           serverType: KalturaEntryServerNodeType.livePrimary
         };
       }
-      else if (KalturaEntryServerNodeType.liveBackup.equals(currentInfo.streamStatus.serverType)) {
+      else if (KalturaEntryServerNodeType.liveBackup === currentInfo.streamStatus.serverType) {
         return {
           state: this._streamStatusPipe.transform(serverNodeList[1].status, viewMode),
           serverType: KalturaEntryServerNodeType.liveBackup
@@ -459,7 +460,7 @@ export class LiveEntryService implements OnDestroy {
     }
   }
 
-  private _getDiagnosticsObjToUpdate(entryDiagnosticsObject: LiveEntryDiagnosticsInfo, event: string, isPrimary: boolean): { updatedTime?: number, data?: Object | DiagnosticsDynamicInfo | DiagnosticsHealthInfo } {
+  private _getDiagnosticsObjToUpdate(entryDiagnosticsObject: LiveEntryDiagnosticsInfo, event: string, isPrimary: boolean): { updatedTime?: number, data?: any } {
     switch(event) {
       case 'staticData':
         return (isPrimary) ? entryDiagnosticsObject.staticInfoPrimary : entryDiagnosticsObject.staticInfoSecondary;

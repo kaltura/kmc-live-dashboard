@@ -33,7 +33,7 @@
   <div class="property">
     <div class="label-icon-duo">
       <label class="configuration-label" [class.colors_reverted]="colorsReverted">{{ 'STREAM_CONFIG.transcoding' | translate }}</label>
-      <i class="kIconinfo infoIcon bullet-grey"
+      <i class="kIconerror infoIcon bullet-grey"
          [kTooltip]="((_dynamicInformation.streamStatus.state !== 'Offline') && (_allStreams.primary.length || _allStreams.secondary.length)) ? (_allStreams | transcodingInfo: _dynamicInformation.streamStatus.serverType) : ''"
          [maxWidth]="175" [placement]="'bottom'"></i>
     </div>

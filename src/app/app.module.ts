@@ -10,8 +10,6 @@ import { TooltipModule } from '@kaltura-ng/kaltura-ui';
 import { TabMenuModule, TabViewModule, InputTextModule, InputTextareaModule, ButtonModule, DropdownModule, CheckboxModule, RadioButtonModule, GrowlModule, ConfirmDialogModule } from 'primeng/primeng';
 
 // Services
-import { KalturaClient } from 'kaltura-ngx-client';
-import { KalturaClientConfiguration } from 'kaltura-ngx-client';
 import { LiveEntryService } from './services/live-entry.service';
 import { PartnerInformationService } from "./services/partner-information.service";
 import { LiveEntryTimerTaskService } from "./services/entry-timer-task.service";
@@ -51,14 +49,7 @@ import { StreamStatusPipe } from './pipes/stream-status.pipe';
 // Configuration Services
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
 import { AppLocalization, AppStorage } from "@kaltura-ng/kaltura-common";
-
-// TODO: Temporary solution! --> remove
-export function clientConfigurationFactory() {
-  const result = new KalturaClientConfiguration();
-  result.endpointUrl = '.';
-  result.clientTag = '.';
-  return result;
-}
+import { KalturaClientModule } from 'kaltura-ngx-client';
 
 @NgModule({
   declarations: [
@@ -104,15 +95,10 @@ export function clientConfigurationFactory() {
     RadioButtonModule,
     GrowlModule,
     TooltipModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    KalturaClientModule.forRoot()
   ],
   providers: [
-    KalturaClient,
-    {
-      provide: KalturaClientConfiguration,
-      useFactory: clientConfigurationFactory
-
-    },
     LiveEntryService,
     PartnerInformationService,
     LiveEntryTimerTaskService,
