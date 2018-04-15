@@ -9,7 +9,7 @@ import { KalturaEntryServerNodeType } from "kaltura-ngx-client/api/types/Kaltura
 export class TranscodingInfoPipe implements PipeTransform {
 
   transform(allStreams: NodeStreams, arg?: KalturaEntryServerNodeType): string {
-    if (KalturaEntryServerNodeType.livePrimary.equals(arg)) {
+    if (KalturaEntryServerNodeType.livePrimary === arg) {
       return this.appendFormattedStream(allStreams.primary);
     }
     else {

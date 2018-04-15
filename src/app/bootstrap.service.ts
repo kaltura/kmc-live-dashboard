@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { KalturaClient, KalturaClientConfiguration } from "kaltura-ngx-client";
+import { KalturaClient } from "kaltura-ngx-client";
 import { LiveDashboardConfiguration } from "./services/live-dashboard-configuration.service";
 import { Observable } from "rxjs/Observable";
 import { environment } from "../environments/environment";
@@ -12,7 +12,6 @@ declare var window: any;
 export class BootstrapService {
 
   constructor(private _kalturaClient: KalturaClient,
-              private _kalturaClientConfiguration: KalturaClientConfiguration,
               private _liveDashboardConfiguration: LiveDashboardConfiguration,
               private _appLocalization: AppLocalization) {
   }
@@ -40,9 +39,13 @@ export class BootstrapService {
     }
 
     if (this._liveDashboardConfiguration.ks && this._liveDashboardConfiguration.service_url && this._liveDashboardConfiguration.entryId) {
-      this._kalturaClient.ks = this._liveDashboardConfiguration.ks;
-      this._kalturaClient.endpointUrl = this._liveDashboardConfiguration.service_url + environment.bootstrap.service_url_extension;
-      this._kalturaClientConfiguration.clientTag = 'KalturaLiveDashboard';
+      this._kalturaClient.setDefaultRequestOptions({
+        ks: this._liveDashboardConfiguration.ks,
+      });
+      this._kalturaClient.setOptions({
+        endpointUrl: this._liveDashboardConfiguration.service_url + environment.bootstrap.service_url_extension,
+        clientTag: 'KalturaLiveDashboard'
+      });
 
       console.log('Bootstrap service started successfully');
       // init i18n - Set english as default language and initialize localization service
