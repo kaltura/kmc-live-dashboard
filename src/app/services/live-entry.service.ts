@@ -18,7 +18,7 @@ import { LiveStreamGetAction } from "kaltura-ngx-client/api/types/LiveStreamGetA
 import { LiveStreamUpdateAction } from "kaltura-ngx-client/api/types/LiveStreamUpdateAction";
 import { KalturaLiveStreamEntry } from "kaltura-ngx-client/api/types/KalturaLiveStreamEntry";
 import { EntryServerNodeListAction } from "kaltura-ngx-client/api/types/EntryServerNodeListAction";
-import { KalturaEntryServerNodeFilter } from "kaltura-ngx-client/api/types/KalturaEntryServerNodeFilter";
+import { KalturaLiveEntryServerNodeFilter } from "kaltura-ngx-client/api/types/KalturaLiveEntryServerNodeFilter";
 import { KalturaEntryServerNode } from "kaltura-ngx-client/api/types/KalturaEntryServerNode";
 import { KalturaAssetParamsOrigin } from "kaltura-ngx-client/api/types/KalturaAssetParamsOrigin";
 import { KalturaDVRStatus } from "kaltura-ngx-client/api/types/KalturaDVRStatus";
@@ -41,7 +41,7 @@ import { KalturaNullableBoolean } from "kaltura-ngx-client/api/types/KalturaNull
 import {
   LiveStreamStates, LiveStreamSession, LiveEntryDynamicStreamInfo, LiveEntryStaticConfiguration,
   ApplicationStatus, LoadingStatus, LiveEntryDiagnosticsInfo, StreamHealth, DiagnosticsHealthInfo,
-  DiagnosticsDynamicInfo, BeaconObjectTypes
+  BeaconObjectTypes
 } from "../types/live-dashboard.types";
 // Pipes
 import { CodeToSeverityPipe } from "../pipes/code-to-severity.pipe";
@@ -215,7 +215,7 @@ export class LiveEntryService implements OnDestroy {
   private _runEntryStatusMonitoring(): void {
     this._subscriptionEntryStatusMonitoring = this._entryTimerTask.runTimer(() => {
       return this._kalturaClient.request(new EntryServerNodeListAction({
-        filter: new KalturaEntryServerNodeFilter({ entryIdEqual: this._liveDashboardConfiguration.entryId })
+        filter: new KalturaLiveEntryServerNodeFilter({ entryIdEqual: this._liveDashboardConfiguration.entryId })
       }))
         .do(response => {
           // Make sure primary entryServerNode is first in array
