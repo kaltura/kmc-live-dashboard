@@ -83,7 +83,7 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
   }
 
   private _getStreamsSeverity(diagnostics: LiveEntryDiagnosticsInfo): void {
-    if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType)) {
+    if (KalturaEntryServerNodeType.livePrimary === this._dynamicInformation.streamStatus.serverType) {
       if (diagnostics.streamHealth.data.primary.length) {
         // get the last report status as general status
         this._streamSeverity = diagnostics.streamHealth.data.primary[0].severity;
@@ -113,10 +113,10 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
 
   public _getSourceHeight(): string {
     let flavorsArray: FlavorObject[] = [];
-    if (KalturaEntryServerNodeType.livePrimary.equals(this._dynamicInformation.streamStatus.serverType)) {
+    if (KalturaEntryServerNodeType.livePrimary === this._dynamicInformation.streamStatus.serverType) {
       flavorsArray = this._allStreams.primary;
     }
-    else if (KalturaEntryServerNodeType.liveBackup.equals(this._dynamicInformation.streamStatus.serverType)) {
+    else if (KalturaEntryServerNodeType.liveBackup === this._dynamicInformation.streamStatus.serverType) {
       flavorsArray = this._allStreams.secondary;
     }
 
