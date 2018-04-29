@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  "version": "1.5.4",
   "bootstrap": {
     "service_url_extension": "/api_v3/index.php",
     "default_lang": "en",
