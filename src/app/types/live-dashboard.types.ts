@@ -57,7 +57,8 @@ export enum DiagnosticsErrorCodes  {
   AuthenticationIncorrectStream = 112,
   AuthenticationEntryNotFound = 113,
   AuthenticationNoLivePermission = 114,
-  AuthenticationTooManyStreams = 115
+  AuthenticationTooManyStreams = 115,
+  AuthenticationTooManyTranscodedStreams = 118
 }
 
 export enum AlertSeverity {

@@ -31,6 +31,7 @@ export class CodeToSeverityPipe implements PipeTransform {
       case DiagnosticsErrorCodes.AuthenticationEntryNotFound:
       case DiagnosticsErrorCodes.AuthenticationNoLivePermission:
       case DiagnosticsErrorCodes.AuthenticationTooManyStreams:
+      case DiagnosticsErrorCodes.AuthenticationTooManyTranscodedStreams:
         return AlertSeverity.critical;
 
       default:
