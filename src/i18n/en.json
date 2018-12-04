@@ -172,7 +172,12 @@
     "117": {
       "message-log": "Frame rate of {{actualFrameRate}} is different than configured {{configuredFrameRate}} on flavor ({{Flavor}})",
       "message-text-box": "Frame rate of {{actualFrameRate}} is different than configured on flavor ({{Flavor}}). Please check your encoder CPU and resolution accordingly."
+    },
+    "118": {
+      "message-log": "Exceeded max encoded entries allowed",
+      "message-text-box": "Exceeded max encoded entries allowed, please contact support"
     }
+
   },
   "ERRORS": {
     "parameters_error": "Invalid Application Parameters! Please restart application",
