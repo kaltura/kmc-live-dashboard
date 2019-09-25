@@ -379,7 +379,8 @@ export class LiveEntryService implements OnDestroy {
         filter: new KalturaBeaconFilter({
           eventTypeIn: '0_staticData,0_dynamicData,1_staticData,1_dynamicData',
           objectIdIn: this._liveDashboardConfiguration.entryId,
-          indexTypeEqual: KalturaBeaconIndexType.state
+          indexTypeEqual: KalturaBeaconIndexType.state,
+          relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON.toString()
         })
       }))
         .do(response => {
