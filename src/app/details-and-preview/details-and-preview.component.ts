@@ -29,7 +29,8 @@ export class DetailAndPreviewComponent implements OnInit, OnDestroy {
 
   public  _dynamicInfo: LiveEntryDynamicStreamInfo = {
     redundancy: false,
-    streamStatus: { state: 'Offline' }
+    streamStatus: { state: 'Offline' },
+    selfServe: false
   };
   private _tempExplicitLiveInformation: ExplicitLiveObject = {};
   public  _explicitLiveInformation: ExplicitLiveObject;

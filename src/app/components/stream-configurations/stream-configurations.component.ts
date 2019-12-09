@@ -42,7 +42,8 @@ export class StreamConfigurationsComponent implements OnInit, OnDestroy {
       redundancy: false,
       streamStatus: {
         state: 'Offline'
-      }
+      },
+      selfServe: false
     };
     this._allStreams = { primary: [], secondary: [] };
     this._streamSeverity = AlertSeverity.info;

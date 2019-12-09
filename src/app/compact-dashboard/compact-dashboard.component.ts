@@ -14,7 +14,8 @@ export class CompactDashboardComponent implements OnInit, OnDestroy {
   private _dynamicInformationSubscription: ISubscription;
   public  _dynamicInfo: LiveEntryDynamicStreamInfo = {
     redundancy: false,
-    streamStatus: { state: 'Offline' }
+    streamStatus: { state: 'Offline' },
+    selfServe: false
   };
 
   @Input() colorsReverted = false;

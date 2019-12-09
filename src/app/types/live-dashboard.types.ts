@@ -9,7 +9,8 @@ export interface LiveEntryDynamicStreamInfo {
   redundancy?: boolean,
   streamStatus?: LiveStreamStates,
   streamSession?: LiveStreamSession,
-  streamCreationTime?: number
+  streamCreationTime?: number,
+  selfServe?: boolean
 }
 
 export declare type LiveStreamStates = {
@@ -58,8 +59,12 @@ export enum DiagnosticsErrorCodes  {
   AuthenticationEntryNotFound = 113,
   AuthenticationNoLivePermission = 114,
   AuthenticationTooManyStreams = 115,
+  FrameRateFluctuating = 116,
+  FrameRateDifferent = 117,
   AuthenticationTooManyTranscodedStreams = 118
 }
+
+export const SelfServeSpecificErrorCodes = { 116: false, 117: false};
 
 export enum AlertSeverity {
   debug = 0,

@@ -20,6 +20,7 @@ import { KalturaLiveStreamEntry } from "kaltura-ngx-client/api/types/KalturaLive
 import { EntryServerNodeListAction } from "kaltura-ngx-client/api/types/EntryServerNodeListAction";
 import { KalturaLiveEntryServerNodeFilter } from "kaltura-ngx-client/api/types/KalturaLiveEntryServerNodeFilter";
 import { KalturaEntryServerNode } from "kaltura-ngx-client/api/types/KalturaEntryServerNode";
+import { KalturaConferenceEntryServerNodeFilter } from "kaltura-ngx-client/api/types/KalturaConferenceEntryServerNodeFilter";
 import { KalturaAssetParamsOrigin } from "kaltura-ngx-client/api/types/KalturaAssetParamsOrigin";
 import { KalturaDVRStatus } from "kaltura-ngx-client/api/types/KalturaDVRStatus";
 import { KalturaRecordStatus } from "kaltura-ngx-client/api/types/KalturaRecordStatus";
@@ -100,6 +101,8 @@ export class LiveEntryService implements OnDestroy {
   public numOfWatcher$ = this._numOfWatcherSubject.asObservable();
   private _numOfWatchersTimerSubscription: Subscription = null;
 
+  private _subscriptionSelfServeEnabled: ISubscription;
+
   constructor(private _kalturaClient: KalturaClient,
               private _entryTimerTask: LiveEntryTimerTaskService,
               private _partnerInformationService: PartnerInformationService,
@@ -122,6 +125,8 @@ export class LiveEntryService implements OnDestroy {
       this._numOfWatchersTimerSubscription.unsubscribe();
       this._numOfWatchersTimerSubscription = null;
     }
+
+    this._subscriptionSelfServeEnabled.unsubscribe();
   }
 
   public InitializeLiveEntryService(): void {
@@ -140,6 +145,7 @@ export class LiveEntryService implements OnDestroy {
       this._runDiagnosticsDataMonitoring();
       this._streamHealthInitialization();
       this._listenToNumOfWatcherWhenLive();
+      this._setIsSelfServe();
 
       uiConfListSubscription.unsubscribe();
     },
@@ -379,8 +385,7 @@ export class LiveEntryService implements OnDestroy {
         filter: new KalturaBeaconFilter({
           eventTypeIn: '0_staticData,0_dynamicData,1_staticData,1_dynamicData',
           objectIdIn: this._liveDashboardConfiguration.entryId,
-          indexTypeEqual: KalturaBeaconIndexType.state,
-          relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON.toString()
+          indexTypeEqual: KalturaBeaconIndexType.state
         })
       }))
         .do(response => {
@@ -461,8 +466,18 @@ export class LiveEntryService implements OnDestroy {
     }
   }
 
+  private _parseConferenceEntryServeNodeList(beaconsArray: KalturaBeacon[]): void {
+    const dynamicConfigObj = this._entryDynamicInformation.getValue();
+    // dynamicConfigObj.selfServe = true;
+    if (beaconsArray.length > 0) {
+      dynamicConfigObj.selfServe = true;
+    }
+    this._entryDynamicInformation.next(dynamicConfigObj);
+  }
+
+
   private _getDiagnosticsObjToUpdate(entryDiagnosticsObject: LiveEntryDiagnosticsInfo, event: string, isPrimary: boolean): { updatedTime?: number, data?: any } {
-    switch(event) {
+    switch (event) {
       case 'staticData':
         return (isPrimary) ? entryDiagnosticsObject.staticInfoPrimary : entryDiagnosticsObject.staticInfoSecondary;
       case 'dynamicData':
@@ -547,4 +562,24 @@ export class LiveEntryService implements OnDestroy {
     this._liveStream.next(newLiveEntry);
     this._parseEntryServeNodeList(this._lastEntryServerNodesList);
   }
+
+  private _setIsSelfServe(): void {
+    this._subscriptionSelfServeEnabled = this._kalturaClient.request(new BeaconListAction({
+      filter: new KalturaBeaconFilter({
+        orderBy: '-updatedAt',
+        relatedObjectTypeIn: BeaconObjectTypes.ENTRY_BEACON.toString(),
+        eventTypeIn: 'selfServeStats',
+        objectIdIn: this._liveDashboardConfiguration.entryId,
+        indexTypeEqual: KalturaBeaconIndexType.log
+      }),
+      pager: new KalturaFilterPager({
+        pageSize: environment.liveEntryService.max_beacon_health_reports_to_show
+      })
+    }))
+      .subscribe(response => {
+        this._parseConferenceEntryServeNodeList(response.objects);
+        console.log(`[_setIsSelfServe] Finished successfully`);
+      })
+  }
+
 }

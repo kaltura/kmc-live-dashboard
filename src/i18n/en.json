@@ -179,6 +179,16 @@
     }
 
   },
+  "SELF_SERVE_ALERTS": {
+    "116": {
+      "message-log": "",
+      "message-text-box": ""
+    },
+    "117": {
+      "message-log": "",
+      "message-text-box": ""
+    }
+  },
   "ERRORS": {
     "parameters_error": "Invalid Application Parameters! Please restart application",
     "liveStream_get_failure": "Failed to load Live Entry"

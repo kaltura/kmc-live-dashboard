@@ -28,11 +28,13 @@
 
         <div class="row-2 alerts">
           <div *ngFor="let alert of notification.alerts" class="grid alert">
-            <span class="small-bullet"
-                 [class.bullet-green]=  "((alert.Code | codeToSeverity | severityToHealth) === 'Good')"
-                 [class.bullet-yellow]= "((alert.Code | codeToSeverity | severityToHealth) === 'Fair')"
-                 [class.bullet-red]=    "((alert.Code | codeToSeverity | severityToHealth) === 'Poor')">•</span>
-            <span class="col alert-description">{{ "ALERTS." + alert.Code + ".message-log" | translate: alert.Arguments }}</span>
+            <span *ngIf="( _dynamicInfo.selfServe && shouldDisplaySelfServe(alert.Code))">
+              <span class="small-bullet"
+                   [class.bullet-green]=  "((alert.Code | codeToSeverity | severityToHealth) === 'Good')"
+                   [class.bullet-yellow]= "((alert.Code | codeToSeverity | severityToHealth) === 'Fair')"
+                   [class.bullet-red]=    "((alert.Code | codeToSeverity | severityToHealth) === 'Poor')">•</span>
+              <span class="col alert-description">{{ "ALERTS." + alert.Code + ".message-log" | translate: alert.Arguments }}</span>
+            </span>
           </div>
           <div *ngIf="notification.alerts.length == 0">{{ "ALERTS.no-alerts" | translate }}</div>
         </div>
