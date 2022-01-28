@@ -33,7 +33,7 @@
     "jsnlog": "^2.24.3",
     "kaltura-ngx-client": "file:libs/kaltura-ngx-client-10.1.1-v20180412-103801.tgz",
     "lodash": "^4.17.5",
-    "moment": "^2.22.0",
+    "moment": "^2.29.1",
     "ng2-translate": "^5.0.0",
     "normalize.css": "^8.0.0",
     "primeng": "^5.2.4",
