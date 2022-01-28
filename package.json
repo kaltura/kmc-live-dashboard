@@ -27,7 +27,7 @@
     "@kaltura-ng/kaltura-ui": "^5.1.1",
     "@kaltura-ng/mc-theme": "^2.1.0",
     "classlist.js": "^1.1.20150312",
-    "core-js": "^2.5.5",
+    "core-js": "^2.6.12",
     "font-awesome": "^4.7.0",
     "gridlex": "^2.7.1",
     "jsnlog": "^2.24.3",
